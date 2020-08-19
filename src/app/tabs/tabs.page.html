@@ -1,0 +1,44 @@
+<div class="content_box">
+    <router-outlet></router-outlet>
+</div>
+<TabBar [hidden]="hidden" [barTintColor]="'white'" [tintColor]="tintColor" [ngStyle]="tabbarStyle"
+    [activeTab]="selectedIndex" [unselectedTintColor]="unselectedTintColor" [tabBarPosition]="'bottom'"
+    (onPress)="tabBarTabOnPress($event)">
+    <TabBarItem [title]="'记账'" [key]="1" [icon]="icon1" [selectedIcon]="icon11">
+    </TabBarItem>
+    <TabBarItem [title]="'查账'" [key]="1" [icon]="icon2" [selectedIcon]="icon22">
+    </TabBarItem>
+    <TabBarItem [title]="'设置'" [key]="1" [icon]="icon3" [selectedIcon]="icon33">
+    </TabBarItem>
+</TabBar>
+
+<ng-template #icon1>
+    <div
+        style="width:22px;height: 22px;background: url('/assets/icon/bianji.svg') center center / 21px 21px no-repeat;">
+    </div>
+</ng-template>
+<ng-template #icon11>
+    <div
+        style="width:22px;height: 22px;background: url('/assets/icon/bianji-active.svg') center center / 21px 21px no-repeat;">
+    </div>
+</ng-template>
+<ng-template #icon2>
+    <div
+        style="width:22px;height: 22px;background: url('/assets/icon/zhangben.svg') center center / 21px 21px no-repeat;">
+    </div>
+</ng-template>
+<ng-template #icon22>
+    <div
+        style="width:22px;height: 22px;background: url('/assets/icon/zhangben-active.svg') center center / 21px 21px no-repeat;">
+    </div>
+</ng-template>
+<ng-template #icon3>
+    <div
+        style="width:22px;height: 22px;background: url('/assets/icon/shezhi.svg') center center / 21px 21px no-repeat;">
+    </div>
+</ng-template>
+<ng-template #icon33>
+    <div
+        style="width:22px;height: 22px;background: url('/assets/icon/shezhi-active.svg') center center / 21px 21px no-repeat;">
+    </div>
+</ng-template>
