@@ -8,7 +8,6 @@ import { TabsPage } from './tabs.page';
 
 import { TabsPageRoutingModule } from './tabs-routing.module';
 import { NgZorroAntdMobileModule } from 'ng-zorro-antd-mobile';
-import { SettingComponent } from '../setting/setting.component';
 
 
 @NgModule({
@@ -19,6 +18,6 @@ import { SettingComponent } from '../setting/setting.component';
     TabsPageRoutingModule,
     NgZorroAntdMobileModule
   ],
-  declarations: [TabsPage, NoteComponent, ViewComponent, SettingComponent]
+  declarations: [TabsPage, NoteComponent, ViewComponent]
 })
 export class TabsPageModule { }

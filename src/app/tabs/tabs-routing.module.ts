@@ -3,7 +3,6 @@ import { NoteComponent } from './../note/note.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TabsPage } from './tabs.page';
-import { SettingComponent } from '../setting/setting.component';
 
 const routes: Routes = [
   {
@@ -20,7 +19,7 @@ const routes: Routes = [
       },
       {
         path: 'setting',
-        component: SettingComponent
+        loadChildren: () => import('../setting/setting.module').then( m => m.SettingPageModule)
       },
       {
         path: '',
