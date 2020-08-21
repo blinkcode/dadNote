@@ -102,9 +102,111 @@ export class ListComponent implements OnInit {
     });
     await alert.present();
   }
-  addPersonCtrl(edit?: boolean) { }
-  addTypeCtrl(edit?: boolean) { }
-  addOriginCtrl(edit?: boolean) { }
+  async addPersonCtrl(edit?: boolean) {
+    const alert = await this.alertCtrl.create({
+      header: '人员信息!',
+      message: '请输入人名',
+      inputs: [
+        {
+          value: edit ? this.lists[this.openIndex]['userName'] : '',
+          name: 'userName',
+          type: 'text',
+          placeholder: '李洪亮'
+        }
+      ],
+      buttons: [
+        {
+          text: '取消',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => { }
+        }, {
+          text: '确定',
+          handler: (blah) => {
+            if (!edit) {
+              const id1 = uuidv4();
+              this.lists.push({ id: id1, ...blah });
+            } else {
+              const origin = this.lists[this.openIndex];
+              this.lists[this.openIndex] = { ...origin, ...blah };
+            }
+            this.save();
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+  async addTypeCtrl(edit?: boolean) {
+    const alert = await this.alertCtrl.create({
+      header: '货料种类',
+      message: '请输入货料种类',
+      inputs: [
+        {
+          value: edit ? this.lists[this.openIndex]['typeName'] : '',
+          name: 'typeName',
+          type: 'text',
+          placeholder: '苹果'
+        }
+      ],
+      buttons: [
+        {
+          text: '取消',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => { }
+        }, {
+          text: '确定',
+          handler: (blah) => {
+            if (!edit) {
+              const id1 = uuidv4();
+              this.lists.push({ id: id1, ...blah });
+            } else {
+              const origin = this.lists[this.openIndex];
+              this.lists[this.openIndex] = { ...origin, ...blah };
+            }
+            this.save();
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+  async addOriginCtrl(edit?: boolean) {
+    const alert = await this.alertCtrl.create({
+      header: '货料来源',
+      message: '请输入货料来源',
+      inputs: [
+        {
+          value: edit ? this.lists[this.openIndex]['originName'] : '',
+          name: 'originName',
+          type: 'text',
+          placeholder: '大自然公司'
+        }
+      ],
+      buttons: [
+        {
+          text: '取消',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => { }
+        }, {
+          text: '确定',
+          handler: (blah) => {
+            if (!edit) {
+              const id1 = uuidv4();
+              this.lists.push({ id: id1, ...blah });
+            } else {
+              const origin = this.lists[this.openIndex];
+              this.lists[this.openIndex] = { ...origin, ...blah };
+            }
+            this.save();
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
 
   save() {
     this.storage.set(this.id, this.lists);

@@ -1,3 +1,55 @@
-<div style="height: 100%">
-  记账区域
+<div class="note_box">
+  <div>2020-06-22：账本</div>
+  <div class="button_box">
+    <div Button [inline]="true" [type]="'primary'" (click)="addCar()">添加车队</div>
+  </div>
+  <div class="table_box">
+    <Tabs page='5' [useOnPan]="true" [swipeable]="true" [activeTab]="activeTabIndex"
+      [tabBarActiveTextColor]="'#1890ff'">
+      <TabPane *ngFor="let car of carList; let i = index" [title]="car.title">
+        <div style="width: 100%;height:100%">
+          <nz-table #table nzBordered [nzData]="dataSet" [nzScroll]="{ x:'1366px',y: '800px' }"
+            [nzShowPagination]='false' nzPageSize='150'>
+            <thead>
+              <tr>
+                <th class="table_header">车队</th>
+                <th class="table_header">出发时间</th>
+                <th class="table_header">回厂时间</th>
+                <th class="table_header">货料来源</th>
+                <th class="table_header">货料种类</th>
+                <th class="table_header">毛重(吨)</th>
+                <th class="table_header">皮重(吨)</th>
+                <th class="table_header">净重(吨)</th>
+                <th class="table_header">料款(元)</th>
+                <th class="table_header">电子秤图片</th>
+                <th class="table_header">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of table.data;let i=index">
+                <ng-container *ngIf="i === 0">
+                  <td [attr.rowspan]='table.data.length' class="table_header">鲁Q123456 <br> 李洪亮，张三</td>
+                </ng-container>
+                <td class="table_header">2010-0101-010</td>
+                <td class="table_header">2020-0101-11</td>
+                <td class="table_header">大自然</td>
+                <td class="table_header">苹果</td>
+                <td class="table_header">7.1</td>
+                <ng-container *ngIf="i === 0">
+                  <td [attr.rowspan]='table.data.length' class="table_header">3.4</td>
+                </ng-container>
+                <td class="table_header">3.7</td>
+                <td class="table_header">30</td>
+                <td class="table_header">这里是图片</td>
+                <td class="table_header">
+                  <a [hidden]='data.img'>拍摄</a>
+                  <a [hidden]='!data.img' class='delete'>删除</a>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </div>
+      </TabPane>
+    </Tabs>
+  </div>
 </div>

@@ -8,6 +8,7 @@ import { TabsPage } from './tabs.page';
 
 import { TabsPageRoutingModule } from './tabs-routing.module';
 import { NgZorroAntdMobileModule } from 'ng-zorro-antd-mobile';
+import { NzTableModule } from 'ng-zorro-antd/table';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { NgZorroAntdMobileModule } from 'ng-zorro-antd-mobile';
     FormsModule,
     IonicModule,
     TabsPageRoutingModule,
-    NgZorroAntdMobileModule
+    NgZorroAntdMobileModule,
+    NzTableModule
   ],
   declarations: [TabsPage, NoteComponent, ViewComponent]
 })

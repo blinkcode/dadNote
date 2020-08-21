@@ -1,0 +1,24 @@
+@import "~ng-zorro-antd/style/index.min.css"; /* 引入基本样式 */
+@import "~ng-zorro-antd/table/style/index.min.css"; /* 引入组件样式 */
+.note_box {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  .button_box {
+    height: 50px;
+  }
+  .table_box {
+    width: 100%;
+    flex: 1;
+    // background-color: red
+    font-size: 20px;
+    .table_header {
+      text-align: center;
+      font-size: 23px;
+    }
+    .delete {
+      color: red;
+    }
+  }
+}

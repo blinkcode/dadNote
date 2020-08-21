@@ -7,8 +7,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NoteComponent implements OnInit {
 
+  carList: any[] = [{ title: '车队' }];
+  activeTabIndex = 0;
+  dataSet: any[] = []
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.dataSet = new Array(10).fill({});
+  }
+
+  addCar() {
+    this.carList.push({ title: '车队' });
+  }
 
 }

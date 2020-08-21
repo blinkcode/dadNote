@@ -4,7 +4,7 @@
 <List [hidden]="id !== 'car'">
   <ng-container *ngFor="let list of lists; let i=index">
     <SwipeAction style="background-color: gray" [autoClose]="true" [right]="right" (onOpen)="open(i)">
-      <ListItem extra="向左滑动删除" [arrow]="'horizontal'">
+      <ListItem extra="向左滑动进行操作" [arrow]="'horizontal'">
         {{list.carNo}}
         &nbsp;&nbsp;&nbsp;&nbsp;
         {{list.weight}} &nbsp;吨
@@ -14,36 +14,36 @@
 </List>
 <List [hidden]="id !== 'person'">
   <ng-container *ngFor="let list of lists; let i=index">
-    <SwipeAction style="background-color: gray" [autoClose]="true" [right]="right">
-      <ListItem extra="向左滑动删除" [arrow]="'horizontal'">
-        {{list.name}}
+    <SwipeAction style="background-color: gray" [autoClose]="true" [right]="right" (onOpen)="open(i)">
+      <ListItem extra="向左滑动进行操作" [arrow]="'horizontal'">
+        {{list.userName}}
       </ListItem>
     </SwipeAction>
   </ng-container>
 </List>
 <List [hidden]="id !== 'type'">
   <ng-container *ngFor="let list of lists; let i=index">
-    <SwipeAction style="background-color: gray" [autoClose]="true" [right]="right">
-      <ListItem extra="向左滑动删除" [arrow]="'horizontal'">
-        {{list.name}}
+    <SwipeAction style="background-color: gray" [autoClose]="true" [right]="right" (onOpen)="open(i)">
+      <ListItem extra="向左滑动进行操作" [arrow]="'horizontal'">
+        {{list.typeName}}
       </ListItem>
     </SwipeAction>
   </ng-container>
 </List>
 <List [hidden]="id !== 'origin'">
   <ng-container *ngFor="let list of lists; let i=index">
-    <SwipeAction style="background-color: gray" [autoClose]="true" [right]="right">
-      <ListItem extra="向左滑动删除" [arrow]="'horizontal'">
-        {{list.name}}
+    <SwipeAction style="background-color: gray" [autoClose]="true" [right]="right" (onOpen)="open(i)">
+      <ListItem extra="向左滑动进行操作" [arrow]="'horizontal'">
+        {{list.originName}}
       </ListItem>
     </SwipeAction>
   </ng-container>
 </List>
 <List [hidden]="id !== 'export'">
   <ng-container *ngFor="let list of lists; let i=index">
-    <SwipeAction style="background-color: gray" [autoClose]="true" [right]="right">
-      <ListItem extra="向左滑动删除" [arrow]="'horizontal'">
-        {{list.name}}
+    <SwipeAction style="background-color: gray" [autoClose]="true" [right]="right" (onOpen)="open(i)">
+      <ListItem extra="向左滑动进行操作" [arrow]="'horizontal'">
+        {{list.export}}
       </ListItem>
     </SwipeAction>
   </ng-container>
@@ -51,8 +51,6 @@
 <WingBlank>
   <WhiteSpace></WhiteSpace>
   <WhiteSpace></WhiteSpace>
-  <WhiteSpace></WhiteSpace>
-  <WhiteSpace></WhiteSpace>
-  <span [hidden]="lists.length !==0">暂无信息</span>
+  <span [hidden]="lists.length !== 0">暂无信息</span>
   <div Button style="margin-right: 4px" [type]="'ghost'" [size]="'large'" (click)="add()">添加</div>
 </WingBlank>
