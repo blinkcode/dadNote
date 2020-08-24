@@ -37,18 +37,18 @@
                 <td class="table_header">{{data.startTime}}</td>
                 <td class="table_header">{{data.endTime}}</td>
                 <td class="table_header" (click)="editCtrl('origin',i,j)">{{data.origin}}</td>
-                <td class="table_header">{{data.type}}</td>
-                <td class="table_header">{{data.maozhong}}</td>
+                <td class="table_header" (click)="editCtrl('type',i,j)">{{data.type}}</td>
+                <td class="table_header" (click)="selfEditCtrl('maozhong',i,j,data.maozhong)">{{data.maozhong}}</td>
                 <ng-container *ngIf="j === 0">
                   <td [attr.rowspan]='table.data.length' class="table_header">{{data.pizhong}}</td>
                 </ng-container>
                 <td class="table_header">{{data.jingzhong}}</td>
-                <td class="table_header">{{data.amount}}</td>
+                <td class="table_header" (click)="selfEditCtrl('amount',i,j, data.amount)">{{data.amount}}</td>
                 <td class="table_header">
-                  <img [src]="data.img" alt="">
+                  <img class="img" [src]="data.img" alt="">
                 </td>
                 <td class="table_header">
-                  <a [hidden]='data.img'>拍摄</a>
+                  <a [hidden]='data.img' (click)="openCamera(i,j)">拍摄</a>
                   <a [hidden]='!data.img' class='delete'>删除</a>
                 </td>
               </tr>
