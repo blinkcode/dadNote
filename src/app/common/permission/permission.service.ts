@@ -37,11 +37,12 @@ export class PermissionService {
       this.androidPermissions.PERMISSION.SEND_SMS, // 发短信 手动添加
     ];
     /* 一次性获取所需的所有权限 */
-    this.androidPermissions.requestPermissions(permissions).then(res => {
+    return this.androidPermissions.requestPermissions(permissions)
+    // .then(res => {
       /*这个地方有些疑问，第一次安装检查权限，会去请求获取权限，
         结果返回的是false,第二次启动时，已有权限，仍然返回的是false.
       */
-    }).catch(err => { });
+    // }).catch(err => { });
   }
 
 }
