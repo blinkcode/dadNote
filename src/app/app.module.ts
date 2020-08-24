@@ -30,7 +30,7 @@ registerLocaleData(zh);
     BrowserAnimationsModule,
     FormsModule,
     HttpClientModule,
-    NgZorroAntdMobileModule
+    // NgZorroAntdMobileModule
   ],
   providers: [
     StatusBar,

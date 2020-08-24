@@ -29,8 +29,9 @@ export class AppComponent {
       if (this.device.isMobile()) {
         this.statusBar.styleDefault();
         this.splashScreen.hide();
-        this.file.init();
-        this.persmission.getPermission();
+        this.persmission.getPermission().then(() => {
+          this.file.init();
+        })
       }
     });
   }
