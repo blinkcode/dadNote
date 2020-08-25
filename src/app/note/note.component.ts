@@ -10,7 +10,6 @@ import { ToastService } from 'ng-zorro-antd-mobile';
 import { v4 as uuidv4 } from 'uuid';
 import { Big } from "big.js";
 import { isNumber } from 'util';
-import { thistle } from 'color-name';
 
 @Component({
   selector: 'app-note',
@@ -42,7 +41,7 @@ export class NoteComponent implements OnInit {
   }
   readFile() {
     this.toast.loading('正在加载，请稍后')
-    this.file.readFile().then((account) => {
+    this.file.readFile(new Date().toISOString()).then((account) => {
       this.toast.hide();
       this.accountBook = account;
     })
@@ -123,6 +122,7 @@ export class NoteComponent implements OnInit {
     const alert = await this.alertCtrl.create({
       header: '选择车队',
       inputs: inputs,
+      backdropDismiss: false,
       buttons: [
         {
           text: '取消',
@@ -158,6 +158,7 @@ export class NoteComponent implements OnInit {
     const alert = await this.alertCtrl.create({
       header: '选择随车人员',
       inputs: inputs,
+      backdropDismiss: false,
       buttons: [
         {
           text: '取消',
@@ -212,6 +213,7 @@ export class NoteComponent implements OnInit {
     inputs.push({ value: 'edit', type: 'radio', label: '自定义', });
     const alert = await this.alertCtrl.create({
       header: '选择货料来源',
+      backdropDismiss: true,
       inputs: inputs,
       buttons: [
         {
@@ -250,6 +252,7 @@ export class NoteComponent implements OnInit {
     const alert = await this.alertCtrl.create({
       header: '选择货料类型',
       inputs: inputs,
+      backdropDismiss: true,
       buttons: [
         {
           text: '取消',
@@ -287,6 +290,7 @@ export class NoteComponent implements OnInit {
     const inputType = config1[type];
     const alert = await this.alertCtrl.create({
       header: title,
+      backdropDismiss: true,
       inputs: [
         {
           value: oldValue || '',
@@ -326,13 +330,48 @@ export class NoteComponent implements OnInit {
       this.accountBook.cars[this.editCarIndex].datas[this.editRowIndex].jingzhong = jingzhong;
     }
   }
-
+  /**
+   * @description 打开摄像头
+   * @author Blink
+   * @date 2020-08-25
+   * @param {number} i
+   * @param {number} j
+   * @memberof NoteComponent
+   */
   openCamera(i: number, j: number) {
     this.editCarIndex = i;
     this.editRowIndex = j;
     this.camera.openCamera().then((img) => {
-      console.log(img);
       this.setCellValue('img', img);
+    })
+  }
+
+  deleteImg(i: number, j: number) {
+    this.editCarIndex = i;
+    this.editRowIndex = j;
+    this.setCellValue('img', '');
+  }
+
+  /**
+   * @description 保存
+   * @author Blink
+   * @date 2020-08-25
+   * @memberof NoteComponent
+   */
+  save() {
+    this.file.saveFile(this.accountBook).then(() => {
+      this.toast.success('保存成功');
+    });
+  }
+
+  export (){
+    const loading = this.toast.loading('正在导出')
+    this.file.exportFileByDate('2020-08-25').then((res) => {
+      this.toast.hide()
+      this.toast.success('导出成功');
+    }).catch((err) => {
+      console.log(err);
+      this.toast.fail('导出失败');
     })
   }
 }

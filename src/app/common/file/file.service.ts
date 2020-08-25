@@ -6,6 +6,10 @@ import { File } from '@ionic-native/file/ngx';
 import { reject } from 'q';
 import { DeviceService } from '../device/device.service';
 import { ToastService } from 'ng-zorro-antd-mobile';
+import { v4 as uuidv4 } from 'uuid';
+import * as XLSX from 'xlsx';
+import * as moment from 'moment';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -26,9 +30,9 @@ export class FileService {
   async init() {
     const root = this.file.externalRootDirectory;
     console.log(root);
-    const year = new Date().getFullYear() + '';
-    const month = new Date().getMonth() + 1 + '';
-    const date = new Date().getDate() + '';
+    const year = moment().year() + '';
+    const month = moment().month() + 1 + '';
+    const date = moment().date() + '';
     const dadNote = await this.createDir(root, 'dadNote');
     const note = await this.createDir(dadNote, 'note');
     const year1 = await this.createDir(note, year);
@@ -64,7 +68,7 @@ export class FileService {
       this.file.checkFile(path, fileName).then((flag) => {
         resolve(`${path}${fileName}`)
       }).catch(() => {
-        const json = { id: '', date: '', cars: [] }
+        const json = { id: uuidv4, date: new Date().toDateString(), cars: [] }
         this.file.writeFile(path, fileName, JSON.stringify(json, null, 4)).then(() => {
           resolve(`${path}${fileName}`);
         }).catch((err) => console.log(err))
@@ -75,18 +79,23 @@ export class FileService {
   /**
    * 读取当天的账本
    */
-  readFile(): Promise<AccountBook> {
-    if(!this.device.isMobile()){
+  readFile(dateStr: string): Promise<AccountBook> {
+    if (!this.device.isMobile()) {
       return this.readFileByWeb();
     }
+    const year = moment(dateStr).years();
+    const month = moment(dateStr).month() + 1 + '';
+    const date = moment(dateStr).date();
+    const root = this.file.externalRootDirectory;
+    const path = `${root}dadNote/note/${year}/${month}`;
     return new Promise(async (resolve) => {
       if (this.filePath) {
-        this.file.readAsText(this.path, this.fileName).then((res) => {
+        this.file.readAsText(path, `${date}.json`).then((res) => {
           resolve(JSON.parse(res));
         }).catch((err) => console.log(err))
       } else {
         setTimeout(() => {
-          this.file.readAsText(this.path, this.fileName).then((res) => {
+          this.file.readAsText(path, `${date}.json`).then((res) => {
             resolve(JSON.parse(res));
           }).catch((err) => console.log(err))
         }, 3000);
@@ -94,7 +103,7 @@ export class FileService {
     })
   }
 
-  private readFileByWeb(): Promise<AccountBook>{
+  private readFileByWeb(): Promise<AccountBook> {
     return new Promise((resolve) => {
       const date = new Date().toDateString();
       const note = this.storage.get(date) || { id: '', date: '', cars: [] };
@@ -105,17 +114,85 @@ export class FileService {
   /**
    * 
    */
-  saveFile(note: AccountBook) {
-    if(!this.device.isMobile()){
+  saveFile(note: AccountBook): Promise<any> {
+    if (!this.device.isMobile()) {
       return this.saveFileByWeb(note);
     }
     return this.file.writeExistingFile(this.path, this.fileName, JSON.stringify(note, null, 4));
   }
 
-  private saveFileByWeb(note: AccountBook){
+  private saveFileByWeb(note: AccountBook): Promise<boolean> {
     return new Promise((resolve) => {
       const date = new Date().toDateString();
       this.storage.set(date, note);
+      resolve(true);
+    })
+  }
+
+  /**
+   * @description 导出xlsx文件
+   * @author Blink
+   * @date 2020-08-25
+   * @param {AccountBook} accountBook
+   * @memberof FileService
+   */
+  exportFile(accountBook: AccountBook) {
+    const header = ['车队', '出发时间', '回厂时间', '货料来源', '货料种类', '皮重', '毛重', '净重', '料款'];
+    const sheets = [];
+    accountBook.cars.forEach((car) => {
+      const data = [header];
+      car.datas.forEach((d) => {
+        const a = [d.carNo, d.startTime, d.endTime, d.origin, d.type, d.pizhong, d.maozhong, d.jingzhong, d.amount];
+        data.push(a);
+      })
+      const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(data);
+      sheets.push(ws);
+    });
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    sheets.forEach((sheet, i) => XLSX.utils.book_append_sheet(wb, sheet, accountBook.cars[i].carNo));
+    const date = moment(accountBook.date).format('YYYY-MM-DD[-过磅单.xlsx]');
+    /* save to file */
+    XLSX.writeFile(wb, `${date}.xlsx`);
+    // const wbout: ArrayBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    // let blob = new Blob([wbout], {type: 'application/octet-stream'});
+    // this.file.writeFile(f, filename, blob, {replace: true});
+  }
+
+  /**
+   * @description 导出过磅单
+   * @author Blink
+   * @date 2020-08-25
+   * @param {string} date
+   * @memberof FileService
+   */
+  exportFileByDate(dateStr: string) {
+    const year = moment(dateStr).years();
+    const month = moment(dateStr).month() + 1 + '';
+    const date = moment(dateStr).date();
+    const root = this.file.externalRootDirectory;
+    const path = `${root}dadNote/note/${year}/${month}`;
+    return new Promise((resolve, reject) => {
+      this.readFile(dateStr).then((res: AccountBook) => {
+        const header = ['车队', '出发时间', '回厂时间', '货料来源', '货料种类', '皮重', '毛重', '净重', '料款'];
+        const sheets = [];
+        res.cars.forEach((car) => {
+          const data = [header];
+          car.datas.forEach((d) => {
+            const a = [d.carNo, d.startTime, d.endTime, d.origin, d.type, d.pizhong, d.maozhong, d.jingzhong, d.amount];
+            data.push(a);
+          })
+          const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(data);
+          sheets.push(ws);
+        });
+        const wb: XLSX.WorkBook = XLSX.utils.book_new();
+        sheets.forEach((sheet, i) => XLSX.utils.book_append_sheet(wb, sheet, res.cars[i].carNo));
+        const wbout: ArrayBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+        let blob = new Blob([wbout], { type: 'application/octet-stream' });
+        const date = moment(res.date).format('YYYY-MM-DD[-过磅单.xlsx]');
+        this.file.writeFile(path, date, blob, { replace: true }).then((res) => {
+          resolve(res);
+        }).catch(reject)
+      }).catch(reject)
     })
   }
 
