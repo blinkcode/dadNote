@@ -19,7 +19,8 @@ export class AppComponent {
     private statusBar: StatusBar,
     private device: DeviceService,
     private file: FileService,
-    private persmission: PermissionService
+    private persmission: PermissionService,
+    private screenOrientation: ScreenOrientation
   ) {
     this.initializeApp();
   }
@@ -27,6 +28,7 @@ export class AppComponent {
   initializeApp() {
     this.platform.ready().then(() => {
       if (this.device.isMobile()) {
+        this.screenOrientation.lock('landscape');
         this.statusBar.styleDefault();
         this.splashScreen.hide();
         this.persmission.getPermission().then(() => {
