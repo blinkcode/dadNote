@@ -17,8 +17,7 @@ import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { zh_CN } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
 import zh from '@angular/common/locales/zh';
-import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
-
+// import { ScreenOrientation } from "@ionic-native/screen-orientation/ngx";
 registerLocaleData(zh);
 
 @NgModule({
@@ -30,8 +29,7 @@ registerLocaleData(zh);
     AppRoutingModule,
     BrowserAnimationsModule,
     FormsModule,
-    HttpClientModule,
-    ScreenOrientation
+    HttpClientModule
   ],
   providers: [
     StatusBar,
@@ -39,6 +37,7 @@ registerLocaleData(zh);
     File,
     AndroidPermissions,
     Camera,
+    // ScreenOrientation,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: NZ_I18N, useValue: zh_CN }
   ],

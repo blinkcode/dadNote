@@ -20,7 +20,7 @@ export class AppComponent {
     private device: DeviceService,
     private file: FileService,
     private persmission: PermissionService,
-    private screenOrientation: ScreenOrientation
+    // private screenOrientation: ScreenOrientation,
   ) {
     this.initializeApp();
   }
@@ -28,7 +28,7 @@ export class AppComponent {
   initializeApp() {
     this.platform.ready().then(() => {
       if (this.device.isMobile()) {
-        this.screenOrientation.lock('landscape');
+        // this.screenOrientation.lock('landscape');
         this.statusBar.styleDefault();
         this.splashScreen.hide();
         this.persmission.getPermission().then(() => {
