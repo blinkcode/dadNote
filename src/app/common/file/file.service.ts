@@ -196,4 +196,11 @@ export class FileService {
     })
   }
 
+  readImgAsBase64(filePath: string): Promise<any>{
+    const fileName = filePath.split('/').pop();
+    const path = filePath.split(fileName).shift();
+    console.log(path,fileName);
+    return  this.file.readAsDataURL(path, fileName);
+  }
+
 }

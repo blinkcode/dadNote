@@ -3,11 +3,12 @@
   <div class="button_box">
     <div Button [inline]="true" [type]="'ghost'" (click)="addCarCtrl()">添加车队</div>
     <div Button [inline]="true" [type]="'ghost'" (click)="save()">保存</div>
+    <div Button [inline]="true" [type]="'ghost'" (click)="addRow()">添加一行</div>
     <div Button [inline]="true" [type]="'ghost'" (click)="editCar()">修改车队</div>
-    <div Button [inline]="true" [type]="'ghost'" (click)="export()">导出尝试</div>
+    <div Button [inline]="true" [type]="'ghost'" (click)="export()">导出账本</div>
   </div>
   <div class="table_box">
-    <Tabs [useOnPan]="true" [swipeable]="true" [activeTab]="activeTabIndex" [tabBarActiveTextColor]="'#1890ff'">
+    <Tabs (onChange)='changeTab($event)' [useOnPan]="true" [swipeable]="true" [activeTab]="activeTabIndex" [tabBarActiveTextColor]="'#1890ff'">
       <TabPane *ngFor="let car of accountBook.cars; let i = index" [title]="'车队'+(i+1)+'-'+car.carNo">
         <div style="width: 100%;height:100%">
           <nz-table #table nzBordered [nzData]="car.datas" [nzScroll]="{ x:'1000px',y: '580px' }"

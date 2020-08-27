@@ -10,6 +10,7 @@ import { ToastService } from 'ng-zorro-antd-mobile';
 import { v4 as uuidv4 } from 'uuid';
 import { Big } from "big.js";
 import { isNumber } from 'util';
+import * as cloneDeep from "clone-deep";
 
 @Component({
   selector: 'app-note',
@@ -55,6 +56,13 @@ export class NoteComponent implements OnInit {
   init() {
 
   }
+  /**
+   * 切换车队
+   * @param index any
+   */
+  changeTab(index: any){
+    this.activeTabIndex = index.index;
+  }
 
   /**
    * 添加今日车队
@@ -75,35 +83,31 @@ export class NoteComponent implements OnInit {
       jingzhong: '',
       amount: '',
       img: '',
-    }, {
-      id: uuidv4(),
-      carNo: this.selectedCar.carNo,
-      startTime: '',
-      endTime: '',
-      origin: '',
-      type: '',
-      maozhong: '',
-      pizhong: this.selectedCar.weight,
-      jingzhong: '',
-      amount: '',
-      img: '',
-    }, {
-      id: uuidv4(),
-      carNo: this.selectedCar.carNo,
-      startTime: '',
-      endTime: '',
-      origin: '',
-      type: '',
-      maozhong: '',
-      pizhong: this.selectedCar.weight,
-      jingzhong: '',
-      amount: '',
-      img: '',
     }]
     this.accountBook.cars.push({ ...this.selectedCar, datas: arr, persons: [... this.selectedPerson] })
     console.log(this.accountBook);
     this.selectedCar = null;
     this.selectedPerson = [];
+  }
+
+  addRow(){
+    const car = this.accountBook.cars[this.activeTabIndex];
+    const row = {
+      id: uuidv4(),
+      carNo: car.carNo,
+      startTime: '',
+      endTime: '',
+      origin: '',
+      type: '',
+      maozhong: '',
+      pizhong: car.weight,
+      jingzhong: '',
+      amount: '',
+      img: '',
+    }
+    const datas = cloneDeep(this.accountBook.cars[this.activeTabIndex].datas);
+    datas.push(row)
+    this.accountBook.cars[this.activeTabIndex].datas = datas;
   }
 
   /**
@@ -341,6 +345,7 @@ export class NoteComponent implements OnInit {
   openCamera(i: number, j: number) {
     this.editCarIndex = i;
     this.editRowIndex = j;
+    this.setCellValue('img', '123123');
     this.camera.openCamera().then((img) => {
       this.setCellValue('img', img);
     })
@@ -373,5 +378,16 @@ export class NoteComponent implements OnInit {
       console.log(err);
       this.toast.fail('导出失败');
     })
+  }
+
+  async getImgBase64(img){
+    if(img.trim()){
+      const result = await this.file.readImgAsBase64(img);
+      console.log(result);
+      return result;
+    } else {
+      console.log(123);
+      return img;
+    }
   }
 }

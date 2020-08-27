@@ -12,15 +12,16 @@ export class CameraService {
 
   openCamera(): Promise<string> {
     const options: CameraOptions = {
-      quality: 80,
-      destinationType: this.camera.DestinationType.DATA_URL,
+      quality: 50,
+      destinationType: this.camera.DestinationType.FILE_URI,
       encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE,
     }
     return new Promise((resolve, reject) => {
-      this.camera.getPicture(options).then((imageData) => {
-        let base64Image = 'data:image/jpeg;base64,' + imageData;
-        resolve(base64Image);
+      this.camera.getPicture(options).then((url) => {
+        // let base64Image = 'data:image/jpeg;base64,' + imageData;
+        console.log('图片', url);
+        resolve(url);
       }, reject);
     })
   }
