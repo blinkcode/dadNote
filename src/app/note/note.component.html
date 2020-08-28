@@ -49,7 +49,7 @@
                 <td class="table_header">{{data.jingzhong}}</td>
                 <td class="table_header" (click)="selfEditCtrl('amount',i,j, data.amount)">{{data.amount}}</td>
                 <td class="table_header">
-                  <img class="img" [src]="data.img" alt="">
+                  <img class="img" [src]="data.thumbnail" alt="">
                 </td>
                 <td class="table_header">
                   <a [hidden]='data.img' (click)="openCamera(i,j)">拍摄</a>

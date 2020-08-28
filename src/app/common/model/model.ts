@@ -39,16 +39,50 @@ export interface AccountCar extends Car {
     datas: Data[];
 }
 export interface Table {
+    /**
+     * 车牌号
+     */
     carNo: string;
+    /**
+     * 出厂时间
+     */
     startTime: string;
+    /**
+     * 回厂时间
+     */
     endTime: string;
+    /**
+     * 货料来源
+     */
     origin: string;
+    /**
+     * 货料类型
+     */
     type: string;
+    /**
+     * 毛重
+     */
     maozhong: string;
+    /**
+     * 皮重
+     */
     pizhong: string;
+    /**
+     * 净重
+     */
     jingzhong: string;
+    /**
+     * 金额
+     */
     amount: string;
+    /**
+     * 拍摄图片地址
+     */
     img: string;
+    /**
+     * 缩略图地址
+     */
+    thumbnail: string;
 }
 export interface Data extends Table {
     id: string;
