@@ -383,14 +383,16 @@ export class NoteComponent implements OnInit {
         })
     }
 
-    async getImgBase64(img) {
-        if (img.trim()) {
-            const result = await this.file.readImgAsBase64(img);
-            console.log(result);
-            return result;
-        } else {
-            console.log(123);
-            return img;
-        }
+    /**
+     * 查看图片
+     * @param filePath 文件地址
+     */
+    seeImg(filePath: string) {
+        this.file.seeImg(filePath).catch(err => {
+            console.log('打开失败', err);
+            this.toast.fail('打开失败');
+        })
     }
+
+
 }

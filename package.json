@@ -23,6 +23,7 @@
     "@ionic-native/camera": "^5.28.0",
     "@ionic-native/core": "^5.0.0",
     "@ionic-native/file": "^5.28.0",
+    "@ionic-native/file-opener": "^5.28.0",
     "@ionic-native/file-path": "^5.28.0",
     "@ionic-native/screen-orientation": "^5.28.0",
     "@ionic-native/splash-screen": "^5.0.0",

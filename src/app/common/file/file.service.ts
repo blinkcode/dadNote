@@ -7,6 +7,7 @@ import { reject } from 'q';
 import { DeviceService } from '../device/device.service';
 import { ToastService } from 'ng-zorro-antd-mobile';
 import { v4 as uuidv4 } from 'uuid';
+import { FileOpener } from "@ionic-native/file-opener/ngx";
 import * as XLSX from 'xlsx';
 import * as moment from 'moment';
 
@@ -16,30 +17,33 @@ import * as moment from 'moment';
 export class FileService {
   root = '';
   path = '';
-  filePath
+  filePath = '';
   fileName = '';
   constructor(
     private file: File,
     private storage: StorageService,
     private device: DeviceService,
+    private fileOpener: FileOpener
   ) { }
   /**
-   * 必须的文件夹是不是存在
-   * 文件夹路径为${root}/dataNote/note/${year}/${month}
+   * 检查必须的文件夹是不是存在
+   * 文件夹路径为${root}/dataNote/${year}/${month}/datas
+   * 图片和导出地址: ${root}/dataNote/${year}/${month}/exports
    */
   async init() {
     const root = this.file.externalRootDirectory;
-    console.log(root);
     const year = moment().year() + '';
     const month = moment().month() + 1 + '';
     const date = moment().date() + '';
     const dadNote = await this.createDir(root, 'dadNote');
-    const note = await this.createDir(dadNote, 'note');
-    const year1 = await this.createDir(note, year);
-    this.path = await this.createDir(year1, month);
-    this.filePath = await this.createFile(this.path, `${date}.json`);
+    // const note = await this.createDir(dadNote, 'note');
+    const year1 = await this.createDir(dadNote, year);
+    const month1 = await this.createDir(year1, month);
+    const datas = await this.createDir(month1, 'datas');
+    await this.createDir(month1,'exports');
+    this.filePath = await this.createFile(datas, `${date}.json`);
     this.fileName = `${date}.json`;
-    console.log(this.path, this.filePath, this.fileName);
+    // console.log(this.path, this.filePath, this.fileName);
   }
   /**
    * 创建文件夹
@@ -87,7 +91,7 @@ export class FileService {
     const month = moment(dateStr).month() + 1 + '';
     const date = moment(dateStr).date();
     const root = this.file.externalRootDirectory;
-    const path = `${root}dadNote/note/${year}/${month}`;
+    const path = `${root}dadNote/${year}/${month}/datas`;
     return new Promise(async (resolve) => {
       if (this.filePath) {
         this.file.readAsText(path, `${date}.json`).then((res) => {
@@ -170,7 +174,7 @@ export class FileService {
     const month = moment(dateStr).month() + 1 + '';
     const date = moment(dateStr).date();
     const root = this.file.externalRootDirectory;
-    const path = `${root}dadNote/note/${year}/${month}`;
+    const path = `${root}dadNote/${year}/${month}/exports/`;
     return new Promise((resolve, reject) => {
       this.readFile(dateStr).then((res: AccountBook) => {
         const header = ['车队', '出发时间', '回厂时间', '货料来源', '货料种类', '皮重', '毛重', '净重', '料款'];
@@ -201,6 +205,14 @@ export class FileService {
     const path = filePath.split(fileName).shift();
     console.log(path,fileName);
     return  this.file.readAsDataURL(path, fileName);
+  }
+
+  /**
+   * 查看图片
+   * @param filePath 图片地址
+   */
+  seeImg(filePath: string){
+    return this.fileOpener.open(filePath,'application/image');
   }
 
 }

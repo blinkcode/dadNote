@@ -46,7 +46,7 @@ export class CameraService {
         const month = moment(dateStr).month() + 1 + '';
         const date = moment(dateStr).date();
         const root = this.file.externalRootDirectory;
-        const path = `${root}dadNote/note/${year}/${month}/`;
+        const path = `${root}dadNote/${year}/${month}/exports/`;
         const random = this.random();
         const fileName = `${year}${month}${date}${random}.jpg`;
         return new Promise((resolve, reject) => {
@@ -93,6 +93,11 @@ export class CameraService {
         return new Blob([u8arr], { type: mime });
     }
 
+    /**
+     * 
+     * @param blob 文件的Blob类型
+     * @param callback 转换成功的回调
+     */
     private blobToDataURL(blob: Blob, callback) {
         var a = new FileReader();
         a.onload = function (e) { callback(e.target.result); }
