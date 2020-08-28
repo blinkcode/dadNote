@@ -91,7 +91,7 @@ export class FileService {
     const month = moment(dateStr).month() + 1 + '';
     const date = moment(dateStr).date();
     const root = this.file.externalRootDirectory;
-    const path = `${root}dadNote/${year}/${month}/datas`;
+    const path = `${root}dadNote/${year}/${month}/datas/`;
     return new Promise(async (resolve) => {
       if (this.filePath) {
         this.file.readAsText(path, `${date}.json`).then((res) => {
@@ -122,7 +122,12 @@ export class FileService {
     if (!this.device.isMobile()) {
       return this.saveFileByWeb(note);
     }
-    return this.file.writeExistingFile(this.path, this.fileName, JSON.stringify(note, null, 4));
+    const year = moment().years();
+    const month = moment().month() + 1 + '';
+    const date = moment().date();
+    const root = this.file.externalRootDirectory;
+    const path = `${root}dadNote/${year}/${month}/datas/`;
+    return this.file.writeExistingFile(path, `${date}.json`, JSON.stringify(note, null, 4));
   }
 
   private saveFileByWeb(note: AccountBook): Promise<boolean> {
@@ -209,10 +214,10 @@ export class FileService {
 
   /**
    * 查看图片
-   * @param filePath 图片地址
+   * @param filePath 图片地址1
    */
   seeImg(filePath: string){
-    return this.fileOpener.open(filePath,'application/image');
+    return this.fileOpener.open(filePath, 'image/jpeg');
   }
 
 }

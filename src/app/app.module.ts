@@ -18,6 +18,7 @@ import { zh_CN } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
 import zh from '@angular/common/locales/zh';
 // import { ScreenOrientation } from "@ionic-native/screen-orientation/ngx";
+import { FileOpener } from "@ionic-native/file-opener/ngx";
 registerLocaleData(zh);
 
 @NgModule({
@@ -37,6 +38,7 @@ registerLocaleData(zh);
     File,
     AndroidPermissions,
     Camera,
+    FileOpener,
     // ScreenOrientation,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: NZ_I18N, useValue: zh_CN }
