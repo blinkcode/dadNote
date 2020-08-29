@@ -1,14 +1,19 @@
 <div class="content_box">
     <router-outlet></router-outlet>
 </div>
-<TabBar [hidden]="hidden" [barTintColor]="'white'" [tintColor]="tintColor" [ngStyle]="tabbarStyle"
-    [activeTab]="selectedIndex" [unselectedTintColor]="unselectedTintColor" [tabBarPosition]="'bottom'"
+<TabBar 
+    [barTintColor]="'white'"
+    [tintColor]="tintColor"
+    [ngStyle]="tabbarStyle"
+    [activeTab]="selectedIndex"
+    [unselectedTintColor]="unselectedTintColor"
+    [tabBarPosition]="'bottom'" 
     (onPress)="tabBarTabOnPress($event)">
     <TabBarItem [title]="'记账'" [key]="1" [icon]="icon1" [selectedIcon]="icon11">
     </TabBarItem>
-    <TabBarItem [title]="'查账'" [key]="1" [icon]="icon2" [selectedIcon]="icon22">
+    <TabBarItem [title]="'查账'" [key]="2" [icon]="icon2" [selectedIcon]="icon22">
     </TabBarItem>
-    <TabBarItem [title]="'设置'" [key]="1" [icon]="icon3" [selectedIcon]="icon33">
+    <TabBarItem [title]="'设置'" [key]="3" [icon]="icon3" [selectedIcon]="icon33">
     </TabBarItem>
 </TabBar>
 

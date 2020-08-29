@@ -26,7 +26,7 @@ registerLocaleData(zh);
   entryComponents: [],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(),
+    IonicModule.forRoot({ mode: 'ios' }),
     AppRoutingModule,
     BrowserAnimationsModule,
     FormsModule,

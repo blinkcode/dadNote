@@ -64,6 +64,7 @@ export class ListComponent implements OnInit {
     const alert = await this.alertCtrl.create({
       header: '车辆信息!',
       message: '请输入车牌号和皮重',
+      backdropDismiss: false,
       inputs: [
         {
           value: edit ? this.lists[this.openIndex]['carNo'] : '',
@@ -106,6 +107,7 @@ export class ListComponent implements OnInit {
     const alert = await this.alertCtrl.create({
       header: '人员信息!',
       message: '请输入人名',
+      backdropDismiss: false,
       inputs: [
         {
           value: edit ? this.lists[this.openIndex]['userName'] : '',
@@ -141,6 +143,7 @@ export class ListComponent implements OnInit {
     const alert = await this.alertCtrl.create({
       header: '货料种类',
       message: '请输入货料种类',
+      backdropDismiss: false,
       inputs: [
         {
           value: edit ? this.lists[this.openIndex]['typeName'] : '',
@@ -176,6 +179,7 @@ export class ListComponent implements OnInit {
     const alert = await this.alertCtrl.create({
       header: '货料来源',
       message: '请输入货料来源',
+      backdropDismiss: false,
       inputs: [
         {
           value: edit ? this.lists[this.openIndex]['originName'] : '',

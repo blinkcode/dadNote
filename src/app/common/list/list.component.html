@@ -1,6 +1,4 @@
-<WingBlank>
-  <WhiteSpace></WhiteSpace>
-</WingBlank>
+
 <List [hidden]="id !== 'car'">
   <ng-container *ngFor="let list of lists; let i=index">
     <SwipeAction style="background-color: gray" [autoClose]="true" [right]="right" (onOpen)="open(i)">
@@ -39,18 +37,16 @@
     </SwipeAction>
   </ng-container>
 </List>
-<List [hidden]="id !== 'export'">
-  <ng-container *ngFor="let list of lists; let i=index">
-    <SwipeAction style="background-color: gray" [autoClose]="true" [right]="right" (onOpen)="open(i)">
-      <ListItem extra="向左滑动进行操作" [arrow]="'horizontal'">
-        {{list.export}}
-      </ListItem>
-    </SwipeAction>
-  </ng-container>
-</List>
 <WingBlank>
-  <WhiteSpace></WhiteSpace>
-  <WhiteSpace></WhiteSpace>
   <span [hidden]="lists.length !== 0">暂无信息</span>
-  <div Button style="margin-right: 4px" [type]="'ghost'" [size]="'large'" (click)="add()">添加</div>
+  <WhiteSpace [size]="'xs'"></WhiteSpace>
+  <WhiteSpace [size]="'xs'"></WhiteSpace>
+  <WhiteSpace [size]="'xs'"></WhiteSpace>
+  <WhiteSpace [size]="'xs'"></WhiteSpace>
+  <WhiteSpace [size]="'xs'"></WhiteSpace>
+  <div [inline]='true' Button class="center_btn" [type]="'ghost'" [size]="'large'" (click)="add()">
+    <span style="color:white">123123123</span>
+    添加
+    <span style="color:white">123123123</span>
+  </div>
 </WingBlank>

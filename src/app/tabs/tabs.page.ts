@@ -11,7 +11,8 @@ export class TabsPage {
     private router: Router
   ) { }
   tabbarStyle: object = { position: 'fixed', width: '100%', height: '50px', bottom: 0 };
-  unselectedTintColor: object = { color: 'black' };
+  unselectedTintColor: string = '#888';
+  tintColor: string = '#108ee9';
   selectedIndex = 0;
 
   tabBarTabOnPress(pressParam: any) {

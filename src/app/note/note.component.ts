@@ -18,10 +18,8 @@ import * as cloneDeep from "clone-deep";
     styleUrls: ['./note.component.scss'],
 })
 export class NoteComponent implements OnInit {
-
-    carList: any[] = [{ carNo: '鲁A123456' }];
+    swipeable = false;
     activeTabIndex = 0;
-    // dataSet: any[] = [];
     selectedCar: Car = null;
     selectedPerson: Person[] = [];
     accountBook: AccountBook = { id: '', date: '', cars: [] };
@@ -70,7 +68,6 @@ export class NoteComponent implements OnInit {
      * 2. 往今日数据中添加新车队信息
      */
     addCar() {
-        // this.carList.push(JSON.parse(JSON.stringify(this.selectedCar)));
         const arr = [{
             id: uuidv4(),
             carNo: this.selectedCar.carNo,
@@ -301,10 +298,7 @@ export class NoteComponent implements OnInit {
                     value: oldValue || '',
                     name: type,
                     type: inputType,
-                    placeholder: `请输入${title}`,
-                    attributes: {
-                        autofocus: true
-                    },
+                    placeholder: `请输入${title}`
                 }
             ],
             buttons: [
@@ -333,6 +327,17 @@ export class NoteComponent implements OnInit {
             const pizhong = this.accountBook.cars[this.editCarIndex].weight;
             const jingzhong = new Big(value).minus(pizhong).toString();
             this.accountBook.cars[this.editCarIndex].datas[this.editRowIndex].jingzhong = jingzhong;
+        }
+        this.updateEndTime();
+    }
+
+    /**
+     * 更新回厂时间
+     */
+    updateEndTime(){
+        const time = this.accountBook.cars[this.editCarIndex].datas[this.editRowIndex].endTime;
+        if(!time.trim()){
+            this.accountBook.cars[this.editCarIndex].datas[this.editRowIndex].endTime = new Date().toISOString()
         }
     }
     /**
@@ -373,7 +378,7 @@ export class NoteComponent implements OnInit {
 
     export() {
         this.toast.loading('正在导出', 10000)
-        this.file.exportFileByDate('2020-08-25').then((res) => {
+        this.file.exportFileByDate(new Date().toDateString()).then((res) => {
             this.toast.hide()
             this.toast.success('导出成功');
         }).catch((err) => {
