@@ -1,11 +1,8 @@
 import { StorageService } from './../storage/storage.service';
 import { AccountBook } from './../model/model';
 import { Injectable } from '@angular/core';
-import { FilePath } from '@ionic-native/file-path/ngx';
 import { File } from '@ionic-native/file/ngx';
-import { reject } from 'q';
 import { DeviceService } from '../device/device.service';
-import { ToastService } from 'ng-zorro-antd-mobile';
 import { v4 as uuidv4 } from 'uuid';
 import { FileOpener } from "@ionic-native/file-opener/ngx";
 import * as XLSX from 'xlsx';
@@ -40,9 +37,11 @@ export class FileService {
     const year1 = await this.createDir(dadNote, year);
     const month1 = await this.createDir(year1, month);
     const datas = await this.createDir(month1, 'datas');
-    await this.createDir(month1,'exports');
+    await this.createDir(month1, 'exports');
     this.filePath = await this.createFile(datas, `${date}.json`);
     this.fileName = `${date}.json`;
+    const config = { person: [], car: [], type: [], origin: [] };
+    await this.createFile(dadNote, 'config.json', config);
     // console.log(this.path, this.filePath, this.fileName);
   }
   /**
@@ -67,12 +66,21 @@ export class FileService {
    * @param path 
    * @param fileName 
    */
-  private createFile(path, fileName): Promise<string> {
+  private createFile(path, fileName, content?: any): Promise<string> {
+    if (!this.device.isMobile()) {
+      this.storage.set('config', content);
+      return Promise.resolve('');
+    }
     return new Promise((resolve) => {
       this.file.checkFile(path, fileName).then((flag) => {
         resolve(`${path}${fileName}`)
       }).catch(() => {
-        const json = { id: uuidv4, date: new Date().toDateString(), cars: [] }
+        let json: any = null;
+        if (content) {
+          json = content;
+        } else {
+          json = { id: uuidv4, date: new Date().toDateString(), cars: [] }
+        }
         this.file.writeFile(path, fileName, JSON.stringify(json, null, 4)).then(() => {
           resolve(`${path}${fileName}`);
         }).catch((err) => console.log(err))
@@ -205,18 +213,46 @@ export class FileService {
     })
   }
 
-  readImgAsBase64(filePath: string): Promise<any>{
+  /**
+   * 读取配置
+   */
+  readConfig(): Promise<any> {
+    if (!this.device.isMobile()) {
+      return Promise.resolve(this.storage.get('config'));
+    }
+    const path = this.file.externalRootDirectory + 'dadNote/';
+    return new Promise((resolve, reject) => {
+      this.file.readAsText(path, 'config.json').then((res) => {
+        resolve(JSON.parse(res));
+      }).catch(reject)
+    })
+  }
+
+  /**
+   * 保存配置
+   * @param config 配置文件
+   */
+  saveConfig(config: any): Promise<any> {
+    if (!this.device.isMobile()) {
+      this.storage.set('config', config);
+      return Promise.resolve();
+    }
+    const path = this.file.externalRootDirectory + 'dadNote/';
+    return this.file.writeExistingFile(path, 'config.json', JSON.stringify(config, null, 4));
+  }
+
+  readImgAsBase64(filePath: string): Promise<any> {
     const fileName = filePath.split('/').pop();
     const path = filePath.split(fileName).shift();
-    console.log(path,fileName);
-    return  this.file.readAsDataURL(path, fileName);
+    console.log(path, fileName);
+    return this.file.readAsDataURL(path, fileName);
   }
 
   /**
    * 查看图片
    * @param filePath 图片地址1
    */
-  seeImg(filePath: string){
+  seeImg(filePath: string) {
     return this.fileOpener.open(filePath, 'image/jpeg');
   }
 
