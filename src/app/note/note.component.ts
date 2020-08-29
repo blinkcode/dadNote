@@ -28,6 +28,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
     config: any = {};
     scroll = { x: '1000px', y: '500px' };
     @ViewChild('tableBox') tableBox: ElementRef;
+    @ViewChild('tableHeader') tableHeader: ElementRef;
     constructor(
         private alertCtrl: AlertController,
         private storage: StorageService,
@@ -53,10 +54,11 @@ export class NoteComponent implements OnInit, AfterViewInit {
         // document.getElementById
         const width = this.tableBox.nativeElement.offsetWidth;
         const height = this.tableBox.nativeElement.offsetHeight;
+        // headerHeight = this.tableHeader.nativeElement.offsetHeight;
         // 计算高度
-        const scrollHeight = height - 45 - 40;
+        const scrollHeight = height - 45 - 61;
         this.scroll.y = scrollHeight + 'px';
-        console.log(width, height);
+        this.scroll.x = width + 'px';
     }
     /**
      * @description 读取账本文件
@@ -224,7 +226,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
      * 来源编辑
      */
     async editOriginCtrl() {
-        const types: Origin[] = this.config.type;
+        const types: Origin[] = this.config.origin;
         const inputs = [];
         types.forEach((type) => {
             const input: AlertInput = { type: 'radio', label: type.originName, value: type.originName };

@@ -14,7 +14,7 @@
           <nz-table #table  nzBordered nzSize='small' [nzData]="car.datas" [nzScroll]="scroll"
             [nzShowPagination]='false' nzPageSize='150'>
             <thead>
-              <tr>
+              <tr #tableHeader>
                 <th class="table_header">车队</th>
                 <th class="table_header">出发时间</th>
                 <th class="table_header">回厂时间</th>
