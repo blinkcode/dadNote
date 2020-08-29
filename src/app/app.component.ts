@@ -84,7 +84,7 @@ export class AppComponent {
       }
       /* 在tabs路由下的监听返回按钮提示退出，特别：tabs/sysdrpbconfig移动基础设置需要单独区分 */
       const currentUrl = this.router.url;
-      if (currentUrl.indexOf('/tabs/') !== -1 && currentUrl.indexOf('sysdrpbconfig') === -1) {
+      if (currentUrl.indexOf('/tabs/') !== -1) {
         if (this.backButtonPressed) {
           this.backButtonPressed = false;
           this.minimize.minimize(); // 程序最小化
@@ -93,18 +93,6 @@ export class AppComponent {
           this.backButtonPressed = true;
           setTimeout(() => this.backButtonPressed = false, 2000);
         }
-      } else if (this.router.url === '/login') {
-        /* 在登陆页面点击退出时，直接退出应用, 如果login的url有参数，需要返回，不能退出 */
-        if (this.backButtonPressed) {
-          navigator['app'].exitApp(); // 退出APP
-        } else {
-          this.toast.show('再按一次退出应用', 1000);
-          this.backButtonPressed = true;
-          setTimeout(() => this.backButtonPressed = false, 2000);
-        }
-      } else {
-        /* 返回到路由的上一步 */
-        this.nav.back();
       }
     });
   }
