@@ -1,5 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { StorageService } from '../storage/storage.service';
+import { FileService } from './../file/file.service';
+import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
 import { ModalService, ToastService } from 'ng-zorro-antd-mobile';
 import { AlertController } from '@ionic/angular';
 import { v4 as uuidv4 } from 'uuid';
@@ -15,6 +15,8 @@ export class ListComponent implements OnInit {
   id = '';
   lists: any[] = [];
   openIndex: 0;
+  @Input()
+  config: any;
   right = [
     {
       text: '修改',
@@ -28,18 +30,26 @@ export class ListComponent implements OnInit {
     }
   ];
   constructor(
-    private storage: StorageService,
     private modal: ModalService,
     private toast: ToastService,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private file: FileService,
   ) { }
 
   ngOnInit() {
-    this.init();
+    // this.init();
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes && changes['config'].currentValue){
+      this.lists = this.config[this.id];
+    }
   }
 
   init() {
-    this.lists = this.storage.get(this.id) || [];
+    // this.file.readConfig().then((config: any) => {
+    //   this.config = config;
+    //   this.lists = this.config[this.id];
+    // })
   }
   add(edit?: boolean) {
     switch (this.id) {
@@ -91,10 +101,10 @@ export class ListComponent implements OnInit {
           handler: (blah) => {
             if (!edit) {
               const id1 = uuidv4();
-              this.lists.push({ id: id1, ...blah });
+              this.config[this.id].push({ id: id1, ...blah });
             } else {
               const origin = this.lists[this.openIndex];
-              this.lists[this.openIndex] = { ...origin, ...blah };
+              this.config[this.id][this.openIndex] = { ...origin, ...blah };
             }
             this.save();
           }
@@ -127,10 +137,10 @@ export class ListComponent implements OnInit {
           handler: (blah) => {
             if (!edit) {
               const id1 = uuidv4();
-              this.lists.push({ id: id1, ...blah });
+              this.config[this.id].push({ id: id1, ...blah })
             } else {
               const origin = this.lists[this.openIndex];
-              this.lists[this.openIndex] = { ...origin, ...blah };
+              this.config[this.id][this.openIndex] = { ...origin, ...blah };
             }
             this.save();
           }
@@ -163,10 +173,10 @@ export class ListComponent implements OnInit {
           handler: (blah) => {
             if (!edit) {
               const id1 = uuidv4();
-              this.lists.push({ id: id1, ...blah });
+              this.config[this.id].push({ id: id1, ...blah })
             } else {
               const origin = this.lists[this.openIndex];
-              this.lists[this.openIndex] = { ...origin, ...blah };
+              this.config[this.id][this.openIndex] = { ...origin, ...blah };
             }
             this.save();
           }
@@ -199,10 +209,10 @@ export class ListComponent implements OnInit {
           handler: (blah) => {
             if (!edit) {
               const id1 = uuidv4();
-              this.lists.push({ id: id1, ...blah });
+              this.config[this.id].push({ id: id1, ...blah });
             } else {
               const origin = this.lists[this.openIndex];
-              this.lists[this.openIndex] = { ...origin, ...blah };
+              this.config[this.id][this.openIndex] = { ...origin, ...blah };
             }
             this.save();
           }
@@ -213,8 +223,9 @@ export class ListComponent implements OnInit {
   }
 
   save() {
-    this.storage.set(this.id, this.lists);
-    this.toast.info('保存成功', 1000);
+    this.file.saveConfig(this.config).then(() => {
+      this.toast.info('保存成功', 1000);
+    })
   }
   open(index) {
     this.openIndex = index;
@@ -229,16 +240,15 @@ export class ListComponent implements OnInit {
         text: '删除',
         onPress: () =>
           new Promise(resolve => {
-            this.lists.splice(this.openIndex, 1);
-            this.storage.set(this.id, this.lists);
-            setTimeout(() => {
-              resolve();
+            this.config[this.id].splice(this.openIndex, 1);
+            this.file.saveConfig(this.config).then(() => {
               this.toast.info('删除成功', 2000);
-            }, 100);
+              resolve();
+            })
           }),
         style: {
           color: '#ffffff',
-          background: '#108ee9'
+          background: '#e94f4f'
         }
       }
     ]);

@@ -6,10 +6,11 @@
   .header {
     font-size: 18px;
     font-weight: bold;
+    height: 30px;
     text-align: center;
   }
   .button_box {
-    height: 50px;
+    min-height: 50px;
     div {
       margin: 0px 8px;
     }
@@ -23,7 +24,7 @@
     font-size: 18px;
     .table_header {
       text-align: center;
-      font-size: 15px;
+      font-size: 14px;
     }
     .delete {
       color: red;

@@ -1,8 +1,8 @@
+import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
-
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
@@ -17,8 +17,9 @@ import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { zh_CN } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
 import zh from '@angular/common/locales/zh';
-// import { ScreenOrientation } from "@ionic-native/screen-orientation/ngx";
 import { FileOpener } from "@ionic-native/file-opener/ngx";
+import { AppMinimize } from '@ionic-native/app-minimize/ngx';
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 registerLocaleData(zh);
 
 @NgModule({
@@ -39,7 +40,9 @@ registerLocaleData(zh);
     AndroidPermissions,
     Camera,
     FileOpener,
-    // ScreenOrientation,
+    Keyboard,
+    AppMinimize,
+    ScreenOrientation,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: NZ_I18N, useValue: zh_CN }
   ],

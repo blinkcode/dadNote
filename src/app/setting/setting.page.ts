@@ -1,3 +1,4 @@
+import { FileService } from './../common/file/file.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -7,11 +8,15 @@ import { Router } from '@angular/router';
   styleUrls: ['./setting.page.scss'],
 })
 export class SettingPage implements OnInit {
-
+  config: any = null;
   constructor(
-    private router: Router
+    private file: FileService
+
   ) { }
 
   ngOnInit() {
+    this.file.readConfig().then((config) => {
+      this.config = config;
+    })
   }
 }
