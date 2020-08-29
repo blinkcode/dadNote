@@ -3,7 +3,7 @@ import { FileService } from './../common/file/file.service';
 import { Person, AccountBook, Type, Origin } from './../common/model/model';
 import { StorageService } from './../common/storage/storage.service';
 import { AlertController } from '@ionic/angular';
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { Car } from '../common/model/model';
 import { AlertInput } from '@ionic/core';
 import { ToastService } from 'ng-zorro-antd-mobile';
@@ -17,7 +17,7 @@ import * as cloneDeep from "clone-deep";
     templateUrl: './note.component.html',
     styleUrls: ['./note.component.scss'],
 })
-export class NoteComponent implements OnInit {
+export class NoteComponent implements OnInit, AfterViewInit {
     swipeable = false;
     activeTabIndex = 0;
     selectedCar: Car = null;
@@ -25,6 +25,9 @@ export class NoteComponent implements OnInit {
     accountBook: AccountBook = { id: '', date: '', cars: [] };
     editCarIndex: number;
     editRowIndex: number;
+    config: any = {};
+    scroll = { x: '1000px', y: '500px' };
+    @ViewChild('tableBox') tableBox: ElementRef;
     constructor(
         private alertCtrl: AlertController,
         private storage: StorageService,
@@ -37,23 +40,38 @@ export class NoteComponent implements OnInit {
         setTimeout(() => {
             this.readFile();
         });
+        this.file.readConfig().then((config: any) => {
+            this.config = config;
+        })
     }
+    ngAfterViewInit(): void {
+        this.getResize();
+
+    }
+
+    getResize() {
+        // document.getElementById
+        const width = this.tableBox.nativeElement.offsetWidth;
+        const height = this.tableBox.nativeElement.offsetHeight;
+        // 计算高度
+        const scrollHeight = height - 45 - 40;
+        this.scroll.y = scrollHeight + 'px';
+        console.log(width, height);
+    }
+    /**
+     * @description 读取账本文件
+     * @author Blink
+     * @date 2020-08-29
+     * @memberof NoteComponent
+     */
     readFile() {
-        this.toast.loading('正在加载，请稍后')
+        this.toast.loading('正在加载，请稍后', 0)
         this.file.readFile(new Date().toISOString()).then((account) => {
             this.toast.hide();
             this.accountBook = account;
         })
     }
 
-    /**
-     * 初始化数据
-     * 1. 获取当前的车队
-     * 2. 获取当前的数据
-     */
-    init() {
-
-    }
     /**
      * 切换车队
      * @param index any
@@ -112,7 +130,7 @@ export class NoteComponent implements OnInit {
      * 添加车辆弹出框
      */
     async addCarCtrl() {
-        const cars = this.storage.get('car') || [];
+        const cars = this.config.car;
         const freeCars: Car[] = cars.filter((car: Car) => {
             return !this.accountBook.cars.filter((c: Car) => c.id === car.id).pop();
         });
@@ -151,7 +169,7 @@ export class NoteComponent implements OnInit {
      * 添加人员弹出框
      */
     async addPersonCtrl() {
-        const persons: Person[] = this.storage.get('person') || [];
+        const persons: Person[] = this.config.person;
         const inputs: AlertInput[] = [];
         persons.forEach(person => {
             const input: AlertInput = { type: 'checkbox', label: person.userName, value: person.id };
@@ -206,7 +224,7 @@ export class NoteComponent implements OnInit {
      * 来源编辑
      */
     async editOriginCtrl() {
-        const types: Origin[] = this.storage.get('origin');
+        const types: Origin[] = this.config.type;
         const inputs = [];
         types.forEach((type) => {
             const input: AlertInput = { type: 'radio', label: type.originName, value: type.originName };
@@ -244,7 +262,7 @@ export class NoteComponent implements OnInit {
      * 类型编辑
      */
     async editTypeCtrl() {
-        const types: Type[] = this.storage.get('type');
+        const types: Type[] = this.config.type;
         const inputs = [];
         types.forEach((type) => {
             const input: AlertInput = { type: 'radio', label: type.typeName, value: type.typeName };
@@ -334,9 +352,9 @@ export class NoteComponent implements OnInit {
     /**
      * 更新回厂时间
      */
-    updateEndTime(){
+    updateEndTime() {
         const time = this.accountBook.cars[this.editCarIndex].datas[this.editRowIndex].endTime;
-        if(!time.trim()){
+        if (!time.trim()) {
             this.accountBook.cars[this.editCarIndex].datas[this.editRowIndex].endTime = new Date().toISOString()
         }
     }
@@ -377,7 +395,7 @@ export class NoteComponent implements OnInit {
     }
 
     export() {
-        this.toast.loading('正在导出', 10000)
+        this.toast.loading('正在导出', 0)
         this.file.exportFileByDate(new Date().toDateString()).then((res) => {
             this.toast.hide()
             this.toast.success('导出成功');
