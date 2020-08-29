@@ -235,7 +235,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
         inputs.push({ value: 'edit', type: 'radio', label: '自定义', });
         const alert = await this.alertCtrl.create({
             header: '选择货料来源',
-            backdropDismiss: true,
+            backdropDismiss: false,
             inputs: inputs,
             buttons: [
                 {
@@ -274,7 +274,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
         const alert = await this.alertCtrl.create({
             header: '选择货料类型',
             inputs: inputs,
-            backdropDismiss: true,
+            backdropDismiss: false,
             buttons: [
                 {
                     text: '取消',
@@ -312,7 +312,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
         const inputType = config1[type];
         const alert = await this.alertCtrl.create({
             header: title,
-            backdropDismiss: true,
+            backdropDismiss: false,
             inputs: [
                 {
                     value: oldValue || '',
