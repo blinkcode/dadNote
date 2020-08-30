@@ -6,7 +6,7 @@ import { AlertController } from '@ionic/angular';
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { Car } from '../common/model/model';
 import { AlertInput } from '@ionic/core';
-import { ToastService } from 'ng-zorro-antd-mobile';
+import { ToastService, ModalService } from 'ng-zorro-antd-mobile';
 import { v4 as uuidv4 } from 'uuid';
 import { Big } from "big.js";
 import { isNumber } from 'util';
@@ -27,6 +27,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
     editRowIndex: number;
     config: any = {};
     scroll = { x: '1000px', y: '500px' };
+    setOfCheckedId = new Set<string>(); // 选中的id
     @ViewChild('tableBox') tableBox: ElementRef;
     @ViewChild('tableHeader') tableHeader: ElementRef;
     constructor(
@@ -34,7 +35,8 @@ export class NoteComponent implements OnInit, AfterViewInit {
         private storage: StorageService,
         private file: FileService,
         private toast: ToastService,
-        private camera: CameraService
+        private camera: CameraService,
+        private modal: ModalService
     ) { }
 
     ngOnInit() {
@@ -108,6 +110,23 @@ export class NoteComponent implements OnInit, AfterViewInit {
         this.selectedPerson = [];
     }
 
+    /**
+     * @description 编辑车辆信息
+     * @author Blink
+     * @date 2020-08-30
+     * @memberof NoteComponent
+     */
+    editCar() {
+
+    }
+
+
+    /**
+     * @description 添加一行数据
+     * @author Blink
+     * @date 2020-08-30
+     * @memberof NoteComponent
+     */
     addRow() {
         const car = this.accountBook.cars[this.activeTabIndex];
         const row = {
@@ -128,6 +147,39 @@ export class NoteComponent implements OnInit, AfterViewInit {
         this.accountBook.cars[this.activeTabIndex].datas = datas;
     }
 
+    /**
+     * @description 删除一行数据
+     * @author Blink
+     * @date 2020-08-30
+     * @memberof NoteComponent
+     */
+    deleteRow() {
+        if (!this.setOfCheckedId.size) {
+            this.toast.info('请勾选一行', 1500);
+            return false;
+        }
+        this.modal.alert('删除', '确定要删除么', [
+            { text: '取消', onPress: () => { } },
+            {
+                text: '删除',
+                onPress: () =>
+                    new Promise(resolve => {
+                        this.accountBook.cars[this.activeTabIndex].datas.forEach((data, i) => {
+                            if (this.setOfCheckedId.has(data.id)) {
+                                const data = cloneDeep(this.accountBook.cars[this.activeTabIndex].datas);
+                                data.splice(i,1);
+                                this.accountBook.cars[this.activeTabIndex].datas = data;
+                                resolve();
+                            }
+                        })
+                    }),
+                style: {
+                    color: '#ffffff',
+                    background: '#e94f4f'
+                }
+            }
+        ]);
+    }
     /**
      * 添加车辆弹出框
      */
@@ -417,6 +469,21 @@ export class NoteComponent implements OnInit, AfterViewInit {
             console.log('打开失败', err);
             this.toast.fail('打开失败');
         })
+    }
+
+    /**
+     * @description 行勾选变化
+     * @author Blink
+     * @date 2020-08-30
+     * @param {number} id
+     * @param {boolean} checked
+     * @memberof NoteComponent
+     */
+    onItemChecked(id: string, checked: boolean): void {
+        this.setOfCheckedId.clear();
+        if (checked) {
+            this.setOfCheckedId.add(id);
+        }
     }
 
 

@@ -4,17 +4,20 @@
     <div size='small' Button [inline]="true" [type]="'ghost'" (click)="addCarCtrl()">添加车队</div>
     <div size='small' Button [inline]="true" [type]="'ghost'" (click)="editCar()">修改车队</div>
     <div size='small' Button [inline]="true" [type]="'ghost'" (click)="export()">导出账本</div>
-    <div size='small' class="alignt_right" Button [inline]="true" [type]="'ghost'" (click)="addRow()">添加一行</div>
     <div size='small' class="alignt_right" Button [inline]="true" [type]="'ghost'" (click)="save()">保存</div>
+    <div size='small' class="alignt_right" Button [inline]="true" [type]="'ghost'" (click)="addRow()">添加一行</div>
+    <div size='small' class="alignt_right" Button [inline]='true' [type]="'warning'" (click)="deleteRow()">删除一行</div>
   </div>
   <div class="table_box" #tableBox>
-    <Tabs (onChange)='changeTab($event)' [swipeable]='swipeable' [useOnPan]="true" [activeTab]="activeTabIndex" [tabBarActiveTextColor]="'#1890ff'">
+    <Tabs (onChange)='changeTab($event)' [swipeable]='swipeable' [useOnPan]="true" [activeTab]="activeTabIndex"
+      [tabBarActiveTextColor]="'#1890ff'">
       <TabPane *ngFor="let car of accountBook.cars; let i = index" [title]="'车队'+(i+1)+'-'+car.carNo">
         <div style="width: 100%;height:100%">
-          <nz-table #table  nzBordered nzSize='small' [nzData]="car.datas" [nzScroll]="scroll"
-            [nzShowPagination]='false' nzPageSize='150'>
+          <nz-table #table nzBordered nzSize='small' [nzData]="car.datas" [nzScroll]="scroll" [nzShowPagination]='false'
+            nzPageSize='150'>
             <thead>
               <tr #tableHeader>
+                <th nzWidth="20px"></th>
                 <th class="table_header">车队</th>
                 <th class="table_header">出发时间</th>
                 <th class="table_header">回厂时间</th>
@@ -30,6 +33,8 @@
             </thead>
             <tbody>
               <tr *ngFor="let data of table.data;let j=index">
+                <td style="margin: 0px;padding:0px;" [nzChecked]="setOfCheckedId.has(data.id)"
+                  (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
                 <ng-container *ngIf="j === 0">
                   <td [attr.rowspan]='table.data.length' class="table_header">
                     <span class="carName">{{car.carNo}}</span><br>
