@@ -1,8 +1,7 @@
-
 <List [hidden]="id !== 'car'">
   <ng-container *ngFor="let list of lists; let i=index">
-    <SwipeAction style="background-color: gray" [autoClose]="true" [right]="right" (onOpen)="open(i)">
-      <ListItem extra="向左滑动进行操作" [arrow]="'horizontal'">
+    <SwipeAction style="background-color: gray" [autoClose]="true" (onOpen)="open(i)">
+      <ListItem extra="点击进行操作" (onClick)="itemClick(i)">
         {{list.carNo}}
         &nbsp;&nbsp;&nbsp;&nbsp;
         {{list.weight}} &nbsp;吨
@@ -12,8 +11,8 @@
 </List>
 <List [hidden]="id !== 'person'">
   <ng-container *ngFor="let list of lists; let i=index">
-    <SwipeAction style="background-color: gray" [autoClose]="true" [right]="right" (onOpen)="open(i)">
-      <ListItem extra="向左滑动进行操作" [arrow]="'horizontal'">
+    <SwipeAction style="background-color: gray" [autoClose]="true" (onOpen)="open(i)">
+      <ListItem extra="点击进行操作"  (onClick)="itemClick(i)">
         {{list.userName}}
       </ListItem>
     </SwipeAction>
@@ -21,8 +20,8 @@
 </List>
 <List [hidden]="id !== 'type'">
   <ng-container *ngFor="let list of lists; let i=index">
-    <SwipeAction style="background-color: gray" [autoClose]="true" [right]="right" (onOpen)="open(i)">
-      <ListItem extra="向左滑动进行操作" [arrow]="'horizontal'">
+    <SwipeAction style="background-color: gray" [autoClose]="true" (onOpen)="open(i)">
+      <ListItem extra="点击进行操作"  (onClick)="itemClick(i)">
         {{list.typeName}}
       </ListItem>
     </SwipeAction>
@@ -30,8 +29,8 @@
 </List>
 <List [hidden]="id !== 'origin'">
   <ng-container *ngFor="let list of lists; let i=index">
-    <SwipeAction style="background-color: gray" [autoClose]="true" [right]="right" (onOpen)="open(i)">
-      <ListItem extra="向左滑动进行操作" [arrow]="'horizontal'">
+    <SwipeAction style="background-color: gray" [autoClose]="true" (onOpen)="open(i)">
+      <ListItem extra="点击进行操作"  (onClick)="itemClick(i)">
         {{list.originName}}
       </ListItem>
     </SwipeAction>

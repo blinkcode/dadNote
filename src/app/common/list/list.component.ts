@@ -33,14 +33,14 @@ export class ListComponent implements OnInit {
     private modal: ModalService,
     private toast: ToastService,
     private alertCtrl: AlertController,
-    private file: FileService,
+    private file: FileService
   ) { }
 
   ngOnInit() {
     // this.init();
   }
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes && changes['config'].currentValue){
+    if (changes && changes['config'].currentValue) {
       this.lists = this.config[this.id];
     }
   }
@@ -230,8 +230,25 @@ export class ListComponent implements OnInit {
   open(index) {
     this.openIndex = index;
   }
-  edit() {
 
+  itemClick(index) {
+    this.openIndex = index;
+    this.modal.operation([
+      {
+        text: '修改', onPress: () => {
+          this.add(true);
+          this.modal.close();
+        }
+      },
+      {
+        text: '删除', onPress: () => {
+          // this.modal.close();
+          setTimeout(() => {
+            this.delete();
+          },400);
+        }
+      }
+    ]);
   }
   delete() {
     this.modal.alert('删除', '确定要删除么', [
