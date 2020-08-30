@@ -116,8 +116,104 @@ export class NoteComponent implements OnInit, AfterViewInit {
      * @date 2020-08-30
      * @memberof NoteComponent
      */
-    editCar() {
+    async editCar() {
+        const car = this.accountBook.cars[this.activeTabIndex];
+        const carIDs = [];
+        this.accountBook.cars.map(({ id }) => carIDs.push(id));
+        // const unSelectedCar = this.config.car.filter(({ id }) => {
+        //     return this.accountBook.cars.filter((car3) => car3.id !== id).length !== 0;
+        // });
+        const unSelectedCar = [];
+        this.config.car.forEach(element => {
+            let flag = true;
+            const len = this.accountBook.cars.forEach((element1) => {
+                if (element1.id === element.id) {
+                    flag = false;
+                }
+            });
+            if (flag) {
+                unSelectedCar.push(element);
+            }
+        });
+        const car1 = [...unSelectedCar, { id: car.id, carNo: car.carNo }];
+        const persons = this.config.person;
+        const inputs: AlertInput[] = [];
+        car1.forEach(car2 => {
+            const input: AlertInput = { type: 'radio', label: car2.carNo, value: car2.id, checked: car.id === car2.id };
+            inputs.push(input);
+        })
+        const alert = await this.alertCtrl.create({
+            header: '选择车队',
+            inputs: inputs,
+            backdropDismiss: false,
+            buttons: [
+                {
+                    text: '取消',
+                    role: 'cancel',
+                    cssClass: 'secondary',
+                    handler: () => { }
+                }, {
+                    text: '确定',
+                    handler: (blah) => {
+                        console.log(blah);
+                        if (blah) {
+                            this.editPerson(blah);
+                        } else {
+                            return false;
+                        }
+                    }
+                }
+            ]
+        });
+        await alert.present();
+    }
 
+    /**
+     * @description 编辑人
+     * @author Blink
+     * @date 2020-08-30
+     * @memberof NoteComponent
+     */
+    async editPerson(carID:string) {
+        const persons = this.config.person;
+        const selectedPerson = [];
+        this.accountBook.cars[this.activeTabIndex].persons.map(({ id }) => selectedPerson.push(id));
+        const inputs: AlertInput[] = []
+        persons.forEach(person => {
+            const input: AlertInput = { type: 'checkbox', label: person.userName, value: person.id, checked: selectedPerson.includes(person.id) };
+            inputs.push(input);
+        });
+        const alert = await this.alertCtrl.create({
+            header: '修改随车人员',
+            inputs: inputs,
+            backdropDismiss: false,
+            buttons: [
+                {
+                    text: '取消',
+                    role: 'cancel',
+                    cssClass: 'secondary',
+                    handler: () => { }
+                }, {
+                    text: '确定',
+                    handler: (blah: string[]) => {
+                        if (blah.length) {
+                            const car = this.config.car.filter(car=> car.id === carID).pop();
+                            const person = this.config.person.filter(person => blah.includes(person.id));
+                            this.accountBook.cars[this.activeTabIndex].persons = person;
+                            this.accountBook.cars[this.activeTabIndex].weight = car.weight;
+                            this.accountBook.cars[this.activeTabIndex].id = car.id;
+                            this.accountBook.cars[this.activeTabIndex].carNo = car.carNo;
+                            const data = cloneDeep(this.accountBook.cars[this.activeTabIndex].datas);
+                            data.forEach(element => element.carNo = car.carNo);
+                            this.accountBook.cars[this.activeTabIndex].datas = data;
+                        } else {
+                            return false;
+                        }
+                    }
+                }
+            ]
+        });
+        await alert.present();
     }
 
 
@@ -167,7 +263,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
                         this.accountBook.cars[this.activeTabIndex].datas.forEach((data, i) => {
                             if (this.setOfCheckedId.has(data.id)) {
                                 const data = cloneDeep(this.accountBook.cars[this.activeTabIndex].datas);
-                                data.splice(i,1);
+                                data.splice(i, 1);
                                 this.accountBook.cars[this.activeTabIndex].datas = data;
                                 resolve();
                             }
