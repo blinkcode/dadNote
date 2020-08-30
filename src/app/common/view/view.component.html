@@ -1,0 +1,8 @@
+<ng-container *ngFor="let month of datas; let i=index">
+  <p class="month_title">{{month.month}}&nbsp; 月</p>
+  <div class="month_box">
+    <div class="month" (click)="showAction(month.month, list)" *ngFor="let list of month.lists; let i=index">
+      <p>{{list}}</p>
+    </div>
+  </div>
+</ng-container>

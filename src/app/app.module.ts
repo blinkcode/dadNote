@@ -20,6 +20,7 @@ import zh from '@angular/common/locales/zh';
 import { FileOpener } from "@ionic-native/file-opener/ngx";
 import { AppMinimize } from '@ionic-native/app-minimize/ngx';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
+import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 registerLocaleData(zh);
 
 @NgModule({
@@ -43,6 +44,7 @@ registerLocaleData(zh);
     Keyboard,
     AppMinimize,
     ScreenOrientation,
+    SocialSharing,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: NZ_I18N, useValue: zh_CN }
   ],

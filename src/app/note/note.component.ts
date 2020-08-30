@@ -11,6 +11,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Big } from "big.js";
 import { isNumber } from 'util';
 import * as cloneDeep from "clone-deep";
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-note',
@@ -19,6 +20,7 @@ import * as cloneDeep from "clone-deep";
 })
 export class NoteComponent implements OnInit, AfterViewInit {
     swipeable = false;
+    editable = true;
     activeTabIndex = 0;
     selectedCar: Car = null;
     selectedPerson: Person[] = [];
@@ -32,20 +34,33 @@ export class NoteComponent implements OnInit, AfterViewInit {
     @ViewChild('tableHeader') tableHeader: ElementRef;
     constructor(
         private alertCtrl: AlertController,
-        private storage: StorageService,
         private file: FileService,
         private toast: ToastService,
         private camera: CameraService,
-        private modal: ModalService
+        private modal: ModalService,
+        private activedRouter: ActivatedRoute
     ) { }
 
     ngOnInit() {
-        setTimeout(() => {
-            this.readFile();
-        });
+        // setTimeout(() => {
+        //     this.readFile();
+        // });
+        this.activedRouter.queryParamMap.subscribe(params => {
+            if (params.has('year') && params.has('month') && params.has('date')) {
+                this.editable = false;
+                const date = params.get('year') + '-' + params.get('month') + '-' + params.get('date');
+                setTimeout(() => {
+                    this.readFile(date);
+                }, 10);
+            } else {
+                setTimeout(() => {
+                    this.readFile();
+                }, 10);
+            }
+        })
         this.file.readConfig().then((config: any) => {
             this.config = config;
-        })
+        });
     }
     ngAfterViewInit(): void {
         this.getResize();
@@ -53,10 +68,8 @@ export class NoteComponent implements OnInit, AfterViewInit {
     }
 
     getResize() {
-        // document.getElementById
         const width = this.tableBox.nativeElement.offsetWidth;
         const height = this.tableBox.nativeElement.offsetHeight;
-        // headerHeight = this.tableHeader.nativeElement.offsetHeight;
         // 计算高度
         const scrollHeight = height - 45 - 61;
         this.scroll.y = scrollHeight + 'px';
@@ -68,9 +81,9 @@ export class NoteComponent implements OnInit, AfterViewInit {
      * @date 2020-08-29
      * @memberof NoteComponent
      */
-    readFile() {
+    readFile(date?: string) {
         this.toast.loading('正在加载，请稍后', 0)
-        this.file.readFile(new Date().toISOString()).then((account) => {
+        this.file.readFile(date || new Date().toISOString()).then((account) => {
             this.toast.hide();
             this.accountBook = account;
         })
@@ -174,7 +187,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
      * @date 2020-08-30
      * @memberof NoteComponent
      */
-    async editPerson(carID:string) {
+    async editPerson(carID: string) {
         const persons = this.config.person;
         const selectedPerson = [];
         this.accountBook.cars[this.activeTabIndex].persons.map(({ id }) => selectedPerson.push(id));
@@ -197,7 +210,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
                     text: '确定',
                     handler: (blah: string[]) => {
                         if (blah.length) {
-                            const car = this.config.car.filter(car=> car.id === carID).pop();
+                            const car = this.config.car.filter(car => car.id === carID).pop();
                             const person = this.config.person.filter(person => blah.includes(person.id));
                             this.accountBook.cars[this.activeTabIndex].persons = person;
                             this.accountBook.cars[this.activeTabIndex].weight = car.weight;

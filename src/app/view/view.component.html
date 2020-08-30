@@ -1,3 +1,7 @@
-<p>
-  查账
-</p>
+<Tabs [swipeable]='swipeable' class='setting_tab' [tabBarPosition]="'left'" [tabDirection]="'vertical'">  
+  <ng-container *ngFor="let year of years; let i=index">
+    <TabPane [title]="year">
+      <common-view [id]='year'></common-view>
+    </TabPane>
+  </ng-container>
+  </Tabs>

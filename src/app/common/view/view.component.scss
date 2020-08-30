@@ -1,0 +1,30 @@
+.month_title {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0 10px;
+  border-bottom: 1px solid #cccccc;
+}
+.month_box {
+  margin-bottom: 8px;
+  .month {
+    float: left;
+    width: 60px;
+    height: 60px;
+    background-image: url("../../../assets/icon/rili.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    margin: 0px 8px;
+    p {
+      text-align: center;
+      padding-top: 28px;
+      font-weight: bold;
+    }
+  }
+}
+.month_box::after {
+  display: block;
+  width: 0;
+  height: 0;
+  content: "";
+  clear: both;
+}

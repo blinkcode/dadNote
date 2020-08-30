@@ -1,0 +1,13 @@
+.setting_box {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  .setting_tab {
+    height: 100%;
+    width: 0px;
+  }
+  .setting_content {
+    flex: 1;
+  }
+}

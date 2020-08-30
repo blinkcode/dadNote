@@ -169,7 +169,7 @@ export class FileService {
     sheets.forEach((sheet, i) => XLSX.utils.book_append_sheet(wb, sheet, accountBook.cars[i].carNo));
     const date = moment(accountBook.date).format('YYYY-MM-DD[-过磅单.xlsx]');
     /* save to file */
-    XLSX.writeFile(wb, `${date}.xlsx`);
+    XLSX.writeFile(wb, `${date}`);
     // const wbout: ArrayBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
     // let blob = new Blob([wbout], {type: 'application/octet-stream'});
     // this.file.writeFile(f, filename, blob, {replace: true});
