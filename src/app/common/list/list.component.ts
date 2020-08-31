@@ -247,7 +247,8 @@ export class ListComponent implements OnInit {
             this.delete();
           },400);
         }
-      }
+      },
+      { text: '取消', onPress: () => { } }
     ]);
   }
   delete() {
