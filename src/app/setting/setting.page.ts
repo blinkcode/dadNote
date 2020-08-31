@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 })
 export class SettingPage implements OnInit {
   config: any = null;
+  swipeable = false;
   constructor(
     private file: FileService
 
