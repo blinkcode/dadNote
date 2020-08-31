@@ -38,16 +38,13 @@ export class ViewCommonComponent implements OnInit {
       months.forEach(month => {
         list.push(this.getList(month))
       });
-      console.log(months);
       Promise.all(list).then((res) => {
-        console.log(res);
         months.forEach((month, i) => {
           this.datas.push({
             month: month,
             lists: res[i]
           })
         })
-        console.log(this.datas);
       })
     })
   }
@@ -86,11 +83,34 @@ export class ViewCommonComponent implements OnInit {
   showAction(month: string, date: string) {
     this.modal.operation([
       { text: '查看账本', onPress: () => this.showDetail(month, date) },
-      { text: '分享账本', onPress: () => this.preShare(month, date) }
+      { text: '导出账本', onPress: () => this.exportFile(month, date)},
+      { text: '分享账本', onPress: () => this.preShare(month, date) },
+      { text: '取消', onPress: () => { } }
     ]);
   }
   showDetail(month: string, date: string) {
     this.router.navigateByUrl(`/tabs/note?year=${this.id}&month=${month}&date=${date}`);
+  }
+
+  /**
+   * 导出账本
+   * @param month 月
+   * @param date 日
+   */
+  exportFile(month: string,date:string){
+    this.toast.loading('正在导出',0);
+    // this.files.readFile(`${this.id}-${month}-${date}`).then((account: AccountBook) => {
+    //   this.toast.success('导出成功!');
+    //   // this.files.exportFileByDate(account);
+    // }).catch((err) => {
+    //   this.toast.fail("导出失败");
+    // })
+    this.files.exportFileByDate(`${this.id}-${month}-${date}`).then((res) => {
+      this.toast.success('导出成功!');
+    }).catch((err) => {
+      console.log(err);
+      this.toast.fail('导出失败');
+    })
   }
 
   /**
@@ -99,19 +119,14 @@ export class ViewCommonComponent implements OnInit {
    * @param date 日
    */
   preShare(month: string, date) {
-    const path = this.file.externalRootDirectory + 'dadNote/' + `${this.id}/${month}/${date}/exports`;
+    const path = this.file.externalRootDirectory + 'dadNote/' + `${this.id}/${month}/exports/`;
     const fileName = moment(`${this.id}-${month}-${date}`).format('YYYY-MM-DD[-过磅单.xlsx]')
     this.file.checkFile(path, fileName).then((flag) => {
       if (flag) {
         this.share(path, fileName);
-      } else {
-        this.files.readFile(`${this.id}-${month}-${date}`).then((account: AccountBook) => {
-          this.files.exportFile(account);
-          setTimeout(() => {
-            this.share(path, fileName);
-          }, 2000);
-        })
       }
+    }).catch(() => {
+      this.toast.info('请先导出账本');
     })
 
   }
@@ -121,14 +136,14 @@ export class ViewCommonComponent implements OnInit {
   }
 
   share(path, fileName) {
-    this.readFile(path, fileName).then((file) => {
-      this.socialSharing.share(null, null, file, null).then((res) => {
-        this.toast.success('分享成功')
-      }, (err) => {
-        console.log(err);
-        this.toast.fail('分享失败');
-      })
+    // this.readFile(path, fileName).then((file) => {
+    this.socialSharing.share(null, null, path + fileName, null).then((res) => {
+      this.toast.success('分享成功')
+    }, (err) => {
+      console.log(err);
+      this.toast.fail('分享失败');
     })
+    // })
   }
 }
 
