@@ -11,7 +11,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Big } from "big.js";
 import { isNumber } from 'util';
 import * as cloneDeep from "clone-deep";
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
     selector: 'app-note',
@@ -38,13 +38,11 @@ export class NoteComponent implements OnInit, AfterViewInit {
         private toast: ToastService,
         private camera: CameraService,
         private modal: ModalService,
-        private activedRouter: ActivatedRoute
+        private activedRouter: ActivatedRoute,
+        private router: Router
     ) { }
 
     ngOnInit() {
-        // setTimeout(() => {
-        //     this.readFile();
-        // });
         this.activedRouter.queryParamMap.subscribe(params => {
             if (params.has('year') && params.has('month') && params.has('date')) {
                 this.editable = false;
@@ -53,6 +51,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
                     this.readFile(date);
                 }, 10);
             } else {
+                this.editable = true;
                 setTimeout(() => {
                     this.readFile();
                 }, 10);
@@ -130,6 +129,9 @@ export class NoteComponent implements OnInit, AfterViewInit {
      * @memberof NoteComponent
      */
     async editCar() {
+        if (!this.editable) {
+            return false;
+        }
         const car = this.accountBook.cars[this.activeTabIndex];
         const carIDs = [];
         this.accountBook.cars.map(({ id }) => carIDs.push(id));
@@ -237,6 +239,9 @@ export class NoteComponent implements OnInit, AfterViewInit {
      * @memberof NoteComponent
      */
     addRow() {
+        if (!this.editable) {
+            return false;
+        }
         const car = this.accountBook.cars[this.activeTabIndex];
         const row = {
             id: uuidv4(),
@@ -263,6 +268,9 @@ export class NoteComponent implements OnInit, AfterViewInit {
      * @memberof NoteComponent
      */
     deleteRow() {
+        if (!this.editable) {
+            return false;
+        }
         if (!this.setOfCheckedId.size) {
             this.toast.info('请勾选一行', 1500);
             return false;
@@ -293,6 +301,9 @@ export class NoteComponent implements OnInit, AfterViewInit {
      * 添加车辆弹出框
      */
     async addCarCtrl() {
+        if (!this.editable) {
+            return false;
+        }
         const cars = this.config.car;
         const freeCars: Car[] = cars.filter((car: Car) => {
             return !this.accountBook.cars.filter((c: Car) => c.id === car.id).pop();
@@ -371,6 +382,9 @@ export class NoteComponent implements OnInit, AfterViewInit {
     editCtrl(column: string, editCarIndex, editRowIndex) {
         this.editCarIndex = editCarIndex;
         this.editRowIndex = editRowIndex;
+        if (!this.editable) {
+            return false;
+        }
         switch (column) {
             case 'origin':
                 this.editOriginCtrl();
@@ -467,6 +481,9 @@ export class NoteComponent implements OnInit, AfterViewInit {
         if (isNumber(j)) {
             this.editRowIndex = j;
         }
+        if (!this.editable) {
+            return false;
+        }
         const config = { type: '货料类型', origin: '货料来源', maozhong: "毛重", pizhong: '皮重', amount: '料款' };
         const config1 = { type: 'text', origin: 'text', maozhong: "number", pizhong: 'number', amount: 'number' };
         const title = config[type];
@@ -502,7 +519,10 @@ export class NoteComponent implements OnInit, AfterViewInit {
         });
         await alert.present();
     }
-    setCellValue(type, value) {
+    private setCellValue(type, value) {
+        if (!this.editable) {
+            return false;
+        }
         this.accountBook.cars[this.editCarIndex].datas[this.editRowIndex][type] = value;
         if (type === 'maozhong') {
             const pizhong = this.accountBook.cars[this.editCarIndex].weight;
@@ -530,6 +550,10 @@ export class NoteComponent implements OnInit, AfterViewInit {
      * @memberof NoteComponent
      */
     openCamera(i: number, j: number) {
+        if (!this.editable) {
+            this.toast.info('只有当天的账本可以修改');
+            return false;
+        }
         this.editCarIndex = i;
         this.editRowIndex = j;
         this.camera.openCamera().then((img: any) => {
@@ -539,6 +563,10 @@ export class NoteComponent implements OnInit, AfterViewInit {
     }
 
     deleteImg(i: number, j: number) {
+        if (!this.editable) {
+            this.toast.info('只有当天的账本可以修改');
+            return false;
+        }
         this.editCarIndex = i;
         this.editRowIndex = j;
         this.setCellValue('img', '');
@@ -552,21 +580,12 @@ export class NoteComponent implements OnInit, AfterViewInit {
      * @memberof NoteComponent
      */
     save() {
+        if (!this.editable) {
+            return false;
+        }
         this.file.saveFile(this.accountBook).then(() => {
             this.toast.success('保存成功');
         });
-    }
-
-    export() {
-        this.toast.loading('正在导出', 0)
-        this.file.exportFileByDate(new Date().toDateString()).then((res) => {
-            this.toast.hide()
-            this.toast.success('导出成功');
-        }).catch((err) => {
-            console.log(err);
-            this.toast.hide();
-            this.toast.fail('导出失败');
-        })
     }
 
     /**
@@ -593,6 +612,14 @@ export class NoteComponent implements OnInit, AfterViewInit {
         if (checked) {
             this.setOfCheckedId.add(id);
         }
+    }
+
+    /**
+     * 返回今日账本
+     */
+    backToday() {
+        // this.readFile()
+        this.router.navigateByUrl('/tabs/note');
     }
 
 
