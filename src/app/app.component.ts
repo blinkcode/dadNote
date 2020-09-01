@@ -44,15 +44,16 @@ export class AppComponent {
   initializeApp() {
     this.platform.ready().then(() => {
       if (this.device.isMobile()) {
+        this.persmission.getPermission().then(() => {
+          this.file.init();
+        });
         this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE);
         // 键盘监听
         this.keyboardEvent();
         this.statusBar.styleDefault();
         this.splashScreen.hide();
         this.orientationEvent();
-        this.persmission.getPermission().then(() => {
-          this.file.init();
-        })
+        ;
       } else {
         const config = this.storage.get('config');;
         if (!config) {

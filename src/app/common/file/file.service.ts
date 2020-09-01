@@ -95,7 +95,7 @@ export class FileService {
     if (!this.device.isMobile()) {
       return this.readFileByWeb();
     }
-    const year = moment(dateStr).years();
+    const year = moment(dateStr).year();
     const month = moment(dateStr).month() + 1 + '';
     const date = moment(dateStr).date();
     const root = this.file.externalRootDirectory;

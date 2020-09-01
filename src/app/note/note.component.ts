@@ -48,18 +48,22 @@ export class NoteComponent implements OnInit, AfterViewInit {
                 this.editable = false;
                 const date = params.get('year') + '-' + params.get('month') + '-' + params.get('date');
                 setTimeout(() => {
-                    this.readFile(date);
+                    this.file.readConfig().then((config) => {
+                        this.config = config;
+                        this.readFile(date);
+                    })
                 }, 10);
             } else {
                 this.editable = true;
                 setTimeout(() => {
-                    this.readFile();
+                    this.file.readConfig().then((config: any) => {
+                        this.config = config;
+                        this.readFile();
+                    });
                 }, 10);
             }
         })
-        this.file.readConfig().then((config: any) => {
-            this.config = config;
-        });
+
     }
     ngAfterViewInit(): void {
         this.getResize();
