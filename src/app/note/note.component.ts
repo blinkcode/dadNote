@@ -290,6 +290,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
                                 const data = cloneDeep(this.accountBook.cars[this.activeTabIndex].datas);
                                 data.splice(i, 1);
                                 this.accountBook.cars[this.activeTabIndex].datas = data;
+                                this.save(true);
                                 resolve();
                             }
                         })
@@ -534,6 +535,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
             this.accountBook.cars[this.editCarIndex].datas[this.editRowIndex].jingzhong = jingzhong;
         }
         this.updateEndTime();
+        this.save(true);
     }
 
     /**
@@ -583,12 +585,17 @@ export class NoteComponent implements OnInit, AfterViewInit {
      * @date 2020-08-25
      * @memberof NoteComponent
      */
-    save() {
+    save(auto?: boolean) {
         if (!this.editable) {
             return false;
         }
         this.file.saveFile(this.accountBook).then(() => {
-            this.toast.success('保存成功');
+            if (auto) {
+                this.toast.info('自动保存成功', 1200, null, false, 'top');
+            } else {
+                this.toast.success('保存成功');
+
+            }
         });
     }
 
