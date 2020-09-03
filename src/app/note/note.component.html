@@ -4,9 +4,14 @@
     <div size='small' [hidden]="editable" Button [inline]="true" [type]="'ghost'" (click)="backToday()">返回今日账本</div>
     <div size='small' [disabled]="!editable" Button [inline]="true" [type]="'ghost'" (click)="addCarCtrl()">添加车队</div>
     <div size='small' [disabled]="!editable" Button [inline]="true" [type]="'ghost'" (click)="editCar()">修改车队</div>
-    <div size='small' [disabled]="!editable" class="alignt_right" Button [inline]="true" [type]="'ghost'" (click)="save()">保存</div>
-    <div size='small' [disabled]="!editable" class="alignt_right" Button [inline]="true" [type]="'ghost'" (click)="addRow()">添加一行</div>
-    <div size='small' [disabled]="!editable" class="alignt_right" Button [inline]='true' [type]="'warning'" (click)="deleteRow()">删除一行</div>
+    <div size='small' [disabled]="!editable" class="alignt_right" Button [inline]="true" [type]="'ghost'"
+      (click)="save()">保存</div>
+    <div size='small' [hidden]='isHidden' class="alignt_right" [disabled]="!editable" Button [inline]="true"
+      [type]="'ghost'" (click)="copy()">复制一行</div>
+    <div size='small' [disabled]="!editable" class="alignt_right" Button [inline]="true" [type]="'ghost'"
+      (click)="addRow()">添加一行</div>
+    <div size='small' [disabled]="!editable" class="alignt_right" Button [inline]='true' [type]="'warning'"
+      (click)="deleteRow()">删除一行</div>
   </div>
   <div class="table_box" #tableBox>
     <Tabs (onChange)='changeTab($event)' [swipeable]='swipeable' [useOnPan]="true" [activeTab]="activeTabIndex"
@@ -59,6 +64,48 @@
                 <td class="table_header">
                   <a [hidden]='data.img' (click)="openCamera(i,j)">拍摄</a>
                   <a [hidden]='!data.img' class='delete' (click)="deleteImg(i,j)">删除</a>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </div>
+      </TabPane>
+      <TabPane title='外来车辆'>
+        <div style="width: 100%;height:100%">
+          <nz-table #outTable nzBordered nzSize='small' [nzData]="accountBook.outCars" [nzScroll]="scroll"
+            [nzShowPagination]='false' nzPageSize='150'>
+            <thead>
+              <tr #tableHeader>
+                <th nzWidth="20px"></th>
+                <th class="table_header">来源</th>
+                <th class="table_header">车牌号</th>
+                <th class="table_header">货料种类</th>
+                <th class="table_header">毛重(吨)</th>
+                <th class="table_header">皮重(吨)</th>
+                <th class="table_header">净重(吨)</th>
+                <th class="table_header">料款(元)</th>
+                <th class="table_header">电子秤图片</th>
+                <th class="table_header">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of outTable.data;let z=index">
+                <td style="margin: 0px;padding:0px;" [nzChecked]="setOfCheckedId.has(data.id)"
+                  (nzCheckedChange)="onItemChecked(data.id, $event)">
+                </td>
+                <td class="table_header" (click)="editOut(data.origin,z,'origin')">{{data.origin}}</td>
+                <td class="table_header" (click)="editOut(data.carNo,z, 'carNo')">{{data.carNo}}</td>
+                <td class="table_header" (click)="editCtrl('type',0,z)">{{data.type}}</td>
+                <td class="table_header" (click)="editOut(data.maozhong,z,'maozhong',true)">{{data.maozhong}}</td>
+                <td class="table_header" (click)="editOut(data.pizhong,z,'pizhong',true)">{{data.pizhong}}</td>
+                <td class="table_header">{{data.jingzhong}}</td>
+                <td class="table_header" (click)="editOut(data.amount,z,'amount',true)">{{data.amount}}</td>
+                <td class="table_header">
+                  <img class="img" (click)="seeImg(data.img)" [src]="data.thumbnail" alt="">
+                </td>
+                <td class="table_header">
+                  <a [hidden]='data.img' (click)="openOutCamera(z)">拍摄</a>
+                  <a [hidden]='!data.img' class='delete' (click)="deleteOutImg(z)">删除</a>
                 </td>
               </tr>
             </tbody>

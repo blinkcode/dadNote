@@ -93,6 +93,46 @@ export interface AccountBook {
     id: string;
     date: string;
     cars: AccountCar[];
+    outCars: OutCar[];
     // persons: Person[];
     // datas: Data[];
+}
+
+export interface OutCar {
+    /**
+     * id
+     */
+    id: string;
+    /**
+     * 车牌号
+     */
+    carNo: string;
+    /**
+     * 来源
+     */
+    origin: string;
+    /**
+     * 皮重
+     */
+    pizhong: string;
+    /**
+     * 毛重
+     */
+    maozhong: string;
+    /**
+     * 净重
+     */
+    jingzhong: string;
+    /**
+     * 金额
+     */
+    amount: string;
+    /**
+     * 图片地址
+     */
+    img: string;
+    /**
+     * 缩略图
+     */
+    thumbnail: string;
 }

@@ -79,7 +79,7 @@ export class FileService {
         if (content) {
           json = content;
         } else {
-          json = { id: uuidv4, date: new Date().toDateString(), cars: [] }
+          json = { id: uuidv4, date: new Date().toDateString(), cars: [], outCars: [] }
         }
         this.file.writeFile(path, fileName, JSON.stringify(json, null, 4)).then(() => {
           resolve(`${path}${fileName}`);
@@ -118,7 +118,7 @@ export class FileService {
   private readFileByWeb(): Promise<AccountBook> {
     return new Promise((resolve) => {
       const date = new Date().toDateString();
-      const note = this.storage.get(date) || { id: '', date: '', cars: [] };
+      const note = this.storage.get(date) || { id: '', date: '', cars: [], outCars: [] };
       resolve(note);
     })
   }
