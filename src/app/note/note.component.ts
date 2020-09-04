@@ -263,7 +263,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
         /** 如果为最后一个tab的话，那么就是外来车辆 **/
         if (this.activeTabIndex === this.accountBook.cars.length) {
             const outCar: OutCar = {
-                id: uuidv4(), carNo: '', origin: '',
+                id: uuidv4(), carNo: '', origin: '', type: '',
                 pizhong: '', maozhong: '', jingzhong: '',
                 amount: '', img: '', thumbnail: ''
             }
@@ -673,9 +673,9 @@ export class NoteComponent implements OnInit, AfterViewInit {
             this.toast.info('请勾选一行', 1500);
             return false;
         }
-        const id1 = { id: uuidv4(), maozhong: '', jingzhong: '', amount: '', img: '', thumbnail: '' };
+        const newrow = { id: uuidv4(), maozhong: '', jingzhong: '', amount: '', img: '', thumbnail: '', type: '' };
         const copyRow = this.accountBook.outCars.filter(car => car.id === id).pop();
-        const newCopyRow = { ...copyRow, ...id1 };
+        const newCopyRow = { ...copyRow, ...newrow };
         const outCars = cloneDeep(this.accountBook.outCars);
         outCars.push(newCopyRow);
         this.accountBook.outCars = outCars;

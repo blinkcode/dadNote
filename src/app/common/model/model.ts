@@ -112,6 +112,10 @@ export interface OutCar {
      */
     origin: string;
     /**
+     * 类型
+     */
+    type: string;
+    /**
      * 皮重
      */
     pizhong: string;

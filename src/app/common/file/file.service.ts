@@ -165,6 +165,13 @@ export class FileService {
       const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(data);
       sheets.push(ws);
     });
+    const outCarheader = ['来源', '车牌号', '种类', '毛重', '皮重', '净重', '料款'];
+    const outcarData = [outCarheader];
+    accountBook.outCars.forEach((car) => {
+      outcarData.push([car.origin, car.carNo, car.type, car.maozhong, car.pizhong, car.jingzhong, car.amount]);
+    })
+    const outcarws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(outcarData);
+    sheets.push(outcarws);
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     sheets.forEach((sheet, i) => XLSX.utils.book_append_sheet(wb, sheet, accountBook.cars[i].carNo));
     const date = moment(accountBook.date).format('YYYY-MM-DD[-过磅单.xlsx]');
@@ -190,10 +197,13 @@ export class FileService {
     const path = `${root}dadNote/${year}/${month}/exports/`;
     return new Promise((resolve, reject) => {
       this.readFile(dateStr).then((res: AccountBook) => {
+        const cars = [];
         const header = ['车队', '出发时间', '回厂时间', '货料来源', '货料种类', '皮重', '毛重', '净重', '料款'];
         const sheets = [];
+
         res.cars.forEach((car) => {
           const data = [header];
+          cars.push(car.carNo);
           car.datas.forEach((d) => {
             const a = [d.carNo, d.startTime, d.endTime, d.origin, d.type, d.pizhong, d.maozhong, d.jingzhong, d.amount];
             data.push(a);
@@ -201,8 +211,16 @@ export class FileService {
           const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(data);
           sheets.push(ws);
         });
+        const outCarheader = ['来源', '车牌号', '种类', '毛重', '皮重', '净重', '料款'];
+        const outcarData = [outCarheader];
+        res.outCars.forEach((car) => {
+          outcarData.push([car.origin, car.carNo, car.type, car.maozhong, car.pizhong, car.jingzhong, car.amount]);
+        });
+        cars.push('外来车辆')
+        const outcarws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(outcarData);
+        sheets.push(outcarws);
         const wb: XLSX.WorkBook = XLSX.utils.book_new();
-        sheets.forEach((sheet, i) => XLSX.utils.book_append_sheet(wb, sheet, res.cars[i].carNo));
+        sheets.forEach((sheet, i) => XLSX.utils.book_append_sheet(wb, sheet, cars[i]));
         const wbout: ArrayBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
         let blob = new Blob([wbout], { type: 'application/octet-stream' });
         const date = moment(res.date).format('YYYY-MM-DD[-过磅单.xlsx]');
