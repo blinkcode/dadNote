@@ -120,6 +120,10 @@ export interface OutCar {
      */
     pizhong: string;
     /**
+     * 扣秤
+     */
+    koucheng: string;
+    /**
      * 毛重
      */
     maozhong: string;

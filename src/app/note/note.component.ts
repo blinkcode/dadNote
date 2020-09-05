@@ -260,7 +260,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
             const outCar: OutCar = {
                 id: uuidv4(), carNo: '', origin: '', type: '',
                 pizhong: '', maozhong: '', jingzhong: '',
-                amount: '', img: '', thumbnail: ''
+                amount: '', img: '', thumbnail: '', koucheng: '0'
             }
             const outCars = cloneDeep(this.accountBook.outCars);
             outCars.push(outCar);
@@ -439,10 +439,10 @@ export class NoteComponent implements OnInit, AfterViewInit {
         const types: Origin[] = this.config.origin;
         const inputs = [];
         types.forEach((type) => {
-            const input: AlertInput = { type: 'radio', label: type.originName, value: type.originName };
+            const input: AlertInput = { type: 'checkbox', label: type.originName, value: type.originName };
             inputs.push(input);
         });
-        inputs.push({ value: 'edit', type: 'radio', label: '自定义', });
+        // inputs.push({ value: 'edit', type: 'checkbox', label: '自定义', });
         const alert = await this.alertCtrl.create({
             header: '选择货料来源',
             backdropDismiss: false,
@@ -455,11 +455,12 @@ export class NoteComponent implements OnInit, AfterViewInit {
                     handler: () => { }
                 }, {
                     text: '确定',
-                    handler: (blah: string) => {
-                        if (blah === 'edit') {
-                            this.selfEditCtrl('origin');
-                        } else if (blah) {
-                            this.setCellValue('origin', blah);
+                    handler: (blah: string[]) => {
+                        // if (blah === 'edit') {
+                        //     this.selfEditCtrl('origin');
+                        // } else 
+                        if (blah) {
+                            this.setCellValue('origin', blah.join(','));
                         } else {
                             return false;
                         }
@@ -682,7 +683,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
             this.toast.info('请勾选一行', 1500);
             return false;
         }
-        const newrow = { id: uuidv4(), maozhong: '', jingzhong: '', amount: '', img: '', thumbnail: '', type: '' };
+        const newrow = { id: uuidv4(), maozhong: '', jingzhong: '', amount: '', img: '', thumbnail: '', type: '', koucheng: '0' };
         const copyRow = this.accountBook.outCars.filter(car => car.id === id).pop();
         const newCopyRow = { ...copyRow, ...newrow };
         const outCars = cloneDeep(this.accountBook.outCars);
@@ -693,26 +694,27 @@ export class NoteComponent implements OnInit, AfterViewInit {
     /**
      * 编辑外来车辆
      */
-    async editOut(oldValue: string, z: number, type: string, isNumber?: boolean) {
+    async editOut(oldValue: string, z: number, type: string) {
         if (!this.editable) {
             return false;
         }
         this.editRowIndex = z;
-        const config = { origin: '来源', carNo: '车牌号', maozhong: "毛重", pizhong: '皮重', jingzhong: '净重', amount: '料款' };
-        const config1 = { type: 'text', origin: 'text', maozhong: "number", pizhong: 'number', amount: 'number' };
+        const config = { origin: '来源', carNo: '车牌号', maozhong: "毛重", pizhong: '皮重', jingzhong: '净重', amount: '料款', koucheng: '扣秤' };
+        const config1 = { type: 'text', origin: 'text', maozhong: "number", pizhong: 'number', amount: 'number', koucheng: 'number' };
         const title = config[type];
         const inputType = config1[type];
+        const inputs: AlertInput[] = [
+            {
+                value: oldValue || '',
+                name: type,
+                type: inputType,
+                placeholder: `请输入${title}`
+            }
+        ]
         const alert = await this.alertCtrl.create({
             header: title,
             backdropDismiss: false,
-            inputs: [
-                {
-                    value: oldValue || '',
-                    name: type,
-                    type: inputType,
-                    placeholder: `请输入${title}`
-                }
-            ],
+            inputs: inputs,
             buttons: [
                 {
                     text: '取消',
@@ -723,7 +725,6 @@ export class NoteComponent implements OnInit, AfterViewInit {
                     text: '确定',
                     handler: (blah: string) => {
                         if (blah[type]) {
-                            // this.setCellValue(type, blah[type]);
                             this.setOutCellValue(type, blah[type])
                         } else {
                             return false;
@@ -741,12 +742,19 @@ export class NoteComponent implements OnInit, AfterViewInit {
         }
         this.accountBook.outCars[this.editRowIndex][type] = value;
         if (type === 'maozhong') {
+            const koucheng = this.accountBook.outCars[this.editRowIndex].koucheng || '0';
             const pizhong = this.accountBook.outCars[this.editRowIndex].pizhong || '0';
-            const jingzhong = new Big(value).minus(pizhong).toString();
+            const jingzhong = new Big(value).minus(pizhong).times(new Big(100).minus(koucheng).div(100)).toString();
             this.accountBook.outCars[this.editRowIndex].jingzhong = jingzhong;
         } else if (type === 'pizhong') {
+            const koucheng = this.accountBook.outCars[this.editRowIndex].koucheng || '0';
             const maozhong = this.accountBook.outCars[this.editRowIndex].maozhong || '0';
-            const jingzhong = new Big(maozhong).minus(value).toString();
+            const jingzhong = new Big(maozhong).minus(value).times(new Big(100).minus(koucheng).div(100)).toString();
+            this.accountBook.outCars[this.editRowIndex].jingzhong = jingzhong;
+        } else if (type === 'koucheng') {
+            const maozhong = this.accountBook.outCars[this.editRowIndex].maozhong || '0';
+            const pizhong = this.accountBook.outCars[this.editRowIndex].pizhong || '0';
+            const jingzhong = new Big(maozhong).minus(pizhong).times(new Big(100).minus(value).div(100)).toString();
             this.accountBook.outCars[this.editRowIndex].jingzhong = jingzhong;
         }
         this.save(true);

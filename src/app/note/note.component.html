@@ -77,12 +77,13 @@
             [nzShowPagination]='false' nzPageSize='150'>
             <thead>
               <tr #tableHeader>
-                <th nzWidth="20px"></th>
+                <th nzWidth="30px"></th>
                 <th class="table_header">来源</th>
                 <th class="table_header">车牌号</th>
                 <th class="table_header">货料种类</th>
                 <th class="table_header">毛重(吨)</th>
                 <th class="table_header">皮重(吨)</th>
+                <th class="table_header">扣秤(%)</th>
                 <th class="table_header">净重(吨)</th>
                 <th class="table_header">料款(元)</th>
                 <th class="table_header">电子秤图片</th>
@@ -97,10 +98,11 @@
                 <td class="table_header" (click)="editOut(data.origin,z,'origin')">{{data.origin}}</td>
                 <td class="table_header" (click)="editOut(data.carNo,z, 'carNo')">{{data.carNo}}</td>
                 <td class="table_header" (click)="editCtrl('type',0,z)">{{data.type}}</td>
-                <td class="table_header" (click)="editOut(data.maozhong,z,'maozhong',true)">{{data.maozhong}}</td>
-                <td class="table_header" (click)="editOut(data.pizhong,z,'pizhong',true)">{{data.pizhong}}</td>
+                <td class="table_header" (click)="editOut(data.maozhong,z,'maozhong')">{{data.maozhong}}</td>
+                <td class="table_header" (click)="editOut(data.pizhong,z,'pizhong')">{{data.pizhong}}</td>
+                <td class="table_header" (click)="editOut(data.koucheng,z,'koucheng')">{{data.koucheng}}</td>
                 <td class="table_header">{{data.jingzhong}}</td>
-                <td class="table_header" (click)="editOut(data.amount,z,'amount',true)">{{data.amount}}</td>
+                <td class="table_header" (click)="editOut(data.amount,z,'amount')">{{data.amount}}</td>
                 <td class="table_header">
                   <img class="img" (click)="seeImg(data.img)" [src]="data.thumbnail" alt="">
                 </td>

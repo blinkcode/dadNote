@@ -198,9 +198,8 @@ export class FileService {
     return new Promise((resolve, reject) => {
       this.readFile(dateStr).then((res: AccountBook) => {
         const cars = [];
-        const header = ['车队', '出发时间', '回厂时间', '货料来源', '货料种类', '皮重', '毛重', '净重', '料款'];
+        const header = ['车队', '出发时间', '回厂时间', '货料来源', '货料种类', '皮重（吨）', '毛重（吨）', '净重（吨）', '料款（元）'];
         const sheets = [];
-
         res.cars.forEach((car) => {
           const data = [header];
           cars.push(car.carNo);
@@ -211,11 +210,11 @@ export class FileService {
           const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(data);
           sheets.push(ws);
         });
-        const outCarheader = ['来源', '车牌号', '种类', '毛重', '皮重', '净重', '料款'];
+        const outCarheader = ['来源', '车牌号', '种类', '毛重（吨）', '皮重（吨）', '扣秤（%）', '净重（吨）', '料款（元）'];
         const outcarData = [outCarheader];
         const outCars = res.outCars || [];
         outCars.forEach((car) => {
-          outcarData.push([car.origin, car.carNo, car.type, car.maozhong, car.pizhong, car.jingzhong, car.amount]);
+          outcarData.push([car.origin, car.carNo, car.type, car.maozhong, car.pizhong, car.koucheng, car.jingzhong, car.amount]);
         });
         cars.push('外来车辆')
         const outcarws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(outcarData);
