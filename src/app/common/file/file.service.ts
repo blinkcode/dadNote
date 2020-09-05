@@ -118,7 +118,7 @@ export class FileService {
   private readFileByWeb(): Promise<AccountBook> {
     return new Promise((resolve) => {
       const date = new Date().toDateString();
-      const note = this.storage.get(date) || { id: '', date: '', cars: [], outCars: [] };
+      const note = this.storage.get(date) || { id: 'webID', date: date, cars: [], outCars: [] };
       resolve(note);
     })
   }
