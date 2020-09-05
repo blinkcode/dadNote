@@ -213,7 +213,8 @@ export class FileService {
         });
         const outCarheader = ['来源', '车牌号', '种类', '毛重', '皮重', '净重', '料款'];
         const outcarData = [outCarheader];
-        res.outCars.forEach((car) => {
+        const outCars = res.outCars || [];
+        outCars.forEach((car) => {
           outcarData.push([car.origin, car.carNo, car.type, car.maozhong, car.pizhong, car.jingzhong, car.amount]);
         });
         cars.push('外来车辆')

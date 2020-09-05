@@ -57,7 +57,7 @@ export class AppComponent {
       } else {
         const config = this.storage.get('config');;
         if (!config) {
-          this.file.saveConfig({ car: [], person: [], origin: [], type: [] });
+          this.file.saveConfig({ car: [], person: [], origin: [], type: [], outCars: [] });
         }
       }
     });
