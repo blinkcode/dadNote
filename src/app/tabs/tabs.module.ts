@@ -10,6 +10,7 @@ import { TabsPageRoutingModule } from './tabs-routing.module';
 import { NgZorroAntdMobileModule } from 'ng-zorro-antd-mobile';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { ViewCommonComponent } from '../common/view/view.component';
+import { TotalComponent } from '../common/total/total.component';
 
 
 @NgModule({
@@ -21,6 +22,6 @@ import { ViewCommonComponent } from '../common/view/view.component';
     NgZorroAntdMobileModule,
     NzTableModule
   ],
-  declarations: [TabsPage, NoteComponent, ViewComponent, ViewCommonComponent]
+  declarations: [TabsPage, NoteComponent, ViewComponent, ViewCommonComponent, TotalComponent]
 })
 export class TabsPageModule { }

@@ -1,8 +1,9 @@
+import { TotalComponent } from './../common/total/total.component';
 import { CameraService } from './../common/camera/camera.service';
 import { FileService } from './../common/file/file.service';
 import { Person, AccountBook, Type, Origin, OutCar } from './../common/model/model';
 import { StorageService } from './../common/storage/storage.service';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { Car } from '../common/model/model';
 import { AlertInput } from '@ionic/core';
@@ -12,6 +13,7 @@ import { Big } from "big.js";
 import { isNumber } from 'util';
 import * as cloneDeep from "clone-deep";
 import { ActivatedRoute, Router } from '@angular/router';
+import * as moment from 'moment';
 
 @Component({
     selector: 'app-note',
@@ -40,7 +42,8 @@ export class NoteComponent implements OnInit, AfterViewInit {
         private camera: CameraService,
         private modal: ModalService,
         private activedRouter: ActivatedRoute,
-        private router: Router
+        private router: Router,
+        private modalCtrl: ModalController
     ) { }
 
     ngOnInit() {
@@ -572,7 +575,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
     updateEndTime() {
         const time = this.accountBook.cars[this.editCarIndex].datas[this.editRowIndex].endTime;
         if (!time.trim()) {
-            this.accountBook.cars[this.editCarIndex].datas[this.editRowIndex].endTime = new Date().toISOString()
+            this.accountBook.cars[this.editCarIndex].datas[this.editRowIndex].endTime = moment().format('HH:mm');
         }
     }
     /**
@@ -765,5 +768,16 @@ export class NoteComponent implements OnInit, AfterViewInit {
         this.editRowIndex = z;
         this.setCellValue('img', '');
         this.setCellValue('thumbnail', '');
+    }
+
+    /** */
+    async total(){
+        const modal = await this.modalCtrl.create({
+            component: TotalComponent,
+            componentProps: {
+                accountBook: this.accountBook
+            }
+        });
+        await modal.present();
     }
 }
