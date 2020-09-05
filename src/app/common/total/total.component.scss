@@ -3,7 +3,9 @@
     font-size: 18px;
     font-weight: bold;
 }
-.car, .outcar {
+.car,
+.outcar,
+.total {
     display: flex;
     flex-direction: row;
 }

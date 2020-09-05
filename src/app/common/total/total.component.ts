@@ -14,6 +14,7 @@ export class TotalComponent implements OnInit {
     date = '';
     cars: any[] = [];
     outCars: any[] = [];
+    total = '0';
     constructor() { }
 
     ngOnInit() {
@@ -24,6 +25,7 @@ export class TotalComponent implements OnInit {
         // this.cars = this.accountBook.cars;
         this.cars = this.initCar();
         this.outCars = this.initOutCar();
+        this.total = this.initTotal();
     }
     initCar() {
         const cars = [];
@@ -57,6 +59,17 @@ export class TotalComponent implements OnInit {
             }
         })
         return cars;
+    }
+
+    initTotal(){
+        let total = '0';
+        this.cars.forEach(car => {
+            total = new Big(car.jingzhong).plus(total).toString();
+        });
+        this.outCars.forEach(outCar => {
+            total = new Big(outCar.jingzhong).plus(total).toString();
+        });
+        return total;
     }
 
 }
