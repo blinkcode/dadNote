@@ -101,7 +101,6 @@ export class NoteComponent implements OnInit, AfterViewInit {
      * @param index any
      */
     changeTab(index: any) {
-        console.log(index);
         setTimeout(() => {
             this.activeTabIndex = index.index;
             if (this.activeTabIndex === this.accountBook.cars.length) {
@@ -123,24 +122,17 @@ export class NoteComponent implements OnInit, AfterViewInit {
      */
     addCar() {
         const arr = [{
-            id: uuidv4(),
-            carNo: this.selectedCar.carNo,
-            startTime: '',
-            endTime: '',
-            origin: '',
-            type: '',
-            maozhong: '',
-            pizhong: this.selectedCar.weight,
-            jingzhong: '',
-            amount: '',
-            img: '',
-            thumbnail: ''
+            id: uuidv4(), carNo: this.selectedCar.carNo, startTime: '',
+            endTime: '', origin: '', type: '',
+            maozhong: '', pizhong: this.selectedCar.weight, jingzhong: '',
+            amount: '', img: '', thumbnail: ''
         }]
         this.accountBook.cars.push({ ...this.selectedCar, datas: arr, persons: [... this.selectedPerson] })
         console.log(this.accountBook);
         this.selectedCar = null;
         this.selectedPerson = [];
         this.isHidden = true;
+        this.save(true);
     }
 
     /**
@@ -285,6 +277,8 @@ export class NoteComponent implements OnInit, AfterViewInit {
             datas.push(row)
             this.accountBook.cars[this.activeTabIndex].datas = datas;
         }
+        /* 添加行的时候也添加自动保存 */
+        this.save(true);
 
     }
 
@@ -308,15 +302,28 @@ export class NoteComponent implements OnInit, AfterViewInit {
                 text: '删除',
                 onPress: () =>
                     new Promise(resolve => {
-                        this.accountBook.cars[this.activeTabIndex].datas.forEach((data, i) => {
-                            if (this.setOfCheckedId.has(data.id)) {
-                                const data = cloneDeep(this.accountBook.cars[this.activeTabIndex].datas);
-                                data.splice(i, 1);
-                                this.accountBook.cars[this.activeTabIndex].datas = data;
-                                this.save(true);
-                                resolve();
-                            }
-                        })
+                        if (this.isHidden) {
+                            this.accountBook.cars[this.activeTabIndex].datas.forEach((data, i) => {
+                                if (this.setOfCheckedId.has(data.id)) {
+                                    const data = cloneDeep(this.accountBook.cars[this.activeTabIndex].datas);
+                                    data.splice(i, 1);
+                                    this.accountBook.cars[this.activeTabIndex].datas = data;
+                                    this.save(true);
+                                    resolve();
+                                }
+                            })
+                        } else {
+                            this.accountBook.outCars.forEach((car, i) => {
+                                if (this.setOfCheckedId.has(car.id)) {
+                                    const data = cloneDeep(this.accountBook.outCars);
+                                    data.splice(i, 1);
+                                    this.accountBook.outCars = data;
+                                    this.save(true);
+                                    resolve();
+                                }
+                            })
+                        }
+
                     }),
                 style: {
                     color: '#ffffff',
@@ -622,10 +629,9 @@ export class NoteComponent implements OnInit, AfterViewInit {
         }
         this.file.saveFile(this.accountBook).then(() => {
             if (auto) {
-                this.toast.info('自动保存成功', 1200, null, false, 'top');
+                this.toast.info('自动保存成功', 1000, null, false, 'top');
             } else {
                 this.toast.success('保存成功');
-
             }
         });
     }
@@ -771,7 +777,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
     }
 
     /** */
-    async total(){
+    async total() {
         const modal = await this.modalCtrl.create({
             component: TotalComponent,
             componentProps: {
