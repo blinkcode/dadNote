@@ -132,6 +132,10 @@ export interface OutCar {
      */
     jingzhong: string;
     /**
+     * 单价
+     */
+    price: string;
+    /**
      * 金额
      */
     amount: string;

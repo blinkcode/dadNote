@@ -33,7 +33,7 @@ export class TotalComponent implements OnInit {
             const obj = {};
             let jingzhong = '0';
             car.datas.forEach((d) => {
-                jingzhong = new Big(d.jingzhong).plus(jingzhong).toString();
+                jingzhong = new Big(d.jingzhong || '0').plus(jingzhong).toString();
             })
             Reflect.set(obj, 'carNo', car.carNo);
             const persons = [];
@@ -52,9 +52,9 @@ export class TotalComponent implements OnInit {
             const index = car1.indexOf(car.origin + car.type)
             if (index !== -1) {
                 cars[index].count++;
-                cars[index].jingzhong = new Big(cars[index].jingzhong).plus(car.jingzhong).toString();
+                cars[index].jingzhong = new Big(cars[index].jingzhong).plus(car.jingzhong || '0').toString();
             } else {
-                cars.push({ origin: car.origin, type: car.type, count: 1, jingzhong: car.jingzhong })
+                cars.push({ origin: car.origin, type: car.type, count: 1, jingzhong: car.jingzhong || '0' })
                 car1.push(car.origin + car.type);
             }
         })

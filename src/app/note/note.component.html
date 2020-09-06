@@ -85,6 +85,7 @@
                 <th class="table_header">皮重(吨)</th>
                 <th class="table_header">扣秤(%)</th>
                 <th class="table_header">净重(吨)</th>
+                <th class="table_header">单价(元)</th>
                 <th class="table_header">料款(元)</th>
                 <th class="table_header">电子秤图片</th>
                 <th class="table_header">操作</th>
@@ -102,7 +103,9 @@
                 <td class="table_header" (click)="editOut(data.pizhong,z,'pizhong')">{{data.pizhong}}</td>
                 <td class="table_header" (click)="editOut(data.koucheng,z,'koucheng')">{{data.koucheng}}</td>
                 <td class="table_header">{{data.jingzhong}}</td>
-                <td class="table_header" (click)="editOut(data.amount,z,'amount')">{{data.amount}}</td>
+                <td class="table_header" (click)="editOut(data.price, z, 'price')">{{data.price}}</td>
+                <!-- <td class="table_header" (click)="editOut(data.amount,z,'amount')">{{data.amount}}</td> -->
+                <td class="table_header">{{data.amount}}</td>
                 <td class="table_header">
                   <img class="img" (click)="seeImg(data.img)" [src]="data.thumbnail" alt="">
                 </td>

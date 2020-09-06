@@ -260,7 +260,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
             const outCar: OutCar = {
                 id: uuidv4(), carNo: '', origin: '', type: '',
                 pizhong: '', maozhong: '', jingzhong: '',
-                amount: '', img: '', thumbnail: '', koucheng: '0'
+                amount: '', img: '', thumbnail: '', koucheng: '0', price: '0'
             }
             const outCars = cloneDeep(this.accountBook.outCars);
             outCars.push(outCar);
@@ -683,7 +683,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
             this.toast.info('请勾选一行', 1500);
             return false;
         }
-        const newrow = { id: uuidv4(), maozhong: '', jingzhong: '', amount: '', img: '', thumbnail: '', type: '', koucheng: '0' };
+        const newrow = { id: uuidv4(), maozhong: '', jingzhong: '', amount: '', img: '', thumbnail: '', type: '', koucheng: '0', price: '0' };
         const copyRow = this.accountBook.outCars.filter(car => car.id === id).pop();
         const newCopyRow = { ...copyRow, ...newrow };
         const outCars = cloneDeep(this.accountBook.outCars);
@@ -746,16 +746,25 @@ export class NoteComponent implements OnInit, AfterViewInit {
             const pizhong = this.accountBook.outCars[this.editRowIndex].pizhong || '0';
             const jingzhong = new Big(value).minus(pizhong).times(new Big(100).minus(koucheng).div(100)).toString();
             this.accountBook.outCars[this.editRowIndex].jingzhong = jingzhong;
+            const price = this.accountBook.outCars[this.editRowIndex].price || '0';
+            this.accountBook.outCars[this.editRowIndex].amount = new Big(price).times(jingzhong).toString();
         } else if (type === 'pizhong') {
             const koucheng = this.accountBook.outCars[this.editRowIndex].koucheng || '0';
             const maozhong = this.accountBook.outCars[this.editRowIndex].maozhong || '0';
             const jingzhong = new Big(maozhong).minus(value).times(new Big(100).minus(koucheng).div(100)).toString();
             this.accountBook.outCars[this.editRowIndex].jingzhong = jingzhong;
+            const price = this.accountBook.outCars[this.editRowIndex].price || '0';
+            this.accountBook.outCars[this.editRowIndex].amount = new Big(price).times(jingzhong).toString();
         } else if (type === 'koucheng') {
             const maozhong = this.accountBook.outCars[this.editRowIndex].maozhong || '0';
             const pizhong = this.accountBook.outCars[this.editRowIndex].pizhong || '0';
             const jingzhong = new Big(maozhong).minus(pizhong).times(new Big(100).minus(value).div(100)).toString();
             this.accountBook.outCars[this.editRowIndex].jingzhong = jingzhong;
+            const price = this.accountBook.outCars[this.editRowIndex].price || '0';
+            this.accountBook.outCars[this.editRowIndex].amount = new Big(price).times(jingzhong).toString();
+        } else if (type === 'price') {
+            const jingzhong = this.accountBook.outCars[this.editRowIndex].jingzhong || '0';
+            this.accountBook.outCars[this.editRowIndex].amount = new Big(jingzhong).times(value).toString();
         }
         this.save(true);
     }
