@@ -53,7 +53,7 @@ export class AppComponent {
         this.statusBar.styleDefault();
         this.splashScreen.hide();
         this.orientationEvent();
-        ;
+        this.registerBackButtonAction();
       } else {
         const config = this.storage.get('config');;
         if (!config) {
@@ -63,7 +63,7 @@ export class AppComponent {
     });
   }
 
-  @HostListener('document:ionBackButton', ['$event'])
+  @HostListener('document:ionBackButton')
   private overrideHardBackAction($event: any) {
     $event.detail.register(100, async () => {
       /** 关闭键盘 */
@@ -128,6 +128,41 @@ export class AppComponent {
 
     //   }
     // );
+  }
+
+  registerBackButtonAction() {
+    window.document.addEventListener('backbutton', async (event) => {
+      /** 关闭键盘 */
+      if (this.keyValue) {
+        this.keyboard.hide();
+        return false;
+      }
+      /** 关闭action sheet */
+      const element = await this.actionCtrl.getTop();
+      if (element) {
+        element.dismiss();
+        return false;
+      }
+
+      /** 关闭modal */
+      const element1 = await this.modalCtrl.getTop();
+      if (element1) {
+        element1.dismiss();
+        return false;
+      }
+      /* 在tabs路由下的监听返回按钮提示退出，特别：tabs/sysdrpbconfig移动基础设置需要单独区分 */
+      const currentUrl = this.router.url;
+      if (currentUrl.indexOf('/tabs/') !== -1) {
+        if (this.backButtonPressed) {
+          this.backButtonPressed = false;
+          this.minimize.minimize(); // 程序最小化
+        } else {
+          this.toast.show('再按一次退出应用', 1000);
+          this.backButtonPressed = true;
+          setTimeout(() => this.backButtonPressed = false, 2000);
+        }
+      }
+    })
   }
 
 }
