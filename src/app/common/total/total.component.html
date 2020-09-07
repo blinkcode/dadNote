@@ -1,13 +1,12 @@
 <ion-content>
     <p class='total_header'>{{date | date:'yyyy-MM-dd'}}&nbsp;统计(单位：吨)</p>
-    <div class="car">
-        <div class="carlabel">车队：&nbsp;&nbsp;</div>
-        <div class="carbox">
-            <ng-container *ngFor="let car of cars; let i=index">
-                <p><span>{{car.carNo}}({{car.person}})：</span>{{car.jingzhong}}</p>
-            </ng-container>
-        </div>
-    </div>
+    <ng-container *ngFor="let car of cars; let i=index">
+        <div>{{car.carNo}}（{{car.person}}）:</div>
+        <ng-container *ngFor="let type of car.types; let j=index">
+            <span>{{type.type}}: {{type.jingzhong}}({{type.count}}车)</span> &nbsp;&nbsp;
+        </ng-container>
+        <span>车队小计: {{car.total}}t&nbsp;({{car.totalCount}}车)</span>
+    </ng-container>
     <div class="outcar">
         <div class="carlabel">外来车辆：&nbsp;&nbsp;</div>
         <div class="carbox">
@@ -20,7 +19,7 @@
     <div class="total">
         <div class="carlabel">统计：&nbsp;&nbsp;</div>
         <div class="carbox">
-           <p style="font-size: 18px;">{{total}}</p>
+            <p style="font-size: 18px;">{{total}}</p>
         </div>
     </div>
 </ion-content>

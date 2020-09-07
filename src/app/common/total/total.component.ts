@@ -24,6 +24,7 @@ export class TotalComponent implements OnInit {
         this.date = this.accountBook.date;
         // this.cars = this.accountBook.cars;
         this.cars = this.initCar();
+        console.log(this.cars);
         this.outCars = this.initOutCar();
         this.total = this.initTotal();
     }
@@ -31,15 +32,29 @@ export class TotalComponent implements OnInit {
         const cars = [];
         this.accountBook.cars.forEach(car => {
             const obj = {};
-            let jingzhong = '0';
+            let total = '0';
+            let totalCount = 0;
+            const car1: string[] = [];
+            const car2 = [];
             car.datas.forEach((d) => {
-                jingzhong = new Big(d.jingzhong || '0').plus(jingzhong).toString();
+                const index = car1.indexOf(d.type)
+                if (index !== -1) {
+                    car2[index].count++;
+                    car2[index].jingzhong === new Big(car2[index].jingzhong).plus(d.jingzhong).toString();
+                } else {
+                    car2.push({ type: d.type, count: 1, jingzhong: d.jingzhong || '0' })
+                    car1.push(d.type);
+                }
+                total = new Big(total).plus(d.jingzhong).toString();
+                totalCount ++;
             })
-            Reflect.set(obj, 'carNo', car.carNo);
             const persons = [];
             car.persons.forEach(person => persons.push(person.userName));
+            Reflect.set(obj, 'carNo', car.carNo);
             Reflect.set(obj, 'person', persons.join('、'));
-            Reflect.set(obj, 'jingzhong', jingzhong);
+            Reflect.set(obj, 'total', total);
+            Reflect.set(obj, 'types', car2),
+            Reflect.set(obj, 'totalCount', totalCount)
             cars.push(obj);
         })
         return cars;
@@ -64,7 +79,7 @@ export class TotalComponent implements OnInit {
     initTotal(){
         let total = '0';
         this.cars.forEach(car => {
-            total = new Big(car.jingzhong).plus(total).toString();
+            total = new Big(car.total).plus(total).toString();
         });
         this.outCars.forEach(outCar => {
             total = new Big(outCar.jingzhong).plus(total).toString();
