@@ -210,11 +210,11 @@ export class FileService {
           const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(data);
           sheets.push(ws);
         });
-        const outCarheader = ['来源', '车牌号', '种类', '毛重（吨）', '皮重（吨）', '扣秤（%）', '净重（吨）', '料款（元）'];
+        const outCarheader = ['来源', '车牌号', '种类', '毛重（吨）', '皮重（吨）', '扣秤（%）', '净重（吨）','单价（元）', '料款（元）'];
         const outcarData = [outCarheader];
         const outCars = res.outCars || [];
         outCars.forEach((car) => {
-          outcarData.push([car.origin, car.carNo, car.type, car.maozhong, car.pizhong, car.koucheng, car.jingzhong, car.amount]);
+          outcarData.push([car.origin, car.carNo, car.type, car.maozhong, car.pizhong, car.koucheng, car.jingzhong, car.price, car.amount]);
         });
         cars.push('外来车辆')
         const outcarws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(outcarData);
