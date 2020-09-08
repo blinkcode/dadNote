@@ -24,7 +24,6 @@ export class TotalComponent implements OnInit {
         this.date = this.accountBook.date;
         // this.cars = this.accountBook.cars;
         this.cars = this.initCar();
-        console.log(this.cars);
         this.outCars = this.initOutCar();
         this.total = this.initTotal();
     }
@@ -40,12 +39,12 @@ export class TotalComponent implements OnInit {
                 const index = car1.indexOf(d.type)
                 if (index !== -1) {
                     car2[index].count++;
-                    car2[index].jingzhong === new Big(car2[index].jingzhong).plus(d.jingzhong).toString();
+                    car2[index].jingzhong = new Big(car2[index].jingzhong).plus(d.jingzhong || '0').toString();
                 } else {
                     car2.push({ type: d.type, count: 1, jingzhong: d.jingzhong || '0' })
                     car1.push(d.type);
                 }
-                total = new Big(total).plus(d.jingzhong).toString();
+                total = new Big(total).plus(d.jingzhong || '0').toString();
                 totalCount ++;
             })
             const persons = [];
@@ -72,7 +71,7 @@ export class TotalComponent implements OnInit {
                 cars.push({ origin: car.origin, type: car.type, count: 1, jingzhong: car.jingzhong || '0' })
                 car1.push(car.origin + car.type);
             }
-        })
+        });
         return cars;
     }
 

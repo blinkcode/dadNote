@@ -1,20 +1,49 @@
 .total_header {
-    text-align: center;
-    font-size: 18px;
-    font-weight: bold;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
 }
 .car,
 .outcar,
 .total {
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 }
 .carlabel {
-    width: 100px;
-    text-align: right;
-    font-size: 16px;
-    font-weight: bold;
+  width: 100px;
+  text-align: right;
+  font-size: 16px;
+  font-weight: bold;
 }
 .carbox {
-    flex: 1;
+  flex: 1;
+}
+.title {
+  font-size: 17px;
+  font-weight: bold;
+  padding-left: 16px;
+  margin-bottom: 0px;
+}
+.carNo {
+  font-size: 15px;
+  padding-left: 32px;
+  font-weight: bold;
+  margin-top: 8px;
+  color: #108ee9;
+}
+.smallTotal {
+  font-weight: bold;
+  padding-left: 32px;
+  & > span {
+    color: #e94f4f;
+  }
+}
+.total {
+  font-size: 18px;
+  font-weight: bold;
+  padding-left: 16px;
+  margin: 8px 0px;
+  & > span {
+    color: #e94f4f;
+  }
 }
