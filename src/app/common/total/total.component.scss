@@ -1,6 +1,6 @@
 .total_header {
   text-align: center;
-  font-size: 18px;
+  font-size: 14px;
   font-weight: bold;
   margin: 0px 0px;
 }
@@ -20,7 +20,7 @@
   flex: 1;
 }
 .title {
-  font-size: 17px;
+  font-size: 14px;
   font-weight: bold;
   padding-left: 16px;
   margin-bottom: 0px;
@@ -29,7 +29,7 @@
   font-size: 15px;
   padding-left: 32px;
   font-weight: bold;
-  margin-top: 8px;
+  margin-top: 0px;
   color: #108ee9;
 }
 .smallTotal {
@@ -43,7 +43,7 @@
   font-size: 18px;
   font-weight: bold;
   padding-left: 16px;
-  margin: 8px 0px;
+  margin: 0px 0px;
   & > span {
     color: #e94f4f;
   }

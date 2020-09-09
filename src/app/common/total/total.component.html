@@ -1,5 +1,4 @@
-<!-- <ion-content> -->
-<div class="box">
+<ion-content>
     <p class='total_header'>{{date | date:'yyyy-MM-dd'}}&nbsp;统计(单位：吨)</p>
     <p class="title">车队&nbsp;&nbsp;共计：<span style="color: #e94f4f;">{{carTotal.total}}({{carTotal.count}}车)</span></p>
     <ng-container *ngFor="let car of cars; let i=index">
@@ -8,10 +7,11 @@
             <ng-container *ngFor="let type of car.types; let j=index">
                 <span>{{type.type}}:{{type.jingzhong}}({{type.count}}车)</span>&nbsp;&nbsp;&nbsp;&nbsp;
             </ng-container>
-            <span class="smallTotal">小计: <span>{{car.total}}&nbsp;({{car.totalCount}}车)</span></span>
-        </div>  
+            <span class="smallTotal" style="padding-left:16px;">小计: <span>{{car.total}}&nbsp;({{car.totalCount}}车)</span></span>
+        </div>
     </ng-container>
-    <p class="title" style="margin:8px 0px">外来车辆&nbsp;&nbsp;共计：<span style="color: #e94f4f;">{{outCarTotal.total}}({{outCarTotal.count}}车)</span></p>
+    <p class="title" style="margin:3px 0px">外来车辆&nbsp;&nbsp;共计：<span
+            style="color: #e94f4f;">{{outCarTotal.total}}({{outCarTotal.count}}车)</span></p>
     <div style="padding-left:35px;">
         <ng-container *ngFor="let outCar of outCars; let i=index">
             <span>{{outCar.origin}}-{{outCar.type}}:</span>{{outCar.jingzhong}}
@@ -22,6 +22,5 @@
         总计：&nbsp;
         <span style="font-size: 18px;">{{total}}</span>
     </div>
-</div>
 
-<!-- </ion-content> -->
+</ion-content>
