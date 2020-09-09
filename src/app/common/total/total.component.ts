@@ -15,6 +15,8 @@ export class TotalComponent implements OnInit {
     cars: any[] = [];
     outCars: any[] = [];
     total = '0';
+    carTotal = { total: '0', count: 0 };
+    outCarTotal = { total: '0', count: 0 };
     constructor() { }
 
     ngOnInit() {
@@ -25,6 +27,8 @@ export class TotalComponent implements OnInit {
         // this.cars = this.accountBook.cars;
         this.cars = this.initCar();
         this.outCars = this.initOutCar();
+        this.carTotal = this.getTotalCar();
+        this.outCarTotal = this.getOutTotalCar();
         this.total = this.initTotal();
     }
     initCar() {
@@ -45,7 +49,7 @@ export class TotalComponent implements OnInit {
                     car1.push(d.type);
                 }
                 total = new Big(total).plus(d.jingzhong || '0').toString();
-                totalCount ++;
+                totalCount++;
             })
             const persons = [];
             car.persons.forEach(person => persons.push(person.userName));
@@ -53,7 +57,7 @@ export class TotalComponent implements OnInit {
             Reflect.set(obj, 'person', persons.join('、'));
             Reflect.set(obj, 'total', total);
             Reflect.set(obj, 'types', car2),
-            Reflect.set(obj, 'totalCount', totalCount)
+                Reflect.set(obj, 'totalCount', totalCount)
             cars.push(obj);
         })
         return cars;
@@ -75,7 +79,7 @@ export class TotalComponent implements OnInit {
         return cars;
     }
 
-    initTotal(){
+    initTotal() {
         let total = '0';
         this.cars.forEach(car => {
             total = new Big(car.total).plus(total).toString();
@@ -86,4 +90,21 @@ export class TotalComponent implements OnInit {
         return total;
     }
 
+    getTotalCar() {
+        let total = { total: '0', count: 0 };
+        this.cars.forEach(car => {
+            total.total = new Big(car.total || '0').plus(total.total).toString();
+            total.count = total.count + car.totalCount;
+        });
+        return total;
+    }
+
+    getOutTotalCar(){
+        let total = { total: '0', count: 0 };
+        this.outCars.forEach(car => {
+            total.total = new Big(car.jingzhong || '0').plus(total.total).toString();
+            total.count = total.count + car.count;
+        });
+        return total;
+    }
 }

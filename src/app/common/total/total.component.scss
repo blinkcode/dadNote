@@ -2,6 +2,7 @@
   text-align: center;
   font-size: 18px;
   font-weight: bold;
+  margin: 0px 0px;
 }
 .car,
 .outcar,
@@ -46,4 +47,7 @@
   & > span {
     color: #e94f4f;
   }
+}
+.box{
+    transform: scale(0.8);
 }
