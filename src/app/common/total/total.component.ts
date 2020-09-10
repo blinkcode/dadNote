@@ -40,16 +40,19 @@ export class TotalComponent implements OnInit {
             const car1: string[] = [];
             const car2 = [];
             car.datas.forEach((d) => {
-                const index = car1.indexOf(d.type)
-                if (index !== -1) {
-                    car2[index].count++;
-                    car2[index].jingzhong = new Big(car2[index].jingzhong).plus(d.jingzhong || '0').toString();
-                } else {
-                    car2.push({ type: d.type, count: 1, jingzhong: d.jingzhong || '0' })
-                    car1.push(d.type);
+                const jingzhong = d.jingzhong.trim();
+                if (jingzhong && jingzhong !== '0') {
+                    const index = car1.indexOf(d.type)
+                    if (index !== -1) {
+                        car2[index].count++;
+                        car2[index].jingzhong = new Big(car2[index].jingzhong).plus(d.jingzhong || '0').toString();
+                    } else {
+                        car2.push({ type: d.type, count: 1, jingzhong: d.jingzhong || '0' })
+                        car1.push(d.type);
+                    }
+                    total = new Big(total).plus(d.jingzhong || '0').toString();
+                    totalCount++;
                 }
-                total = new Big(total).plus(d.jingzhong || '0').toString();
-                totalCount++;
             })
             const persons = [];
             car.persons.forEach(person => persons.push(person.userName));
@@ -67,13 +70,16 @@ export class TotalComponent implements OnInit {
         const outCars = this.accountBook.outCars || [];
         const car1: string[] = [];
         outCars.forEach(car => {
-            const index = car1.indexOf(car.origin + car.type)
-            if (index !== -1) {
-                cars[index].count++;
-                cars[index].jingzhong = new Big(cars[index].jingzhong).plus(car.jingzhong || '0').toString();
-            } else {
-                cars.push({ origin: car.origin, type: car.type, count: 1, jingzhong: car.jingzhong || '0' })
-                car1.push(car.origin + car.type);
+            const jingzhong = car.jingzhong.trim();
+            if (jingzhong && jingzhong !== '0') {
+                const index = car1.indexOf(car.origin + car.type)
+                if (index !== -1) {
+                    cars[index].count++;
+                    cars[index].jingzhong = new Big(cars[index].jingzhong).plus(car.jingzhong || '0').toString();
+                } else {
+                    cars.push({ origin: car.origin, type: car.type, count: 1, jingzhong: car.jingzhong || '0' })
+                    car1.push(car.origin + car.type);
+                }
             }
         });
         return cars;
@@ -99,7 +105,7 @@ export class TotalComponent implements OnInit {
         return total;
     }
 
-    getOutTotalCar(){
+    getOutTotalCar() {
         let total = { total: '0', count: 0 };
         this.outCars.forEach(car => {
             total.total = new Big(car.jingzhong || '0').plus(total.total).toString();
