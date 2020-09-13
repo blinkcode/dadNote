@@ -1,123 +1,131 @@
 <div class="note_box">
-  <div class="header">账本日期：{{accountBook.date | date:'yyyy-MM-dd'}}</div>
-  <div class="button_box">
-    <div size='small' [hidden]="editable" Button [inline]="true" [type]="'ghost'" (click)="backToday()">返回今日账本</div>
-    <div size='small' [disabled]="!editable" Button [inline]="true" [type]="'ghost'" (click)="addCarCtrl()">添加车队</div>
-    <div size='small' [disabled]="!editable" Button [inline]="true" [type]="'ghost'" (click)="editCar()">修改车队</div>
-    <div size='small' Button [inline]="true" [type]="'ghost'" (click)="total()">统计</div>
-    <div size='small' [disabled]="!editable" class="alignt_right" Button [inline]="true" [type]="'ghost'"
-      (click)="save()">保存</div>
-    <div size='small' [hidden]='isHidden' class="alignt_right" [disabled]="!editable" Button [inline]="true"
-      [type]="'ghost'" (click)="copy()">复制一行</div>
-    <div size='small' [disabled]="!editable" class="alignt_right" Button [inline]="true" [type]="'ghost'"
-      (click)="addRow()">添加一行</div>
-    <div size='small' [disabled]="!editable" class="alignt_right" Button [inline]='true' [type]="'warning'"
-      (click)="deleteRow()">删除一行</div>
-  </div>
-  <div class="table_box" #tableBox>
-    <Tabs (onChange)='changeTab($event)' [swipeable]='swipeable' [useOnPan]="true" [activeTab]="activeTabIndex"
-      [tabBarActiveTextColor]="'#1890ff'">
-      <TabPane *ngFor="let car of accountBook.cars; let i = index" [title]="'车队'+(i+1)+'-'+car.carNo">
-        <div style="width: 100%;height:100%">
-          <nz-table #table nzBordered nzSize='small' [nzData]="car.datas" [nzScroll]="scroll" [nzShowPagination]='false'
-            nzPageSize='150'>
-            <thead>
-              <tr #tableHeader>
-                <th nzWidth="20px"></th>
-                <th class="table_header">车队</th>
-                <th class="table_header">出发时间</th>
-                <th class="table_header">回厂时间</th>
-                <th class="table_header">货料来源</th>
-                <th class="table_header">货料种类</th>
-                <th class="table_header">毛重(吨)</th>
-                <th class="table_header">皮重(吨)</th>
-                <th class="table_header">净重(吨)</th>
-                <th class="table_header">料款(元)</th>
-                <th class="table_header">电子秤图片</th>
-                <th class="table_header">操作</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let data of table.data;let j=index">
-                <td style="margin: 0px;padding:0px;" [nzChecked]="setOfCheckedId.has(data.id)"
-                  (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
-                <ng-container *ngIf="j === 0">
-                  <td [attr.rowspan]='table.data.length' class="table_header">
-                    <span class="carName">{{car.carNo}}</span><br>
-                    <ng-container *ngFor="let person of car.persons">
-                      <span class="carPerson">{{person.userName}}</span><br>
-                    </ng-container>
-                  </td>
-                </ng-container>
-                <td class="table_header">{{data.startTime}}</td>
-                <td class="table_header">{{data.endTime}}</td>
-                <td class="table_header" (click)="editCtrl('origin',i,j)">{{data.origin}}</td>
-                <td class="table_header" (click)="editCtrl('type',i,j)">{{data.type}}</td>
-                <td class="table_header" (click)="selfEditCtrl('maozhong',i,j,data.maozhong)">{{data.maozhong}}</td>
-                <ng-container *ngIf="j === 0">
-                  <td [attr.rowspan]='table.data.length' class="table_header">{{data.pizhong}}</td>
-                </ng-container>
-                <td class="table_header">{{data.jingzhong}}</td>
-                <td class="table_header" (click)="selfEditCtrl('amount',i,j, data.amount)">{{data.amount}}</td>
-                <td class="table_header">
-                  <img class="img" (click)="seeImg(data.img)" [src]="data.thumbnail" alt="">
-                </td>
-                <td class="table_header">
-                  <a [hidden]='data.img' (click)="openCamera(i,j)">拍摄</a>
-                  <a [hidden]='!data.img' class='delete' (click)="deleteImg(i,j)">删除</a>
-                </td>
-              </tr>
-            </tbody>
-          </nz-table>
-        </div>
-      </TabPane>
-      <TabPane title='外来车辆'>
-        <div style="width: 100%;height:100%">
-          <nz-table #outTable nzBordered nzSize='small' [nzData]="accountBook.outCars" [nzScroll]="scroll"
-            [nzShowPagination]='false' nzPageSize='150'>
-            <thead>
-              <tr #tableHeader>
-                <th nzWidth="30px"></th>
-                <th class="table_header">来源</th>
-                <th class="table_header">车牌号</th>
-                <th class="table_header">货料种类</th>
-                <th class="table_header">毛重(吨)</th>
-                <th class="table_header">皮重(吨)</th>
-                <th class="table_header">扣秤(%)</th>
-                <th class="table_header">净重(吨)</th>
-                <th class="table_header">单价(元)</th>
-                <th class="table_header">料款(元)</th>
-                <th class="table_header">电子秤图片</th>
-                <th class="table_header">操作</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let data of outTable.data;let z=index">
-                <td style="margin: 0px;padding:0px;" [nzChecked]="setOfCheckedId.has(data.id)"
-                  (nzCheckedChange)="onItemChecked(data.id, $event)">
-                </td>
-                <td class="table_header" (click)="editOut(data.origin,z,'origin')">{{data.origin}}</td>
-                <td class="table_header" (click)="editOut(data.carNo,z, 'carNo')">{{data.carNo}}</td>
-                <td class="table_header" (click)="editCtrl('type',0,z)">{{data.type}}</td>
-                <td class="table_header" (click)="editOut(data.maozhong,z,'maozhong')">{{data.maozhong}}</td>
-                <td class="table_header" (click)="editOut(data.pizhong,z,'pizhong')">{{data.pizhong}}</td>
-                <td class="table_header" (click)="editOut(data.koucheng,z,'koucheng')">{{data.koucheng}}</td>
-                <td class="table_header">{{data.jingzhong}}</td>
-                <td class="table_header" (click)="editOut(data.price, z, 'price')">{{data.price}}</td>
-                <!-- <td class="table_header" (click)="editOut(data.amount,z,'amount')">{{data.amount}}</td> -->
-                <td class="table_header">{{data.amount}}</td>
-                <td class="table_header">
-                  <img class="img" (click)="seeImg(data.img)" [src]="data.thumbnail" alt="">
-                </td>
-                <td class="table_header">
-                  <a [hidden]='data.img' (click)="openOutCamera(z)">拍摄</a>
-                  <a [hidden]='!data.img' class='delete' (click)="deleteOutImg(z)">删除</a>
-                </td>
-              </tr>
-            </tbody>
-          </nz-table>
-        </div>
-      </TabPane>
-    </Tabs>
-  </div>
+    <div class="header">账本日期：{{accountBook.date | date:'yyyy-MM-dd'}}</div>
+    <div class="button_box">
+        <div size='small' [hidden]="editable" Button [inline]="true" [type]="'ghost'" (click)="backToday()">返回今日账本</div>
+        <div size='small' [disabled]="!editable" Button [inline]="true" [type]="'ghost'" (click)="addCarCtrl()">添加车队</div>
+        <div size='small' [disabled]="!editable" Button [inline]="true" [type]="'ghost'" (click)="editCar()">修改车队</div>
+        <div size='small' Button [inline]="true" [type]="'ghost'" (click)="total()">统计</div>
+        <div size='small' [disabled]="!editable" class="alignt_right" Button [inline]="true" [type]="'ghost'"
+            (click)="save()">保存</div>
+        <div size='small' [hidden]='isHidden' class="alignt_right" [disabled]="!editable" Button [inline]="true"
+            [type]="'ghost'" (click)="copy()">复制一行</div>
+        <div size='small' [disabled]="!editable" class="alignt_right" Button [inline]="true" [type]="'ghost'"
+            (click)="addRow()">添加一行</div>
+        <div size='small' [disabled]="!editable" class="alignt_right" Button [inline]='true' [type]="'warning'"
+            (click)="deleteRow()">删除一行</div>
+    </div>
+    <div class="table_box" #tableBox>
+        <Tabs (onChange)='changeTab($event)' [swipeable]='swipeable' [useOnPan]="true" [activeTab]="activeTabIndex"
+            [tabBarActiveTextColor]="'#1890ff'">
+            <TabPane *ngFor="let car of accountBook.cars; let i = index" [title]="'车队'+(i+1)+'-'+car.carNo">
+                <div style="width: 100%;height:100%">
+                    <nz-table #table nzBordered nzSize='small' [nzData]="car.datas" [nzScroll]="scroll"
+                        [nzShowPagination]='false' nzPageSize='150'>
+                        <thead>
+                            <tr #tableHeader>
+                                <th nzWidth="20px"></th>
+                                <th class="table_header">车队</th>
+                                <th class="table_header">出发时间</th>
+                                <th class="table_header">回厂时间</th>
+                                <th class="table_header">货料来源</th>
+                                <th class="table_header">货料种类</th>
+                                <th class="table_header">毛重(吨)</th>
+                                <th class="table_header">皮重(吨)</th>
+                                <th class="table_header">净重(吨)</th>
+                                <th class="table_header">料款(元)</th>
+                                <th class="table_header">电子秤图片</th>
+                                <th class="table_header">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let data of table.data;let j=index">
+                                <td style="margin: 0px;padding:0px;" [nzChecked]="setOfCheckedId.has(data.id)"
+                                    (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
+                                <ng-container *ngIf="j === 0">
+                                    <td [attr.rowspan]='table.data.length' class="table_header">
+                                        <span class="carName">{{car.carNo}}</span><br>
+                                        <ng-container *ngFor="let person of car.persons">
+                                            <span class="carPerson">{{person.userName}}</span><br>
+                                        </ng-container>
+                                    </td>
+                                </ng-container>
+                                <td class="table_header">{{data.startTime}}</td>
+                                <td class="table_header">{{data.endTime}}</td>
+                                <td class="table_header" (click)="editCtrl('origin',i,j)">{{data.origin}}</td>
+                                <td class="table_header" (click)="editCtrl('type',i,j)">{{data.type}}</td>
+                                <td class="table_header" (click)="selfEditCtrl('maozhong',i,j,data.maozhong)">
+                                    {{data.maozhong}}</td>
+                                <ng-container *ngIf="j === 0">
+                                    <td [attr.rowspan]='table.data.length' class="table_header">{{data.pizhong}}</td>
+                                </ng-container>
+                                <td class="table_header">{{data.jingzhong}}</td>
+                                <td class="table_header" (click)="selfEditCtrl('amount',i,j, data.amount)">
+                                    {{data.amount}}</td>
+                                <td class="table_header">
+                                    <!-- <img class="img" (click)="seeImg(data.img)" [src]="data.thumbnail" alt=""> -->
+                                    <span [hidden]="data.img.length !== 0">0张</span>
+                                    <span [hidden]="data.img.length === 0"
+                                        (click)="openPicture(i,j)">{{data.img.length}}张</span>
+                                </td>
+                                <td class="table_header">
+                                    <a (click)="openCamera(i,j)">拍摄</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </nz-table>
+                </div>
+            </TabPane>
+            <TabPane title='外来车辆'>
+                <div style="width: 100%;height:100%">
+                    <nz-table #outTable nzBordered nzSize='small' [nzData]="accountBook.outCars" [nzScroll]="scroll"
+                        [nzShowPagination]='false' nzPageSize='150'>
+                        <thead>
+                            <tr #tableHeader>
+                                <th nzWidth="30px"></th>
+                                <th class="table_header">来源</th>
+                                <th class="table_header">车牌号</th>
+                                <th class="table_header">货料种类</th>
+                                <th class="table_header">毛重(吨)</th>
+                                <th class="table_header">皮重(吨)</th>
+                                <th class="table_header">扣秤(%)</th>
+                                <th class="table_header">净重(吨)</th>
+                                <th class="table_header">单价(元)</th>
+                                <th class="table_header">料款(元)</th>
+                                <th class="table_header">电子秤图片</th>
+                                <th class="table_header">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let data of outTable.data;let z=index">
+                                <td style="margin: 0px;padding:0px;" [nzChecked]="setOfCheckedId.has(data.id)"
+                                    (nzCheckedChange)="onItemChecked(data.id, $event)">
+                                </td>
+                                <td class="table_header" (click)="editOut(data.origin,z,'origin')">{{data.origin}}</td>
+                                <td class="table_header" (click)="editOut(data.carNo,z, 'carNo')">{{data.carNo}}</td>
+                                <td class="table_header" (click)="editCtrl('type',0,z)">{{data.type}}</td>
+                                <td class="table_header" (click)="editOut(data.maozhong,z,'maozhong')">{{data.maozhong}}
+                                </td>
+                                <td class="table_header" (click)="editOut(data.pizhong,z,'pizhong')">{{data.pizhong}}
+                                </td>
+                                <td class="table_header" (click)="editOut(data.koucheng,z,'koucheng')">{{data.koucheng}}
+                                </td>
+                                <td class="table_header">{{data.jingzhong}}</td>
+                                <td class="table_header" (click)="editOut(data.price, z, 'price')">{{data.price}}</td>
+                                <!-- <td class="table_header" (click)="editOut(data.amount,z,'amount')">{{data.amount}}</td> -->
+                                <td class="table_header">{{data.amount}}</td>
+                                <td class="table_header">
+                                     <span [hidden]="data.img.length !== 0">0张</span>
+                                     <span [hidden]="data.img.length === 0"
+                                         (click)="openOutPicture(z)">{{data.img.length}}张</span>
+                                </td>
+                                <td class="table_header">
+                                    <a (click)="openOutCamera(z)">拍摄</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </nz-table>
+                </div>
+            </TabPane>
+        </Tabs>
+    </div>
 </div>

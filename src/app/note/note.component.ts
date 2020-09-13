@@ -1,3 +1,4 @@
+import { PicturesComponent } from './../common/pictures/pictures.component';
 import { TotalComponent } from './../common/total/total.component';
 import { CameraService } from './../common/camera/camera.service';
 import { FileService } from './../common/file/file.service';
@@ -14,6 +15,7 @@ import { isNumber } from 'util';
 import * as cloneDeep from "clone-deep";
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
+import { EventService } from '../common/events/event.service';
 
 @Component({
     selector: 'app-note',
@@ -43,7 +45,8 @@ export class NoteComponent implements OnInit, AfterViewInit {
         private modal: ModalService,
         private activedRouter: ActivatedRoute,
         private router: Router,
-        private modalCtrl: ModalController
+        private modalCtrl: ModalController,
+        private event: EventService,
     ) { }
 
     ngOnInit() {
@@ -93,7 +96,11 @@ export class NoteComponent implements OnInit, AfterViewInit {
         this.file.readFile(date || new Date().toISOString()).then((account) => {
             this.toast.hide();
             this.accountBook = account;
-        })
+            if (this.accountBook.cars.length) {
+                this.isHidden = true;
+            }
+        });
+        this.listenSub();
     }
 
     /**
@@ -125,7 +132,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
             id: uuidv4(), carNo: this.selectedCar.carNo, startTime: '',
             endTime: '', origin: '', type: '',
             maozhong: '', pizhong: this.selectedCar.weight, jingzhong: '',
-            amount: '', img: '', thumbnail: ''
+            amount: '', img: [], thumbnail: ['']
         }]
         this.accountBook.cars.push({ ...this.selectedCar, datas: arr, persons: [... this.selectedPerson] })
         console.log(this.accountBook);
@@ -260,7 +267,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
             const outCar: OutCar = {
                 id: uuidv4(), carNo: '', origin: '', type: '',
                 pizhong: '', maozhong: '', jingzhong: '',
-                amount: '', img: '', thumbnail: '', koucheng: '0', price: '0'
+                amount: '', img: [], thumbnail: [], koucheng: '0', price: '0'
             }
             const outCars = cloneDeep(this.accountBook.outCars);
             outCars.push(outCar);
@@ -271,7 +278,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
                 id: uuidv4(), carNo: car.carNo, startTime: '',
                 endTime: '', origin: '', type: '',
                 maozhong: '', pizhong: car.weight,
-                jingzhong: '', amount: '', img: '',
+                jingzhong: '', amount: [], img: [], thumbnail: []
             }
             const datas = cloneDeep(this.accountBook.cars[this.activeTabIndex].datas);
             datas.push(row)
@@ -567,7 +574,11 @@ export class NoteComponent implements OnInit, AfterViewInit {
         if (!this.editable) {
             return false;
         }
-        this.accountBook.cars[this.editCarIndex].datas[this.editRowIndex][type] = value;
+        if (type === 'img' || type === 'thumbnail') {
+            this.accountBook.cars[this.editCarIndex].datas[this.editRowIndex][type].push(value);
+        } else {
+            this.accountBook.cars[this.editCarIndex].datas[this.editRowIndex][type] = value;
+        }
         if (type === 'maozhong') {
             const pizhong = this.accountBook.cars[this.editCarIndex].weight;
             const jingzhong = new Big(value).minus(pizhong).toString();
@@ -607,7 +618,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
         })
     }
 
-    deleteImg(i: number, j: number) {
+    private deleteImg(i: number, j: number) {
         if (!this.editable) {
             this.toast.info('只有当天的账本可以修改');
             return false;
@@ -740,7 +751,11 @@ export class NoteComponent implements OnInit, AfterViewInit {
         if (!this.editable) {
             return false;
         }
-        this.accountBook.outCars[this.editRowIndex][type] = value;
+        if (type === 'img' || type === 'thumbnail') {
+            this.accountBook.outCars[this.editRowIndex][type].push(value);
+        } else {
+            this.accountBook.outCars[this.editRowIndex][type] = value;
+        }
         if (type === 'maozhong') {
             const koucheng = this.accountBook.outCars[this.editRowIndex].koucheng || '0';
             const pizhong = this.accountBook.outCars[this.editRowIndex].pizhong || '0';
@@ -802,5 +817,45 @@ export class NoteComponent implements OnInit, AfterViewInit {
             }
         });
         await modal.present();
+    }
+
+    /**
+     * 打开图片预览框
+     */
+    async openPicture(i, j) {
+        const thumbnails = this.accountBook.cars[this.activeTabIndex].datas[j].thumbnail;
+        const pictures = this.accountBook.cars[this.activeTabIndex].datas[j].img;
+
+        const modal = await this.modalCtrl.create({
+            component: PicturesComponent,
+            componentProps: {
+                thumbnails: thumbnails,
+                pictures: pictures
+            }
+        });
+        await modal.present();
+    }
+
+    /**
+     * 打开图片预览框
+     */
+    async openOutPicture(index: number) {
+        const thumbnails = this.accountBook.outCars[index].thumbnail;
+        const pictures = this.accountBook.outCars[index].img;
+
+        const modal = await this.modalCtrl.create({
+            component: PicturesComponent,
+            componentProps: {
+                thumbnails: thumbnails,
+                pictures: pictures
+            }
+        });
+        await modal.present();
+    }
+    private listenSub() {
+        const sub$ = this.event.getSub();
+        sub$.subscribe((i) => {
+            this.save(true);
+        });
     }
 }

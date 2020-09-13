@@ -78,11 +78,11 @@ export interface Table {
     /**
      * 拍摄图片地址
      */
-    img: string;
+    img: string[];
     /**
      * 缩略图地址
      */
-    thumbnail: string;
+    thumbnail: string[];
 }
 export interface Data extends Table {
     id: string;
@@ -142,9 +142,9 @@ export interface OutCar {
     /**
      * 图片地址
      */
-    img: string;
+    img: string[];
     /**
      * 缩略图
      */
-    thumbnail: string;
+    thumbnail: string[];
 }
