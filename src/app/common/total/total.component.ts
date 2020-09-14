@@ -1,6 +1,9 @@
-import { AccountBook, AccountCar } from './../model/model';
+import { AccountBook } from './../model/model';
 import { Component, OnInit, Input } from '@angular/core';
 import { Big } from "big.js";
+import { CameraService } from '../camera/camera.service';
+import html2canvas from 'html2canvas';
+import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 
 @Component({
     selector: 'app-total',
@@ -17,7 +20,10 @@ export class TotalComponent implements OnInit {
     total = '0';
     carTotal = { total: '0', count: 0 };
     outCarTotal = { total: '0', count: 0 };
-    constructor() { }
+    constructor(
+        private camera: CameraService,
+        private socialSharing: SocialSharing
+    ) { }
 
     ngOnInit() {
         this.init();
@@ -112,5 +118,19 @@ export class TotalComponent implements OnInit {
             total.count = total.count + car.count;
         });
         return total;
+    }
+
+    /**
+     * 分享
+     */
+    share() {
+        const element = document.getElementById('content_box');
+        html2canvas(element).then(canvas => {
+            canvas.toBlob(content => {
+                this.camera.saveFile(content, new Date().toDateString()).then((path: string) => {
+                    this.socialSharing.share(null, null, path, null).then(() => { }, err => console.log('分享失败', err))
+                });
+            });
+        })
     }
 }

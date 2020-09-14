@@ -41,8 +41,8 @@ export class CameraService {
      * @param dateStr 时间
      * @param isThumbnail 是否是缩略图
      */
-    private saveFile(content: Blob, dateStr: string, isThumbnail?: boolean) {
-        const year = moment(dateStr).years();
+    saveFile(content: Blob, dateStr: string, isThumbnail?: boolean): Promise<any> {
+        const year = moment(dateStr).year();
         const month = moment(dateStr).month() + 1 + '';
         const date = moment(dateStr).date();
         const root = this.file.externalRootDirectory;
