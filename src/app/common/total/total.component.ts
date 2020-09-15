@@ -101,7 +101,7 @@ export class TotalComponent implements OnInit {
         this.outCars.forEach(outCar => {
             total = new Big(outCar.jingzhong).plus(total).toString();
         });
-        return total;
+        return total; 
     }
 
     getTotalCar() {
