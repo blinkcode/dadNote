@@ -831,7 +831,8 @@ export class NoteComponent implements OnInit, AfterViewInit {
             component: PicturesComponent,
             componentProps: {
                 thumbnails: thumbnails,
-                pictures: pictures
+                pictures: pictures,
+                editable: this.editable
             }
         });
         await modal.present();
@@ -848,7 +849,8 @@ export class NoteComponent implements OnInit, AfterViewInit {
             component: PicturesComponent,
             componentProps: {
                 thumbnails: thumbnails,
-                pictures: pictures
+                pictures: pictures,
+                editable: this.editable
             }
         });
         await modal.present();

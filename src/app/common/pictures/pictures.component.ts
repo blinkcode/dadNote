@@ -3,6 +3,7 @@ import { FileService } from './../file/file.service';
 import { ModalService, ToastService } from 'ng-zorro-antd-mobile';
 import { EventService } from './../events/event.service';
 import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
+import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 
 @Component({
     selector: 'app-pictures',
@@ -15,11 +16,14 @@ export class PicturesComponent implements OnInit {
     pictures: string[];
     @Input()
     thumbnails: string[];
+    @Input()
+    editable: boolean;
     constructor(
         private event: EventService,
         private modal1: ActionSheetController,
         private file: FileService,
         private toast: ToastService,
+        private share: SocialSharing
     ) { }
 
     ngOnInit() { }
@@ -47,6 +51,11 @@ export class PicturesComponent implements OnInit {
                     this.openImg(i);
                 }
             }, {
+                text: '分享图片',
+                handler: () => {
+                    this.shareImg(i);
+                }
+            }, {
                 text: '删除图片',
                 role: 'destructive',
                 handler: () => {
@@ -64,6 +73,9 @@ export class PicturesComponent implements OnInit {
      * 删除图片
      */
     delete(i) {
+        if (!this.editable) {
+            return false;
+        }
         this.pictures.splice(i, 1);
         this.thumbnails.splice(i, 1);
         this.event.publish(i);
@@ -77,6 +89,15 @@ export class PicturesComponent implements OnInit {
         this.file.seeImg(filePath).catch(err => {
             this.toast.fail('打开失败');
         })
+    }
+
+    shareImg(i: number) {
+        const imgPath = this.pictures[i];
+        this.share.share(null, null, imgPath, null).then(() => {
+            this.toast.success('分享成功');
+        }).catch(() => {
+            this.toast.fail('分享失败');
+        });
     }
 
 }
