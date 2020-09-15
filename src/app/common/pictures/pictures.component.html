@@ -1,0 +1,5 @@
+<ion-content>
+    <div class="img" *ngFor="let thumbnail of thumbnails; let i=index">
+        <img  (click)="openModal(i)" [src]="thumbnail" alt="">
+    </div>
+</ion-content>

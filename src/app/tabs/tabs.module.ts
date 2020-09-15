@@ -11,6 +11,7 @@ import { NgZorroAntdMobileModule } from 'ng-zorro-antd-mobile';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { ViewCommonComponent } from '../common/view/view.component';
 import { TotalComponent } from '../common/total/total.component';
+import { PicturesComponent } from '../common/pictures/pictures.component';
 
 
 @NgModule({
@@ -22,6 +23,6 @@ import { TotalComponent } from '../common/total/total.component';
     NgZorroAntdMobileModule,
     NzTableModule
   ],
-  declarations: [TabsPage, NoteComponent, ViewComponent, ViewCommonComponent, TotalComponent]
+  declarations: [TabsPage, NoteComponent, ViewComponent, ViewCommonComponent, TotalComponent, PicturesComponent]
 })
 export class TabsPageModule { }
