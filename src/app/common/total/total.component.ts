@@ -4,6 +4,7 @@ import { Big } from "big.js";
 import { CameraService } from '../camera/camera.service';
 import html2canvas from 'html2canvas';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import { ModalController } from '@ionic/angular';
 
 @Component({
     selector: 'app-total',
@@ -22,7 +23,8 @@ export class TotalComponent implements OnInit {
     outCarTotal = { total: '0', count: 0 };
     constructor(
         private camera: CameraService,
-        private socialSharing: SocialSharing
+        private socialSharing: SocialSharing,
+        private modal: ModalController
     ) { }
 
     ngOnInit() {
@@ -125,12 +127,14 @@ export class TotalComponent implements OnInit {
      */
     share() {
         const element = document.getElementById('content_box');
-        html2canvas(element).then(canvas => {
-            canvas.toBlob(content => {
-                this.camera.saveFile(content, new Date().toDateString()).then((path: string) => {
-                    this.socialSharing.share(null, null, path, null).then(() => { }, err => console.log('分享失败', err))
+        this.modal.getTop().then((modal: any) => {
+            html2canvas(modal).then(canvas => {
+                canvas.toBlob(content => {
+                    this.camera.saveFile(content, new Date().toDateString()).then((path: string) => {
+                        this.socialSharing.share(null, null, path, null).then(() => { }, err => console.log('分享失败', err))
+                    });
                 });
-            });
+            })
         })
     }
 }
