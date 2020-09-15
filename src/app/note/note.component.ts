@@ -132,7 +132,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
             id: uuidv4(), carNo: this.selectedCar.carNo, startTime: '',
             endTime: '', origin: '', type: '',
             maozhong: '', pizhong: this.selectedCar.weight, jingzhong: '',
-            amount: '', img: [], thumbnail: ['']
+            amount: '', img: [], thumbnail: []
         }]
         this.accountBook.cars.push({ ...this.selectedCar, datas: arr, persons: [... this.selectedPerson] })
         console.log(this.accountBook);
@@ -694,7 +694,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
             this.toast.info('请勾选一行', 1500);
             return false;
         }
-        const newrow = { id: uuidv4(), maozhong: '', jingzhong: '', amount: '', img: '', thumbnail: '', type: '', koucheng: '0', price: '0' };
+        const newrow = { id: uuidv4(), maozhong: '', jingzhong: '', amount: '', img: [], thumbnail: [], type: '', koucheng: '0', price: '0' };
         const copyRow = this.accountBook.outCars.filter(car => car.id === id).pop();
         const newCopyRow = { ...copyRow, ...newrow };
         const outCars = cloneDeep(this.accountBook.outCars);
@@ -790,6 +790,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
             return false;
         }
         this.editRowIndex = z;
+        this.editCarIndex = this.accountBook.cars.length;
         this.camera.openCamera().then((img: any) => {
             this.setOutCellValue('img', img.img)
             this.setOutCellValue('thumbnail', img.thumbnail);
