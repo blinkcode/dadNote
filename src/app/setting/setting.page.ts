@@ -10,14 +10,16 @@ import { Router } from '@angular/router';
 export class SettingPage implements OnInit {
   config: any = null;
   swipeable = false;
-  constructor(
-    private file: FileService
-
-  ) { }
+  activeTab = 0;
+  activeTab1 = 0;
+  constructor(private file: FileService) {}
 
   ngOnInit() {
     this.file.readConfig().then((config) => {
       this.config = config;
-    })
+    });
+  }
+  changeTabe({ index }) {
+    this.activeTab1 = index;
   }
 }

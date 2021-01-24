@@ -1,14 +1,17 @@
-<Tabs class='setting_tab' [swipeable]='swipeable' [page]="5" [tabBarPosition]="'left'" [tabDirection]="'vertical'">
+<Tabs class='setting_tab' 
+  [swipeable]='swipeable' 
+  [page]="5" [tabBarPosition]="'left'" [tabDirection]="'vertical'"
+  (onChange)='changeTabe($event)'>
   <TabPane [title]="'车辆设置'">
-    <app-list id='car' [config]='config'></app-list>
+    <app-list *ngIf="activeTab1 === 0" id='car' [config]='config'></app-list>
   </TabPane>
   <TabPane [title]="'人员设置'">
-    <app-list id='person' [config]='config'></app-list>
+    <app-list *ngIf="activeTab1 === 1" id='person' [config]='config'></app-list>
   </TabPane>
   <TabPane [title]="'货料种类'">
-    <app-list id='type' [config]='config'></app-list>
+    <app-list *ngIf="activeTab1 === 2" id='type' [config]='config'></app-list>
   </TabPane>
   <TabPane [title]="'货料来源'">
-    <app-list id='origin' [config]='config'></app-list>
+    <app-list *ngIf="activeTab1 === 3" id='origin' [config]='config'></app-list>
   </TabPane>
 </Tabs>

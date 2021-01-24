@@ -1,4 +1,4 @@
-<List [hidden]="id !== 'car'">
+<List *ngIf="id == 'car'">
   <ng-container *ngFor="let list of lists; let i=index">
     <SwipeAction style="background-color: gray" [autoClose]="true" (onOpen)="open(i)">
       <ListItem extra="点击进行操作" (onClick)="itemClick(i)">
@@ -9,7 +9,7 @@
     </SwipeAction>
   </ng-container>
 </List>
-<List [hidden]="id !== 'person'">
+<List *ngIf="id == 'person'">
   <ng-container *ngFor="let list of lists; let i=index">
     <SwipeAction style="background-color: gray" [autoClose]="true" (onOpen)="open(i)">
       <ListItem extra="点击进行操作"  (onClick)="itemClick(i)">
@@ -18,7 +18,7 @@
     </SwipeAction>
   </ng-container>
 </List>
-<List [hidden]="id !== 'type'">
+<List *ngIf="id == 'type'">
   <ng-container *ngFor="let list of lists; let i=index">
     <SwipeAction style="background-color: gray" [autoClose]="true" (onOpen)="open(i)">
       <ListItem extra="点击进行操作"  (onClick)="itemClick(i)">
@@ -27,7 +27,7 @@
     </SwipeAction>
   </ng-container>
 </List>
-<List [hidden]="id !== 'origin'">
+<List *ngIf="id == 'origin'">
   <ng-container *ngFor="let list of lists; let i=index">
     <SwipeAction style="background-color: gray" [autoClose]="true" (onOpen)="open(i)">
       <ListItem extra="点击进行操作"  (onClick)="itemClick(i)">
