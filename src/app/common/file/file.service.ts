@@ -239,10 +239,15 @@ export class FileService {
       return Promise.resolve(this.storage.get('config'));
     }
     const path = this.file.externalRootDirectory + 'dadNote/';
+    console.log('配置文件地址', path);
     return new Promise((resolve, reject) => {
       this.file.readAsText(path, 'config.json').then((res) => {
+        console.log('读取配置文件成功');
         resolve(JSON.parse(res));
-      }).catch(reject)
+      }).catch((err)=>{
+        console.log('读取配置文件出错', err);
+        reject();
+      })
     })
   }
 

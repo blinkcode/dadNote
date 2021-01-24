@@ -51,12 +51,14 @@ export class NoteComponent implements OnInit, AfterViewInit {
 
     ngOnInit() {
         this.activedRouter.queryParamMap.subscribe(params => {
+            console.log(params);
             if (params.has('year') && params.has('month') && params.has('date')) {
                 this.editable = false;
                 const date = params.get('year') + '-' + params.get('month') + '-' + params.get('date');
                 setTimeout(() => {
                     this.file.readConfig().then((config) => {
                         this.config = config;
+                        console.log('config', config);
                         this.readFile(date);
                     })
                 }, 10);
@@ -65,6 +67,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
                 setTimeout(() => {
                     this.file.readConfig().then((config: any) => {
                         this.config = config;
+                        console.log('config', config);
                         this.readFile();
                     });
                 }, 10);
@@ -333,12 +336,23 @@ export class NoteComponent implements OnInit, AfterViewInit {
                                     resolve(true);
                                 }
                             })
-                        } else {
+                        } else if(this.activeTabIndex === this.accountBook.cars.length) {
+                            
                             this.accountBook.outCars.forEach((car, i) => {
                                 if (this.setOfCheckedId.has(car.id)) {
                                     const data = cloneDeep(this.accountBook.outCars);
                                     data.splice(i, 1);
                                     this.accountBook.outCars = data;
+                                    this.save(true);
+                                    resolve(true);
+                                }
+                            })
+                        } else {
+                            this.accountBook.guozhaCars.forEach((car, i) => {
+                                if (this.setOfCheckedId.has(car.id)) {
+                                    const data = cloneDeep(this.accountBook.guozhaCars);
+                                    data.splice(i, 1);
+                                    this.accountBook.guozhaCars = data;
                                     this.save(true);
                                     resolve(true);
                                 }
@@ -521,6 +535,8 @@ export class NoteComponent implements OnInit, AfterViewInit {
                         } else {
                             if (this.activeTabIndex === this.accountBook.cars.length) {
                                 this.setOutCellValue('type', blah);
+                            } else if(this.activeTabIndex > this.accountBook.cars.length) {
+                                this.setGuozhaCellValue('type', blah);
                             } else {
                                 this.setCellValue('type', blah);
                             }
@@ -842,8 +858,8 @@ export class NoteComponent implements OnInit, AfterViewInit {
             return false;
         }
         this.editRowIndex = z;
-        const config = { origin: '来源', carNo: '车牌号', maozhong: "毛重", pizhong: '皮重', jingzhong: '净重', amount: '料款', koucheng: '扣秤' };
-        const config1 = { type: 'text', origin: 'text', maozhong: "number", pizhong: 'number', amount: 'number', koucheng: 'number' };
+        const config = { origin: '来源', type:'果渣', carNo: '车牌号', maozhong: "毛重", pizhong: '皮重', amount: '料款', koucheng: '扣秤' };
+        const config1 = { type: 'text', origin: 'text', carNo:'text', maozhong: "number", pizhong: 'number', amount: 'number', koucheng: 'number' };
         const title = config[type];
         const inputType = config1[type];
         const inputs: AlertInput[] = [
