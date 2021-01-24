@@ -126,6 +126,56 @@
                     </nz-table>
                 </div>
             </TabPane>
+            <TabPane title='果渣'>
+                <div style="width: 100%;height:100%">
+                    <nz-table #guozhaTable nzBordered nzSize='small' [nzData]="accountBook.guozhaCars" [nzScroll]="scroll"
+                        [nzShowPagination]='false' nzPageSize='150'>
+                        <thead>
+                            <tr #tableHeader>
+                                <th nzWidth="30px"></th>
+                                <th class="table_header">来源</th>
+                                <th class="table_header">车牌号</th>
+                                <th class="table_header">货料种类</th>
+                                <th class="table_header">毛重(吨)</th>
+                                <th class="table_header">皮重(吨)</th>
+                                <th class="table_header">扣秤(%)</th>
+                                <th class="table_header">净重(吨)</th>
+                                <th class="table_header">单价(元)</th>
+                                <th class="table_header">料款(元)</th>
+                                <th class="table_header">电子秤图片</th>
+                                <th class="table_header">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let data of guozhaTable.data;let o=index">
+                                <td style="margin: 0px;padding:0px;" [nzChecked]="setOfCheckedId.has(data.id)"
+                                    (nzCheckedChange)="onItemChecked(data.id, $event)">
+                                </td>
+                                <td class="table_header" (click)="editGuozha(data.origin,o,'origin')">{{data.origin}}</td>
+                                <td class="table_header" (click)="editGuozha(data.carNo,o, 'carNo')">{{data.carNo}}</td>
+                                <td class="table_header" >{{data.type}}</td>
+                                <td class="table_header" (click)="editGuozha(data.maozhong,o,'maozhong')">{{data.maozhong}}
+                                </td>
+                                <td class="table_header" (click)="editGuozha(data.pizhong,o,'pizhong')">{{data.pizhong}}
+                                </td>
+                                <td class="table_header" (click)="editGuozha(data.koucheng,o,'koucheng')">{{data.koucheng}}
+                                </td>
+                                <td class="table_header">{{data.jingzhong}}</td>
+                                <td class="table_header" (click)="editGuozha(data.price, o, 'price')">{{data.price}}</td>
+                                <td class="table_header">{{data.amount}}</td>
+                                <td class="table_header">
+                                     <span [hidden]="data.img.length !== 0">0张</span>
+                                     <span [hidden]="data.img.length === 0"
+                                         (click)="openGuozhaPicture(o)">{{data.img.length}}张</span>
+                                </td>
+                                <td class="table_header">
+                                    <a (click)="openGuozhaCamera(o)">拍摄</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </nz-table>
+                </div>
+            </TabPane>
         </Tabs>
     </div>
 </div>

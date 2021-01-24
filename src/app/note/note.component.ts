@@ -2,7 +2,7 @@ import { PicturesComponent } from './../common/pictures/pictures.component';
 import { TotalComponent } from './../common/total/total.component';
 import { CameraService } from './../common/camera/camera.service';
 import { FileService } from './../common/file/file.service';
-import { Person, AccountBook, Type, Origin, OutCar } from './../common/model/model';
+import { Person, AccountBook, Type, Origin, OutCar, GuoZhaCar } from './../common/model/model';
 import { StorageService } from './../common/storage/storage.service';
 import { AlertController, ModalController } from '@ionic/angular';
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
@@ -28,7 +28,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
     activeTabIndex = 0;
     selectedCar: Car = null;
     selectedPerson: Person[] = [];
-    accountBook: AccountBook = { id: '', date: '', cars: [], outCars: [] };
+    accountBook: AccountBook = { id: '', date: '', cars: [], outCars: [], guozhaCars:[]};
     editCarIndex: number;
     editRowIndex: number;
     config: any = {};
@@ -95,6 +95,9 @@ export class NoteComponent implements OnInit, AfterViewInit {
         this.toast.loading('正在加载，请稍后', 0)
         this.file.readFile(date || new Date().toISOString()).then((account) => {
             this.toast.hide();
+            if (!account.guozhaCars) {
+                account.guozhaCars = [];
+            }
             this.accountBook = account;
             if (this.accountBook.cars.length) {
                 this.isHidden = true;
@@ -108,9 +111,10 @@ export class NoteComponent implements OnInit, AfterViewInit {
      * @param index any
      */
     changeTab(index: any) {
+        this.setOfCheckedId.clear();
         setTimeout(() => {
             this.activeTabIndex = index.index;
-            if (this.activeTabIndex === this.accountBook.cars.length) {
+            if (this.activeTabIndex >= this.accountBook.cars.length) {
                 setTimeout(() => {
                     this.isHidden = false;
                 }, 10);
@@ -262,9 +266,9 @@ export class NoteComponent implements OnInit, AfterViewInit {
         if (!this.editable) {
             return false;
         }
-        /** 如果为最后一个tab的话，那么就是外来车辆 **/
+        /** 如果为倒数第二个tab的话，那么就是外来车辆 **/
         if (this.activeTabIndex === this.accountBook.cars.length) {
-            const outCar: OutCar = {
+            const outCar: GuoZhaCar = {
                 id: uuidv4(), carNo: '', origin: '', type: '',
                 pizhong: '', maozhong: '', jingzhong: '',
                 amount: '', img: [], thumbnail: [], koucheng: '0', price: '0'
@@ -272,7 +276,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
             const outCars = cloneDeep(this.accountBook.outCars);
             outCars.push(outCar);
             this.accountBook.outCars = outCars;
-        } else {
+        } else if(this.activeTabIndex < this.accountBook.cars.length) {
             const car = this.accountBook.cars[this.activeTabIndex];
             const row = {
                 id: uuidv4(), carNo: car.carNo, startTime: '',
@@ -283,6 +287,16 @@ export class NoteComponent implements OnInit, AfterViewInit {
             const datas = cloneDeep(this.accountBook.cars[this.activeTabIndex].datas);
             datas.push(row)
             this.accountBook.cars[this.activeTabIndex].datas = datas;
+        } else if (this.activeTabIndex === (this.accountBook.cars.length + 1)) {
+            /** 果渣 */
+            const guozhaCar: GuoZhaCar = {
+                id: uuidv4(), carNo: '', origin: '', type: '果渣',
+                pizhong: '', maozhong: '', jingzhong: '',
+                amount: '', img: [], thumbnail: [], koucheng: '0', price: '0'
+            }
+            const guozhaCars = cloneDeep(this.accountBook.guozhaCars);
+            guozhaCars.push(guozhaCar);
+            this.accountBook.guozhaCars = guozhaCars;
         }
         /* 添加行的时候也添加自动保存 */
         this.save(true);
@@ -316,7 +330,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
                                     data.splice(i, 1);
                                     this.accountBook.cars[this.activeTabIndex].datas = data;
                                     this.save(true);
-                                    resolve();
+                                    resolve(true);
                                 }
                             })
                         } else {
@@ -326,7 +340,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
                                     data.splice(i, 1);
                                     this.accountBook.outCars = data;
                                     this.save(true);
-                                    resolve();
+                                    resolve(true);
                                 }
                             })
                         }
@@ -694,14 +708,28 @@ export class NoteComponent implements OnInit, AfterViewInit {
             this.toast.info('请勾选一行', 1500);
             return false;
         }
-        const newrow = { id: uuidv4(), maozhong: '', jingzhong: '', amount: '', img: [], thumbnail: [], type: '', koucheng: '0', price: '0' };
-        const copyRow = this.accountBook.outCars.filter(car => car.id === id).pop();
-        const newCopyRow = { ...copyRow, ...newrow };
-        const outCars = cloneDeep(this.accountBook.outCars);
-        outCars.push(newCopyRow);
-        this.accountBook.outCars = outCars;
-    }
 
+        if(this.activeTabIndex > this.accountBook.cars.length){
+            const newrow = { 
+                id: uuidv4(),
+                pizhong: '', maozhong: '', 
+                jingzhong: '', amount: '', img: [], 
+                thumbnail: [], koucheng: '0', price: '0'
+            }
+            const copyRow = this.accountBook.guozhaCars.filter(car => car.id === id).pop();
+            const newCopyRow = { ...copyRow, ...newrow };
+            const guozhaCars = cloneDeep(this.accountBook.guozhaCars);
+            guozhaCars.push(newCopyRow);
+            this.accountBook.guozhaCars = guozhaCars;
+        } else {
+            const newrow = { id: uuidv4(), maozhong: '', jingzhong: '', amount: '', img: [], thumbnail: [], type: '', koucheng: '0', price: '0' };
+            const copyRow = this.accountBook.outCars.filter(car => car.id === id).pop();
+            const newCopyRow = { ...copyRow, ...newrow };
+            const outCars = cloneDeep(this.accountBook.outCars);
+            outCars.push(newCopyRow);
+            this.accountBook.outCars = outCars;
+        }
+    }
     /**
      * 编辑外来车辆
      */
@@ -807,6 +835,113 @@ export class NoteComponent implements OnInit, AfterViewInit {
         this.editRowIndex = z;
         this.setCellValue('img', '');
         this.setCellValue('thumbnail', '');
+    }
+
+    async editGuozha(oldValue: string, z: number, type: string){
+        if (!this.editable) {
+            return false;
+        }
+        this.editRowIndex = z;
+        const config = { origin: '来源', carNo: '车牌号', maozhong: "毛重", pizhong: '皮重', jingzhong: '净重', amount: '料款', koucheng: '扣秤' };
+        const config1 = { type: 'text', origin: 'text', maozhong: "number", pizhong: 'number', amount: 'number', koucheng: 'number' };
+        const title = config[type];
+        const inputType = config1[type];
+        const inputs: AlertInput[] = [
+            {
+                value: oldValue || '',
+                name: type,
+                type: inputType,
+                placeholder: `请输入${title}`
+            }
+        ]
+        const alert = await this.alertCtrl.create({
+            header: title,
+            backdropDismiss: false,
+            inputs: inputs,
+            buttons: [
+                {
+                    text: '取消',
+                    role: 'cancel',
+                    cssClass: 'secondary',
+                    handler: () => { }
+                }, {
+                    text: '确定',
+                    handler: (blah: string) => {
+                        if (blah[type]) {
+                            this.setGuozhaCellValue(type, blah[type])
+                        } else {
+                            return false;
+                        }
+                    }
+                }
+            ]
+        });
+        await alert.present();
+    }
+
+    setGuozhaCellValue(type: string, value: string){
+        if (!this.editable) {
+            return false;
+        }
+        if (type === 'img' || type === 'thumbnail') {
+            this.accountBook.guozhaCars[this.editRowIndex][type].push(value);
+        } else {
+            this.accountBook.guozhaCars[this.editRowIndex][type] = value;
+        }
+        if (type === 'maozhong') {
+            const koucheng = this.accountBook.guozhaCars[this.editRowIndex].koucheng || '0';
+            const pizhong = this.accountBook.guozhaCars[this.editRowIndex].pizhong || '0';
+            const jingzhong = new Big(value).minus(pizhong).times(new Big(100).minus(koucheng).div(100)).toString();
+            this.accountBook.guozhaCars[this.editRowIndex].jingzhong = jingzhong;
+            const price = this.accountBook.guozhaCars[this.editRowIndex].price || '0';
+            this.accountBook.guozhaCars[this.editRowIndex].amount = new Big(price).times(jingzhong).toString();
+        } else if (type === 'pizhong') {
+            const koucheng = this.accountBook.guozhaCars[this.editRowIndex].koucheng || '0';
+            const maozhong = this.accountBook.guozhaCars[this.editRowIndex].maozhong || '0';
+            const jingzhong = new Big(maozhong).minus(value).times(new Big(100).minus(koucheng).div(100)).toString();
+            this.accountBook.guozhaCars[this.editRowIndex].jingzhong = jingzhong;
+            const price = this.accountBook.guozhaCars[this.editRowIndex].price || '0';
+            this.accountBook.guozhaCars[this.editRowIndex].amount = new Big(price).times(jingzhong).toString();
+        } else if (type === 'koucheng') {
+            const maozhong = this.accountBook.guozhaCars[this.editRowIndex].maozhong || '0';
+            const pizhong = this.accountBook.guozhaCars[this.editRowIndex].pizhong || '0';
+            const jingzhong = new Big(maozhong).minus(pizhong).times(new Big(100).minus(value).div(100)).toString();
+            this.accountBook.guozhaCars[this.editRowIndex].jingzhong = jingzhong;
+            const price = this.accountBook.guozhaCars[this.editRowIndex].price || '0';
+            this.accountBook.guozhaCars[this.editRowIndex].amount = new Big(price).times(jingzhong).toString();
+        } else if (type === 'price') {
+            const jingzhong = this.accountBook.guozhaCars[this.editRowIndex].jingzhong || '0';
+            this.accountBook.guozhaCars[this.editRowIndex].amount = new Big(jingzhong).times(value).toString();
+        }
+        this.save(true);
+    }
+
+    async openGuozhaPicture(index: number){
+        const thumbnails = this.accountBook.guozhaCars[index].thumbnail;
+        const pictures = this.accountBook.guozhaCars[index].img;
+
+        const modal = await this.modalCtrl.create({
+            component: PicturesComponent,
+            componentProps: {
+                thumbnails: thumbnails,
+                pictures: pictures,
+                editable: this.editable
+            }
+        });
+        await modal.present();
+    }
+
+    openGuozhaCamera(z: number){
+        if (!this.editable) {
+            this.toast.info('只有当天的账本可以修改');
+            return false;
+        }
+        this.editRowIndex = z;
+        this.editCarIndex = this.accountBook.cars.length + 1;
+        this.camera.openCamera().then((img: any) => {
+            this.setGuozhaCellValue('img', img.img)
+            this.setGuozhaCellValue('thumbnail', img.thumbnail);
+        })
     }
 
     /** */

@@ -94,11 +94,66 @@ export interface AccountBook {
     date: string;
     cars: AccountCar[];
     outCars: OutCar[];
+    guozhaCars: GuoZhaCar[];
     // persons: Person[];
     // datas: Data[];
 }
 
 export interface OutCar {
+    /**
+     * id
+     */
+    id: string;
+    /**
+     * 车牌号
+     */
+    carNo: string;
+    /**
+     * 来源
+     */
+    origin: string;
+    /**
+     * 类型
+     */
+    type: string;
+    /**
+     * 皮重
+     */
+    pizhong: string;
+    /**
+     * 扣秤
+     */
+    koucheng: string;
+    /**
+     * 毛重
+     */
+    maozhong: string;
+    /**
+     * 净重
+     */
+    jingzhong: string;
+    /**
+     * 单价
+     */
+    price: string;
+    /**
+     * 金额
+     */
+    amount: string;
+    /**
+     * 图片地址
+     */
+    img: string[];
+    /**
+     * 缩略图
+     */
+    thumbnail: string[];
+}
+
+/**
+ * 果渣car
+ */
+export interface GuoZhaCar {
     /**
      * id
      */

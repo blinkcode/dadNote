@@ -18,9 +18,11 @@ export class TotalComponent implements OnInit {
     date = '';
     cars: any[] = [];
     outCars: any[] = [];
+    guozhaCars: any[] = [];
     total = '0';
     carTotal = { total: '0', count: 0 };
     outCarTotal = { total: '0', count: 0 };
+    guozhaCarTotal = { total: '0', count: 0 };
     constructor(
         private camera: CameraService,
         private socialSharing: SocialSharing,
@@ -35,8 +37,10 @@ export class TotalComponent implements OnInit {
         // this.cars = this.accountBook.cars;
         this.cars = this.initCar();
         this.outCars = this.initOutCar();
+        this.guozhaCars = this.initGuozhaCar();
         this.carTotal = this.getTotalCar();
         this.outCarTotal = this.getOutTotalCar();
+        this.guozhaCarTotal = this.getGuozhaTotalCar();
         this.total = this.initTotal();
     }
     initCar() {
@@ -92,6 +96,25 @@ export class TotalComponent implements OnInit {
         });
         return cars;
     }
+    initGuozhaCar(){
+        const cars = [];
+        const guozhaCars = this.accountBook.guozhaCars || [];
+        const car1: string[] = [];
+        guozhaCars.forEach(car => {
+            const jingzhong = car.jingzhong.trim();
+            if (jingzhong && jingzhong !== '0') {
+                const index = car1.indexOf(car.origin + car.type)
+                if (index !== -1) {
+                    cars[index].count++;
+                    cars[index].jingzhong = new Big(cars[index].jingzhong).plus(car.jingzhong || '0').toString();
+                } else {
+                    cars.push({ origin: car.origin, type: car.type, count: 1, jingzhong: car.jingzhong || '0' })
+                    car1.push(car.origin + car.type);
+                }
+            }
+        });
+        return cars;
+    }
 
     initTotal() {
         let total = '0';
@@ -116,6 +139,15 @@ export class TotalComponent implements OnInit {
     getOutTotalCar() {
         let total = { total: '0', count: 0 };
         this.outCars.forEach(car => {
+            total.total = new Big(car.jingzhong || '0').plus(total.total).toString();
+            total.count = total.count + car.count;
+        });
+        return total;
+    }
+
+    getGuozhaTotalCar() {
+        let total = { total: '0', count: 0 };
+        this.guozhaCars.forEach(car => {
             total.total = new Big(car.jingzhong || '0').plus(total.total).toString();
             total.count = total.count + car.count;
         });
