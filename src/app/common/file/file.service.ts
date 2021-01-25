@@ -79,9 +79,9 @@ export class FileService {
         if (content) {
           json = content;
         } else {
-          json = { id: uuidv4, date: new Date().toDateString(), cars: [], outCars: [], guozhaCars: [] }
+          json = { id: uuidv4, date: moment().format("YYYY-MM-DD"), cars: [], outCars: [], guozhaCars: [] }
         }
-        this.file.writeFile(path, fileName, JSON.stringify(json, null, 4)).then(() => {
+        this.file.writeFile(path, fileName, JSON.stringify(json)).then(() => {
           resolve(`${path}${fileName}`);
         }).catch((err) => console.log(err))
       })
@@ -135,7 +135,7 @@ export class FileService {
     const date = moment().date();
     const root = this.file.externalRootDirectory;
     const path = `${root}dadNote/${year}/${month}/datas/`;
-    return this.file.writeExistingFile(path, `${date}.json`, JSON.stringify(note, null, 4));
+    return this.file.writeExistingFile(path, `${date}.json`, JSON.stringify(note));
   }
 
   private saveFileByWeb(note: AccountBook): Promise<boolean> {

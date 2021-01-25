@@ -477,7 +477,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
             const input: AlertInput = { type: 'checkbox', label: type.originName, value: type.originName };
             inputs.push(input);
         });
-        // inputs.push({ value: 'edit', type: 'checkbox', label: '自定义', });
+        inputs.push({ value: 'edit', type: 'checkbox', label: '自定义', });
         const alert = await this.alertCtrl.create({
             header: '选择货料来源',
             backdropDismiss: false,
@@ -491,10 +491,9 @@ export class NoteComponent implements OnInit, AfterViewInit {
                 }, {
                     text: '确定',
                     handler: (blah: string[]) => {
-                        // if (blah === 'edit') {
-                        //     this.selfEditCtrl('origin');
-                        // } else 
-                        if (blah) {
+                        if (blah.includes('edit')) {
+                            this.selfEditCtrl('origin');
+                        } else if (blah) {
                             this.setCellValue('origin', blah.join(','));
                         } else {
                             return false;
@@ -588,6 +587,8 @@ export class NoteComponent implements OnInit, AfterViewInit {
                         if (blah[type]) {
                             if (this.activeTabIndex === this.accountBook.cars.length) {
                                 this.setOutCellValue(type, blah[type]);
+                            } else if(this.activeTabIndex > this.accountBook.cars.length) {
+                                this.setGuozhaCellValue(type, blah[type]);
                             } else {
                                 this.setCellValue(type, blah[type]);
                             }

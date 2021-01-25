@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { DeviceService } from '../common/device/device.service';
 
 @Component({
   selector: 'app-ready',
@@ -9,13 +10,18 @@ import { Router } from '@angular/router';
 export class ReadyPage implements OnInit {
 
   constructor(
-    private router: Router
+    private router: Router,
+    private device: DeviceService,
   ) { }
 
   ngOnInit() {
-    window.document.addEventListener("deviceready", ()=> {
+    if(this.device.isMobile()){
+      window.document.addEventListener("deviceready", ()=> {
+        this.router.navigateByUrl('tabs');
+      });
+    } else {
       this.router.navigateByUrl('tabs');
-    });
+    }
   }
 
 }
