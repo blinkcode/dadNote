@@ -58,7 +58,6 @@ export class NoteComponent implements OnInit, AfterViewInit {
                 setTimeout(() => {
                     this.file.readConfig().then((config) => {
                         this.config = config;
-                        console.log('config', config);
                         this.readFile(date);
                     })
                 }, 10);
@@ -67,7 +66,6 @@ export class NoteComponent implements OnInit, AfterViewInit {
                 setTimeout(() => {
                     this.file.readConfig().then((config: any) => {
                         this.config = config;
-                        console.log('config', config);
                         this.readFile();
                     });
                 }, 10);
@@ -96,7 +94,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
      */
     readFile(date?: string) {
         this.toast.loading('正在加载，请稍后', 0)
-        this.file.readFile(date || new Date().toISOString()).then((account) => {
+        this.file.readFile(date || moment().format('YYYY-MM-DD')).then((account) => {
             this.toast.hide();
             if (!account.guozhaCars) {
                 account.guozhaCars = [];
@@ -646,7 +644,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
         this.camera.openCamera().then((img: any) => {
             this.setCellValue('img', img.img)
             this.setCellValue('thumbnail', img.thumbnail);
-        })
+        });
     }
 
     private deleteImg(i: number, j: number) {
