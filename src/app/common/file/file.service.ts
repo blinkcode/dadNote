@@ -130,7 +130,7 @@ export class FileService {
     if (!this.device.isMobile()) {
       return this.saveFileByWeb(note);
     }
-    const year = moment().years();
+    const year = moment().year();
     const month = moment().month() + 1 + '';
     const date = moment().date();
     const root = this.file.externalRootDirectory;
