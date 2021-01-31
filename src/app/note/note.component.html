@@ -162,7 +162,7 @@
                                 </td>
                                 <td class="table_header">{{data.jingzhong}}</td>
                                 <td class="table_header" (click)="editGuozha(data.price, o, 'price')">{{data.price}}</td>
-                                <td class="table_header">{{data.amount}}</td>
+                                <td class="table_header" (click)="editGuozha(data.amount, o, 'amount')">{{data.amount}}</td>
                                 <td class="table_header">
                                      <span [hidden]="data.img.length !== 0">0张</span>
                                      <span [hidden]="data.img.length === 0"

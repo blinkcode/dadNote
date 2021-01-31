@@ -475,7 +475,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
             const input: AlertInput = { type: 'checkbox', label: type.originName, value: type.originName };
             inputs.push(input);
         });
-        inputs.push({ value: 'edit', type: 'checkbox', label: '自定义', });
+        inputs.unshift({ value: 'edit', type: 'checkbox', label: '自定义', });
         const alert = await this.alertCtrl.create({
             header: '选择货料来源',
             backdropDismiss: false,
@@ -513,7 +513,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
             const input: AlertInput = { type: 'radio', label: type.typeName, value: type.typeName };
             inputs.push(input);
         });
-        inputs.push({ value: 'edit', type: 'radio', label: '自定义', });
+        inputs.unshift({ value: 'edit', type: 'radio', label: '自定义', });
         const alert = await this.alertCtrl.create({
             header: '选择货料类型',
             inputs: inputs,
