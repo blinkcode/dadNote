@@ -22,10 +22,10 @@
                     <nz-table #table nzBordered nzSize='small' [nzData]="car.datas" [nzScroll]="scroll"
                         [nzShowPagination]='false' nzPageSize='150'>
                         <thead>
-                            <tr #tableHeader>
+                            <tr>
                                 <th nzWidth="20px"></th>
                                 <th class="table_header">车队</th>
-                                <th class="table_header">出发时间</th>
+                                <!-- <th class="table_header">出发时间</th> -->
                                 <th class="table_header">回厂时间</th>
                                 <th class="table_header">货料来源</th>
                                 <th class="table_header">货料种类</th>
@@ -49,7 +49,7 @@
                                         </ng-container>
                                     </td>
                                 </ng-container>
-                                <td class="table_header">{{data.startTime}}</td>
+                                <!-- <td class="table_header">{{data.startTime}}</td> -->
                                 <td class="table_header">{{data.endTime}}</td>
                                 <td class="table_header" (click)="editCtrl('origin',i,j)">{{data.origin}}</td>
                                 <td class="table_header" (click)="editCtrl('type',i,j)">{{data.type}}</td>
@@ -75,12 +75,12 @@
                     </nz-table>
                 </div>
             </TabPane>
-            <TabPane title='外来车辆'>
+            <TabPane *ngIf="isReady" title='外来车辆'>
                 <div style="width: 100%;height:100%">
                     <nz-table #outTable nzBordered nzSize='small' [nzData]="accountBook.outCars" [nzScroll]="scroll"
                         [nzShowPagination]='false' nzPageSize='150'>
                         <thead>
-                            <tr #tableHeader>
+                            <tr>
                                 <th nzWidth="30px"></th>
                                 <th class="table_header">来源</th>
                                 <th class="table_header">车牌号</th>
@@ -126,12 +126,12 @@
                     </nz-table>
                 </div>
             </TabPane>
-            <TabPane title='果渣'>
+            <TabPane *ngIf="isReady" title='果渣'>
                 <div style="width: 100%;height:100%">
                     <nz-table #guozhaTable nzBordered nzSize='small' [nzData]="accountBook.guozhaCars" [nzScroll]="scroll"
                         [nzShowPagination]='false' nzPageSize='150'>
                         <thead>
-                            <tr #tableHeader>
+                            <tr>
                                 <th nzWidth="30px"></th>
                                 <th class="table_header">来源</th>
                                 <th class="table_header">车牌号</th>

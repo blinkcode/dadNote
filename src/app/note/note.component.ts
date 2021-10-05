@@ -33,10 +33,11 @@ export class NoteComponent implements OnInit, AfterViewInit {
     editRowIndex: number;
     config: any = {};
     isHidden = false;
+    isReady = false;
     scroll = { x: '1000px', y: '500px' };
     setOfCheckedId = new Set<string>(); // 选中的id
     @ViewChild('tableBox') tableBox: ElementRef;
-    @ViewChild('tableHeader') tableHeader: ElementRef;
+    // @ViewChild('tableHeader') tableHeader: ElementRef;
     constructor(
         private alertCtrl: AlertController,
         private file: FileService,
@@ -70,21 +71,22 @@ export class NoteComponent implements OnInit, AfterViewInit {
                     });
                 }, 10);
             }
-        })
-
+        });
     }
     ngAfterViewInit(): void {
         this.getResize();
-
     }
 
     getResize() {
         const width = this.tableBox.nativeElement.offsetWidth;
         const height = this.tableBox.nativeElement.offsetHeight;
         // 计算高度
-        const scrollHeight = height - 45 - 61;
+        const scrollHeight = height - 120;
         this.scroll.y = scrollHeight + 'px';
-        this.scroll.x = width + 'px';
+        this.scroll.x = width - 15 + 'px';
+        setTimeout(() => {
+            this.isReady = true;
+        }, 100);
     }
     /**
      * @description 读取账本文件
