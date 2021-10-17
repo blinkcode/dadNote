@@ -3,7 +3,13 @@
         <p class='total_header'>{{date | date:'yyyy-MM-dd'}}&nbsp;统计(单位：吨)</p>
         <!-- <div style="float: right;margin-right: 32px;" size='small' Button [inline]="true" [type]="'ghost'"
             (click)="share()">分享</div> -->
-        <p class="title">车队&nbsp;&nbsp;共计：<span style="color: #e94f4f;">{{carTotal.total}}({{carTotal.count}}车)</span>
+        <p class="title">车队&nbsp;&nbsp;共计：
+            <span style="color: #e94f4f;">{{carTotal.total}}({{carTotal.count}}车)</span>
+            <ng-container *ngFor="let car of carDetail">
+                <span style="margin: 5px;">
+                    <span style="color: #e94f4f;font-size: 12px;">{{car.type}}:{{car.jingzhong}}({{car.count}}车)</span>
+                </span>
+            </ng-container>
         </p>
         <ng-container *ngFor="let car of cars; let i=index">
             <div class="carNo">{{car.carNo}}（{{car.person}}）:</div>
