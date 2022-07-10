@@ -21,8 +21,14 @@
                     <span>{{car.total}}&nbsp;({{car.totalCount}}车)</span></span>
             </div>
         </ng-container>
-        <p class="title" style="margin:3px 0px">外来车辆&nbsp;&nbsp;共计：<span
-                style="color: #e94f4f;">{{outCarTotal.total}}({{outCarTotal.count}}车)</span></p>
+        <p class="title" style="margin:3px 0px">外来车辆&nbsp;&nbsp;共计：
+            <span style="color: #e94f4f;">{{outCarTotal.total}}({{outCarTotal.count}}车)</span>
+            <ng-container *ngFor="let car of outcarDetail">
+                <span style="margin: 5px;">
+                    <span style="color: #e94f4f;font-size: 12px;">{{car.type}}:{{car.jingzhong}}({{car.count}}车)</span>
+                </span>
+            </ng-container>
+        </p>
         <div style="padding-left:35px;">
             <ng-container *ngFor="let outCar of outCars; let i=index">
                 <span>{{outCar.origin}}-{{outCar.type}}:</span>{{outCar.jingzhong}}

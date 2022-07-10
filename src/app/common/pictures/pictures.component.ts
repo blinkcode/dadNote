@@ -100,4 +100,12 @@ export class PicturesComponent implements OnInit {
         });
     }
 
+    shareAll() {
+        this.share.share(null, null, this.pictures, null ).then(() => {
+            this.toast.success('分享成功');
+        }).catch(() => {
+            this.toast.fail('分享失败');
+        })
+    }
+
 }

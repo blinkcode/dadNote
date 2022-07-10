@@ -20,7 +20,8 @@ export class TotalComponent implements OnInit {
 	guozhaCars: any[] = [];
 	total = '0';
 	carTotal = { total: '0', count: 0 };
-	carDetail = [];
+	carDetail = [];// 公司车辆拉货详情
+	outcarDetail = []; // 外来车辆拉货详情
 	outCarTotal = { total: '0', count: 0 };
 	guozhaCarTotal = { total: '0', count: 0 };
 	constructor(
@@ -43,6 +44,7 @@ export class TotalComponent implements OnInit {
 		this.guozhaCarTotal = this.getGuozhaTotalCar();
 		this.total = this.initTotal();
 		this.carDetail = this.getDetailCar();
+		this.outcarDetail = this.getOutDetailCar();
 	}
 	initCar() {
 		const cars = [];
@@ -75,11 +77,11 @@ export class TotalComponent implements OnInit {
 			});
 			const persons = [];
 			car.persons.forEach((person) => persons.push(person.userName));
-			Reflect.set(obj, 'carNo', car.carNo);
-			Reflect.set(obj, 'person', persons.join('、'));
-			Reflect.set(obj, 'total', total);
-			Reflect.set(obj, 'types', car2),
-				Reflect.set(obj, 'totalCount', totalCount);
+			obj['carNo'] = car.carNo;
+			obj['person'] = persons.join('、');
+			obj['total'] = total;
+			obj['types'] = car2;
+			obj['totalCount'] = totalCount;
 			cars.push(obj);
 		});
 		return cars;
@@ -179,6 +181,28 @@ export class TotalComponent implements OnInit {
                     });
                 }
 			});
+		});
+        return detail;
+	}
+
+	getOutDetailCar() {
+		const types = [];
+		const detail = [];
+		this.outCars.forEach((car) => {
+			const index = types.indexOf(car.type);
+			if (index !== -1) {
+				const count = detail[index].count;
+				const jingzhong = detail[index].jingzhong;
+				detail[index].count = new Big(car.count).plus(count).toString();
+				detail[index].jingzhong = new Big(car.jingzhong).plus(jingzhong).toString();
+			} else {
+				types.push(car.type);
+				detail.push({
+					type: car.type,
+					count: car.count,
+					jingzhong: car.jingzhong
+				});
+			}
 		});
         return detail;
 	}
