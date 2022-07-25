@@ -28,7 +28,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
     activeTabIndex = 0;
     selectedCar: Car = null;
     selectedPerson: Person[] = [];
-    accountBook: AccountBook = { id: '', date: '', cars: [], outCars: [], guozhaCars:[]};
+    accountBook: AccountBook = { id: '', date: '', cars: [], outCars: [], guozhaCars: [] };
     editCarIndex: number;
     editRowIndex: number;
     config: any = {};
@@ -279,7 +279,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
             const outCars = cloneDeep(this.accountBook.outCars);
             outCars.push(outCar);
             this.accountBook.outCars = outCars;
-        } else if(this.activeTabIndex < this.accountBook.cars.length) {
+        } else if (this.activeTabIndex < this.accountBook.cars.length) {
             const car = this.accountBook.cars[this.activeTabIndex];
             const row = {
                 id: uuidv4(), carNo: car.carNo, startTime: '',
@@ -336,8 +336,8 @@ export class NoteComponent implements OnInit, AfterViewInit {
                                     resolve(true);
                                 }
                             })
-                        } else if(this.activeTabIndex === this.accountBook.cars.length) {
-                            
+                        } else if (this.activeTabIndex === this.accountBook.cars.length) {
+
                             this.accountBook.outCars.forEach((car, i) => {
                                 if (this.setOfCheckedId.has(car.id)) {
                                     const data = cloneDeep(this.accountBook.outCars);
@@ -534,7 +534,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
                         } else {
                             if (this.activeTabIndex === this.accountBook.cars.length) {
                                 this.setOutCellValue('type', blah);
-                            } else if(this.activeTabIndex > this.accountBook.cars.length) {
+                            } else if (this.activeTabIndex > this.accountBook.cars.length) {
                                 this.setGuozhaCellValue('type', blah);
                             } else {
                                 this.setCellValue('type', blah);
@@ -587,7 +587,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
                         if (blah[type]) {
                             if (this.activeTabIndex === this.accountBook.cars.length) {
                                 this.setOutCellValue(type, blah[type]);
-                            } else if(this.activeTabIndex > this.accountBook.cars.length) {
+                            } else if (this.activeTabIndex > this.accountBook.cars.length) {
                                 this.setGuozhaCellValue(type, blah[type]);
                             } else {
                                 this.setCellValue(type, blah[type]);
@@ -726,11 +726,11 @@ export class NoteComponent implements OnInit, AfterViewInit {
             return false;
         }
 
-        if(this.activeTabIndex > this.accountBook.cars.length){
-            const newrow = { 
+        if (this.activeTabIndex > this.accountBook.cars.length) {
+            const newrow = {
                 id: uuidv4(),
-                pizhong: '', maozhong: '', 
-                jingzhong: '', amount: '', img: [], 
+                pizhong: '', maozhong: '',
+                jingzhong: '', amount: '', img: [],
                 thumbnail: [], koucheng: '0', price: '0'
             }
             const copyRow = this.accountBook.guozhaCars.filter(car => car.id === id).pop();
@@ -785,6 +785,32 @@ export class NoteComponent implements OnInit, AfterViewInit {
                         } else {
                             return false;
                         }
+                    }
+                }
+            ]
+        });
+        await alert.present();
+    }
+
+    /**
+     * 编辑夜班白班
+     * @param z index
+     */
+    async editNight(z: number) {
+        const alert = await this.alertCtrl.create({
+            header: '白/夜班',
+            backdropDismiss: false,
+            inputs: [{ type: 'radio', label: '白班', value: false }, { type: 'radio', label: '夜班', value: true }],
+            buttons: [
+                {
+                    text: '取消',
+                    role: 'cancel',
+                    cssClass: 'secondary',
+                    handler: () => { }
+                }, {
+                    text: '确定',
+                    handler: (blah: string) => {
+                        this.setOutCellValue(type, blah[type])
                     }
                 }
             ]
@@ -854,13 +880,13 @@ export class NoteComponent implements OnInit, AfterViewInit {
         this.setCellValue('thumbnail', '');
     }
 
-    async editGuozha(oldValue: string, z: number, type: string){
+    async editGuozha(oldValue: string, z: number, type: string) {
         if (!this.editable) {
             return false;
         }
         this.editRowIndex = z;
-        const config = { origin: '来源', type:'果渣', carNo: '车牌号', maozhong: "毛重", pizhong: '皮重', amount: '料款', koucheng: '扣秤' };
-        const config1 = { type: 'text', origin: 'text', carNo:'text', maozhong: "number", pizhong: 'number', amount: 'number', koucheng: 'number' };
+        const config = { origin: '来源', type: '果渣', carNo: '车牌号', maozhong: "毛重", pizhong: '皮重', amount: '料款', koucheng: '扣秤' };
+        const config1 = { type: 'text', origin: 'text', carNo: 'text', maozhong: "number", pizhong: 'number', amount: 'number', koucheng: 'number' };
         const title = config[type];
         const inputType = config1[type];
         const inputs: AlertInput[] = [
@@ -896,7 +922,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
         await alert.present();
     }
 
-    setGuozhaCellValue(type: string, value: string){
+    setGuozhaCellValue(type: string, value: string) {
         if (!this.editable) {
             return false;
         }
@@ -933,7 +959,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
         this.save(true);
     }
 
-    async openGuozhaPicture(index: number){
+    async openGuozhaPicture(index: number) {
         const thumbnails = this.accountBook.guozhaCars[index].thumbnail;
         const pictures = this.accountBook.guozhaCars[index].img;
 
@@ -948,7 +974,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
         await modal.present();
     }
 
-    openGuozhaCamera(z: number){
+    openGuozhaCamera(z: number) {
         if (!this.editable) {
             this.toast.info('只有当天的账本可以修改');
             return false;

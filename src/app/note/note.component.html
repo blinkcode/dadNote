@@ -85,6 +85,7 @@
                                 <th class="table_header">来源</th>
                                 <th class="table_header">车牌号</th>
                                 <th class="table_header">货料种类</th>
+                                <th class="table_header">夜班</th>
                                 <th class="table_header">毛重(吨)</th>
                                 <th class="table_header">皮重(吨)</th>
                                 <th class="table_header">扣秤(%)</th>
@@ -103,6 +104,7 @@
                                 <td class="table_header" (click)="editOut(data.origin,z,'origin')">{{data.origin}}</td>
                                 <td class="table_header" (click)="editOut(data.carNo,z, 'carNo')">{{data.carNo}}</td>
                                 <td class="table_header" (click)="editCtrl('type',0,z)">{{data.type}}</td>
+                                <td class="table_header" (click)="editNight(z)">{{data.night ? "夜班": "白班"}}</td>
                                 <td class="table_header" (click)="editOut(data.maozhong,z,'maozhong')">{{data.maozhong}}
                                 </td>
                                 <td class="table_header" (click)="editOut(data.pizhong,z,'pizhong')">{{data.pizhong}}

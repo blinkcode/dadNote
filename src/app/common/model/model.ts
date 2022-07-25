@@ -113,6 +113,10 @@ export interface OutCar {
      */
     origin: string;
     /**
+     * 夜班
+     */
+    night?: boolean;
+    /**
      * 类型
      */
     type: string;
