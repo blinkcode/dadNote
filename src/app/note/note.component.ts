@@ -797,6 +797,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
      * @param z index
      */
     async editNight(z: number) {
+        this.editRowIndex = z;
         const alert = await this.alertCtrl.create({
             header: '白/夜班',
             backdropDismiss: false,
@@ -810,7 +811,9 @@ export class NoteComponent implements OnInit, AfterViewInit {
                 }, {
                     text: '确定',
                     handler: (blah: string) => {
-                        this.setOutCellValue(type, blah[type])
+                        console.log(blah);
+                        this.setOutCellValue('night', blah);
+                        // this.setOutCellValue(type, blah[type])
                     }
                 }
             ]
@@ -818,7 +821,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
         await alert.present();
     }
 
-    setOutCellValue(type: string, value: string) {
+    setOutCellValue(type: string, value:  any) {
         if (!this.editable) {
             return false;
         }
