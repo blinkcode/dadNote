@@ -320,12 +320,65 @@ export class NoteComponent implements OnInit, AfterViewInit {
             this.toast.info('请勾选一行', 1500);
             return false;
         }
-        this.modal.alert('删除', '确定要删除么', [
-            { text: '取消', onPress: () => { } },
-            {
-                text: '删除',
-                onPress: () =>
-                    new Promise(resolve => {
+        // this.modal.alert('删除', '确定要删除么', [
+        //     { text: '取消', onPress: () => { } },
+        //     {
+        //         text: '删除',
+        //         onPress: () =>
+        //             new Promise(resolve => {
+        //                 if (this.isHidden) {
+        //                     this.accountBook.cars[this.activeTabIndex].datas.forEach((data, i) => {
+        //                         if (this.setOfCheckedId.has(data.id)) {
+        //                             const data = cloneDeep(this.accountBook.cars[this.activeTabIndex].datas);
+        //                             data.splice(i, 1);
+        //                             this.accountBook.cars[this.activeTabIndex].datas = data;
+        //                             this.save(true);
+        //                             resolve(true);
+        //                         }
+        //                     })
+        //                 } else if (this.activeTabIndex === this.accountBook.cars.length) {
+
+        //                     this.accountBook.outCars.forEach((car, i) => {
+        //                         if (this.setOfCheckedId.has(car.id)) {
+        //                             const data = cloneDeep(this.accountBook.outCars);
+        //                             data.splice(i, 1);
+        //                             this.accountBook.outCars = data;
+        //                             this.save(true);
+        //                             resolve(true);
+        //                         }
+        //                     })
+        //                 } else {
+        //                     this.accountBook.guozhaCars.forEach((car, i) => {
+        //                         if (this.setOfCheckedId.has(car.id)) {
+        //                             const data = cloneDeep(this.accountBook.guozhaCars);
+        //                             data.splice(i, 1);
+        //                             this.accountBook.guozhaCars = data;
+        //                             this.save(true);
+        //                             resolve(true);
+        //                         }
+        //                     })
+        //                 }
+
+        //             }),
+        //         style: {
+        //             color: '#ffffff',
+        //             background: '#e94f4f'
+        //         }
+        //     }
+        // ]);
+
+        this.alertCtrl.create({
+            header: '删除',
+            message:'确定要删除么',
+            buttons: [
+                {
+                    text:'取消',
+                    role: 'cancel',
+                },
+                {
+                    text:'删除',
+                    cssClass: 'delete',
+                    handler: ()=>{
                         if (this.isHidden) {
                             this.accountBook.cars[this.activeTabIndex].datas.forEach((data, i) => {
                                 if (this.setOfCheckedId.has(data.id)) {
@@ -333,7 +386,6 @@ export class NoteComponent implements OnInit, AfterViewInit {
                                     data.splice(i, 1);
                                     this.accountBook.cars[this.activeTabIndex].datas = data;
                                     this.save(true);
-                                    resolve(true);
                                 }
                             })
                         } else if (this.activeTabIndex === this.accountBook.cars.length) {
@@ -344,7 +396,6 @@ export class NoteComponent implements OnInit, AfterViewInit {
                                     data.splice(i, 1);
                                     this.accountBook.outCars = data;
                                     this.save(true);
-                                    resolve(true);
                                 }
                             })
                         } else {
@@ -354,18 +405,13 @@ export class NoteComponent implements OnInit, AfterViewInit {
                                     data.splice(i, 1);
                                     this.accountBook.guozhaCars = data;
                                     this.save(true);
-                                    resolve(true);
                                 }
                             })
                         }
-
-                    }),
-                style: {
-                    color: '#ffffff',
-                    background: '#e94f4f'
+                    }
                 }
-            }
-        ]);
+            ]
+        })
     }
     /**
      * 添加车辆弹出框
