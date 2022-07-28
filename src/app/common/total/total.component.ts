@@ -4,7 +4,10 @@ import { Big } from 'big.js';
 import { CameraService } from '../camera/camera.service';
 import html2canvas from 'html2canvas';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
-import { ModalController } from '@ionic/angular';
+import { ModalController, ToastController } from '@ionic/angular';
+import * as moment from 'moment';
+import { ToastService } from 'ng-zorro-antd-mobile';
+
 
 @Component({
 	selector: 'app-total',
@@ -17,17 +20,23 @@ export class TotalComponent implements OnInit {
 	date = '';
 	cars: any[] = [];
 	outCars: any[] = [];
+	outCars1: any[] = [];
 	guozhaCars: any[] = [];
 	total = '0';
 	carTotal = { total: '0', count: 0 };
-	carDetail = [];// 公司车辆拉货详情
-	outcarDetail = []; // 外来车辆拉货详情
+	carDetail = []; // 公司车辆拉货详情
+	outcarDetail = []; // 外来车辆拉货详情(白)
+	outcarDetail1 = []; // 外来车辆拉货详情（夜）
 	outCarTotal = { total: '0', count: 0 };
+	outCarTotal1 = { total: '0', count: 0 };
+	outCarTotal2 = { total: '0', count: 0 };
 	guozhaCarTotal = { total: '0', count: 0 };
 	constructor(
 		private camera: CameraService,
 		private socialSharing: SocialSharing,
-		private modal: ModalController
+		private modal: ModalController,
+		private toast: ToastService,
+		private toastCtrl: ToastController
 	) {}
 
 	ngOnInit() {
@@ -38,6 +47,7 @@ export class TotalComponent implements OnInit {
 		// this.cars = this.accountBook.cars;
 		this.cars = this.initCar();
 		this.outCars = this.initOutCar();
+		this.outCars1 = this.initOutCar1();
 		this.guozhaCars = this.initGuozhaCar();
 		this.carTotal = this.getTotalCar();
 		this.outCarTotal = this.getOutTotalCar();
@@ -45,6 +55,7 @@ export class TotalComponent implements OnInit {
 		this.total = this.initTotal();
 		this.carDetail = this.getDetailCar();
 		this.outcarDetail = this.getOutDetailCar();
+		this.outcarDetail1 = this.getOutDetailCar1();
 	}
 	initCar() {
 		const cars = [];
@@ -91,22 +102,53 @@ export class TotalComponent implements OnInit {
 		const outCars = this.accountBook.outCars || [];
 		const car1: string[] = [];
 		outCars.forEach((car) => {
-			const jingzhong = car.jingzhong.trim();
-			if (jingzhong && jingzhong !== '0') {
-				const index = car1.indexOf(car.origin + car.type);
-				if (index !== -1) {
-					cars[index].count++;
-					cars[index].jingzhong = new Big(cars[index].jingzhong)
-						.plus(car.jingzhong || '0')
-						.toString();
-				} else {
-					cars.push({
-						origin: car.origin,
-						type: car.type,
-						count: 1,
-						jingzhong: car.jingzhong || '0',
-					});
-					car1.push(car.origin + car.type);
+			if (!car.night) {
+				const jingzhong = car.jingzhong.trim();
+				if (jingzhong && jingzhong !== '0') {
+					const index = car1.indexOf(car.origin + car.type);
+					if (index !== -1) {
+						cars[index].count++;
+						cars[index].jingzhong = new Big(cars[index].jingzhong)
+							.plus(car.jingzhong || '0')
+							.toString();
+					} else {
+						cars.push({
+							origin: car.origin,
+							type: car.type,
+							count: 1,
+							jingzhong: car.jingzhong || '0',
+						});
+						car1.push(car.origin + car.type);
+					}
+				}
+			}
+		});
+		return cars;
+	}
+	// 夜间外来车辆
+	initOutCar1() {
+		const cars = [];
+		const outCars = this.accountBook.outCars || [];
+		const car1: string[] = [];
+		outCars.forEach((car) => {
+			if (car.night) {
+				const jingzhong = car.jingzhong.trim();
+				if (jingzhong && jingzhong !== '0') {
+					const index = car1.indexOf(car.origin + car.type);
+					if (index !== -1) {
+						cars[index].count++;
+						cars[index].jingzhong = new Big(cars[index].jingzhong)
+							.plus(car.jingzhong || '0')
+							.toString();
+					} else {
+						cars.push({
+							origin: car.origin,
+							type: car.type,
+							count: 1,
+							jingzhong: car.jingzhong || '0',
+						});
+						car1.push(car.origin + car.type);
+					}
 				}
 			}
 		});
@@ -169,20 +211,24 @@ export class TotalComponent implements OnInit {
 				const index = types.indexOf(type.type);
 				if (index !== -1) {
 					const count = detail[index].count;
-                    const jingzhong = detail[index].jingzhong;
-					detail[index].count = new Big(type.count).plus(count).toString();
-                    detail[index].jingzhong = new Big(type.jingzhong).plus(jingzhong).toString();
+					const jingzhong = detail[index].jingzhong;
+					detail[index].count = new Big(type.count)
+						.plus(count)
+						.toString();
+					detail[index].jingzhong = new Big(type.jingzhong)
+						.plus(jingzhong)
+						.toString();
 				} else {
-                    types.push(type.type);
-                    detail.push({
-                        type: type.type,
-                        count: type.count,
-                        jingzhong: type.jingzhong
-                    });
-                }
+					types.push(type.type);
+					detail.push({
+						type: type.type,
+						count: type.count,
+						jingzhong: type.jingzhong,
+					});
+				}
 			});
 		});
-        return detail;
+		return detail;
 	}
 
 	getOutDetailCar() {
@@ -194,26 +240,84 @@ export class TotalComponent implements OnInit {
 				const count = detail[index].count;
 				const jingzhong = detail[index].jingzhong;
 				detail[index].count = new Big(car.count).plus(count).toString();
-				detail[index].jingzhong = new Big(car.jingzhong).plus(jingzhong).toString();
+				detail[index].jingzhong = new Big(car.jingzhong)
+					.plus(jingzhong)
+					.toString();
 			} else {
 				types.push(car.type);
 				detail.push({
 					type: car.type,
 					count: car.count,
-					jingzhong: car.jingzhong
+					jingzhong: car.jingzhong,
 				});
 			}
 		});
-        return detail;
+		this.outCars1.forEach((car) => {
+			const index = types.indexOf(car.type);
+			if (index !== -1) {
+				const count = detail[index].count;
+				const jingzhong = detail[index].jingzhong;
+				detail[index].count = new Big(car.count).plus(count).toString();
+				detail[index].jingzhong = new Big(car.jingzhong)
+					.plus(jingzhong)
+					.toString();
+			} else {
+				types.push(car.type);
+				detail.push({
+					type: car.type,
+					count: car.count,
+					jingzhong: car.jingzhong,
+				});
+			}
+		});
+		return detail;
+	}
+
+	getOutDetailCar1() {
+		const types = [];
+		const detail = [];
+		this.outCars1.forEach((car) => {
+			const index = types.indexOf(car.type);
+			if (index !== -1) {
+				const count = detail[index].count;
+				const jingzhong = detail[index].jingzhong;
+				detail[index].count = new Big(car.count).plus(count).toString();
+				detail[index].jingzhong = new Big(car.jingzhong)
+					.plus(jingzhong)
+					.toString();
+			} else {
+				types.push(car.type);
+				detail.push({
+					type: car.type,
+					count: car.count,
+					jingzhong: car.jingzhong,
+				});
+			}
+		});
+		return detail;
 	}
 
 	getOutTotalCar() {
 		let total = { total: '0', count: 0 };
 		this.outCars.forEach((car) => {
+			const j = new Big(car.jingzhong || '0');
+			total.total = j.plus(total.total).toString();
+			total.count = total.count + car.count;
+			this.outCarTotal1.total = new Big(car.jingzhong || '0')
+				.plus(this.outCarTotal1.total)
+				.toString();
+			this.outCarTotal1.count = this.outCarTotal1.count + car.count;
+		});
+		this.outCars1.forEach((car) => {
+			const j = new Big(car.jingzhong || '0');
 			total.total = new Big(car.jingzhong || '0')
 				.plus(total.total)
 				.toString();
 			total.count = total.count + car.count;
+			this.outCarTotal2.total = j
+				.plus(this.outCarTotal2.total)
+				.toString();
+			this.outCarTotal2.count = this.outCarTotal2.count + car.count;
 		});
 		return total;
 	}
@@ -250,5 +354,60 @@ export class TotalComponent implements OnInit {
 				});
 			});
 		});
+	}
+	/**
+	 * 复制文字
+	 */
+	copyText() {
+		const copyToClipboard = str => {
+			const el = document.createElement('textarea');
+			el.value = str;
+			el.setAttribute('readonly', '');
+			el.style.position = 'absolute';
+			el.style.left = '-9999px';
+			document.body.appendChild(el);
+			const selected =
+			  document.getSelection().rangeCount > 0
+				? document.getSelection().getRangeAt(0)
+				: false;
+			el.select();
+			document.execCommand('copy');
+			document.body.removeChild(el);
+			if (selected) {
+			  document.getSelection().removeAllRanges();
+			  document.getSelection().addRange(selected);
+			}
+		};
+		const date = moment(this.accountBook.date).format('YYYY-MM-DD');
+		let day = '';
+		let night = '';
+		this.outCars.forEach((car) => {
+			day += `
+	${car.origin}-${car.type}-${car.jingzhong}-${car.count}车`;
+		});
+		this.outCars1.forEach((car) => {
+			night += `
+	${car.origin}-${car.type}-${car.jingzhong}-${car.count}车`;
+		});
+		const msg = `
+${date}:
+
+车队：拉料-${this.carTotal.total}
+
+外来-白班：${day}
+白班小计: ${this.outCarTotal1.total}
+
+外来-夜班:${night}
+夜班小计: ${this.outCarTotal2.total}
+
+今日统计: ${this.total}`;
+		copyToClipboard(msg);
+		this.toastCtrl.create({
+			message:'复制成功',
+			duration: 1000,
+			position: 'middle'
+		}).then(toast => {
+			toast.present();
+		})
 	}
 }

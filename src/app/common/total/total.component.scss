@@ -5,8 +5,7 @@
   margin: 0px 0px;
 }
 .car,
-.outcar,
-.total {
+.outcar{
   display: flex;
   flex-direction: row;
 }
@@ -42,12 +41,42 @@
 .total {
   font-size: 18px;
   font-weight: bold;
-  padding-left: 16px;
-  margin: 0px 0px;
-  & > span {
-    color: #e94f4f;
-  }
+  padding-left: 8px;
+  // margin: 0px 0px;
+  color: #e94f4f;
 }
 .box{
     transform: scale(0.8);
+}
+.outDetail{
+  display: flex;
+}
+.day {
+  display: inline-block;
+  box-sizing: border-box;
+  padding-left: 8px;
+  width: 50%;
+}
+.night {
+  width: 50%;
+  box-sizing: border-box;
+  padding-left: 8px;
+  flex: 1;
+}
+
+
+.day>p,.night>p{
+  color: #108ee9;
+  font-weight: bold;
+  font-size: 15px;
+  margin-bottom: 6px;
+}
+.day>p>span,.night>p>span{
+  color: #e94f4f;
+  padding-left: 8px;
+}
+.copyText{
+  float: right;
+  right: 8px;
+  top: -20px;
 }

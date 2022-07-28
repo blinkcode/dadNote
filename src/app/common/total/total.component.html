@@ -1,8 +1,15 @@
 <ion-content>
-    <div id="content_box">
-        <p class='total_header'>{{date | date:'yyyy-MM-dd'}}&nbsp;统计(单位：吨)</p>
-        <!-- <div style="float: right;margin-right: 32px;" size='small' Button [inline]="true" [type]="'ghost'"
-            (click)="share()">分享</div> -->
+    <p class='total_header'>{{date | date:'yyyy-MM-dd'}}&nbsp;总计:
+        <span class="total">{{total}}</span>
+        (吨)
+    </p>
+    <div class="copyText" (click)="copyText()" Button [type]="'ghost'" [inline]="true" style="margin-right: 4px" [size]="'small'">复制文字</div>
+    <Tabs
+      [page]="2"
+      activeTab="0"
+      tabBarPosition="top"
+    >
+      <TabPane [title]="'车队'">
         <p class="title">车队&nbsp;&nbsp;共计：
             <span style="color: #e94f4f;">{{carTotal.total}}({{carTotal.count}}车)</span>
             <ng-container *ngFor="let car of carDetail">
@@ -21,6 +28,8 @@
                     <span>{{car.total}}&nbsp;({{car.totalCount}}车)</span></span>
             </div>
         </ng-container>
+      </TabPane>
+      <TabPane [title]="'外来车辆'">
         <p class="title" style="margin:3px 0px">外来车辆&nbsp;&nbsp;共计：
             <span style="color: #e94f4f;">{{outCarTotal.total}}({{outCarTotal.count}}车)</span>
             <ng-container *ngFor="let car of outcarDetail">
@@ -29,20 +38,24 @@
                 </span>
             </ng-container>
         </p>
-        <div style="padding-left:35px;">
-            <ng-container *ngFor="let outCar of outCars; let i=index">
-                <span>{{outCar.origin}}-{{outCar.type}}:</span>{{outCar.jingzhong}}
-                <span>({{outCar.count}}车)</span>&nbsp;&nbsp;
-            </ng-container>
+        <div class="outDetail">
+            <div class="day">
+                <p>白班:<span>{{outCarTotal1.total}}</span></p>
+                <ng-container *ngFor="let outCar of outCars; let i=index">
+                    <span>{{outCar.origin}}-{{outCar.type}}:</span>{{outCar.jingzhong}}
+                    <span>({{outCar.count}}车)</span><br/>
+                </ng-container>
+            </div>
+            <div class="night">
+                <p>夜班:<span>{{outCarTotal2.total}}</span></p>
+                <ng-container *ngFor="let outCar of outCars1; let i=index">
+                    <span>{{outCar.origin}}-{{outCar.type}}:</span>{{outCar.jingzhong}}
+                    <span>({{outCar.count}}车)</span><br/>
+                </ng-container>
+            </div>
         </div>
-        <!-- 禁用果渣统计 -->
-        <!-- <p class="title" style="margin:3px 0px">果渣&nbsp;&nbsp;共计：<span
-            style="color: #e94f4f;">{{guozhaCarTotal.total}}({{guozhaCarTotal.count}}车)</span></p> -->
-        <div class='total'>
-            总计：&nbsp;
-            <span style="font-size: 18px;">{{total}}</span>
-        </div>
-    </div>
+      </TabPane>
+    </Tabs>
 
 
 </ion-content>
