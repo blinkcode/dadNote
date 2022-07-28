@@ -1,9 +1,11 @@
-<ion-content>
+<ion-header>
     <p class='total_header'>{{date | date:'yyyy-MM-dd'}}&nbsp;总计:
         <span class="total">{{total}}</span>
         (吨)
     </p>
-    <div class="copyText" (click)="copyText()" Button [type]="'ghost'" [inline]="true" style="margin-right: 4px" [size]="'small'">复制文字</div>
+    <div class="copyText" (click)="copyText()" Button [type]="'ghost'" [inline]="true" style="margin-right: 4px" [size]="'small'">分享文字</div>
+</ion-header>
+<ion-content>
     <Tabs
       [page]="2"
       activeTab="0"
@@ -41,16 +43,24 @@
         <div class="outDetail">
             <div class="day">
                 <p>白班:<span>{{outCarTotal1.total}}</span></p>
-                <ng-container *ngFor="let outCar of outCars; let i=index">
+                <ng-container *ngFor="let outCar of outCars1; let i=index">
                     <span>{{outCar.origin}}-{{outCar.type}}:</span>{{outCar.jingzhong}}
                     <span>({{outCar.count}}车)</span><br/>
+                </ng-container>
+                <div>小计:</div>
+                <ng-container *ngFor="let car of outcarDetail1">
+                    &nbsp;&nbsp;<span style="color: #e94f4f;font-size: 12px;">{{car.type}}:{{car.jingzhong}}({{car.count}}车)</span>
                 </ng-container>
             </div>
             <div class="night">
                 <p>夜班:<span>{{outCarTotal2.total}}</span></p>
-                <ng-container *ngFor="let outCar of outCars1; let i=index">
+                <ng-container *ngFor="let outCar of outCars2; let i=index">
                     <span>{{outCar.origin}}-{{outCar.type}}:</span>{{outCar.jingzhong}}
                     <span>({{outCar.count}}车)</span><br/>
+                </ng-container>
+                <div>小计:</div>
+                <ng-container *ngFor="let car of outcarDetail2">
+                    &nbsp;&nbsp;<span style="color: #e94f4f;font-size: 12px;">{{car.type}}:{{car.jingzhong}}({{car.count}}车)</span>
                 </ng-container>
             </div>
         </div>
