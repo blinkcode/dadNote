@@ -411,7 +411,9 @@ export class NoteComponent implements OnInit, AfterViewInit {
                     }
                 }
             ]
-        })
+        }).then(alert => {
+            alert.present();
+        });
     }
     /**
      * 添加车辆弹出框
@@ -879,21 +881,21 @@ export class NoteComponent implements OnInit, AfterViewInit {
         if (type === 'maozhong') {
             const koucheng = this.accountBook.outCars[this.editRowIndex].koucheng || '0';
             const pizhong = this.accountBook.outCars[this.editRowIndex].pizhong || '0';
-            const jingzhong = new Big(value).minus(pizhong).times(new Big(100).minus(koucheng).div(100)).toString();
+            const jingzhong = new Big(value).minus(pizhong).times(new Big(100).minus(koucheng).div(100)).toFixed(2).toString();
             this.accountBook.outCars[this.editRowIndex].jingzhong = jingzhong;
             const price = this.accountBook.outCars[this.editRowIndex].price || '0';
             this.accountBook.outCars[this.editRowIndex].amount = new Big(price).times(jingzhong).toString();
         } else if (type === 'pizhong') {
             const koucheng = this.accountBook.outCars[this.editRowIndex].koucheng || '0';
             const maozhong = this.accountBook.outCars[this.editRowIndex].maozhong || '0';
-            const jingzhong = new Big(maozhong).minus(value).times(new Big(100).minus(koucheng).div(100)).toString();
+            const jingzhong = new Big(maozhong).minus(value).times(new Big(100).minus(koucheng).div(100)).toFixed(2).toString();
             this.accountBook.outCars[this.editRowIndex].jingzhong = jingzhong;
             const price = this.accountBook.outCars[this.editRowIndex].price || '0';
             this.accountBook.outCars[this.editRowIndex].amount = new Big(price).times(jingzhong).toString();
         } else if (type === 'koucheng') {
             const maozhong = this.accountBook.outCars[this.editRowIndex].maozhong || '0';
             const pizhong = this.accountBook.outCars[this.editRowIndex].pizhong || '0';
-            const jingzhong = new Big(maozhong).minus(pizhong).times(new Big(100).minus(value).div(100)).toString();
+            const jingzhong = new Big(maozhong).minus(pizhong).times(new Big(100).minus(value).div(100)).toFixed(2).toString();
             this.accountBook.outCars[this.editRowIndex].jingzhong = jingzhong;
             const price = this.accountBook.outCars[this.editRowIndex].price || '0';
             this.accountBook.outCars[this.editRowIndex].amount = new Big(price).times(jingzhong).toString();
@@ -983,21 +985,21 @@ export class NoteComponent implements OnInit, AfterViewInit {
         if (type === 'maozhong') {
             const koucheng = this.accountBook.guozhaCars[this.editRowIndex].koucheng || '0';
             const pizhong = this.accountBook.guozhaCars[this.editRowIndex].pizhong || '0';
-            const jingzhong = new Big(value).minus(pizhong).times(new Big(100).minus(koucheng).div(100)).toString();
+            const jingzhong = new Big(value).minus(pizhong).times(new Big(100).minus(koucheng).div(100)).toFixed(2).toString();
             this.accountBook.guozhaCars[this.editRowIndex].jingzhong = jingzhong;
             const price = this.accountBook.guozhaCars[this.editRowIndex].price || '0';
             this.accountBook.guozhaCars[this.editRowIndex].amount = new Big(price).times(jingzhong).toString();
         } else if (type === 'pizhong') {
             const koucheng = this.accountBook.guozhaCars[this.editRowIndex].koucheng || '0';
             const maozhong = this.accountBook.guozhaCars[this.editRowIndex].maozhong || '0';
-            const jingzhong = new Big(maozhong).minus(value).times(new Big(100).minus(koucheng).div(100)).toString();
+            const jingzhong = new Big(maozhong).minus(value).times(new Big(100).minus(koucheng).div(100)).toFixed(2).toString();
             this.accountBook.guozhaCars[this.editRowIndex].jingzhong = jingzhong;
             const price = this.accountBook.guozhaCars[this.editRowIndex].price || '0';
             this.accountBook.guozhaCars[this.editRowIndex].amount = new Big(price).times(jingzhong).toString();
         } else if (type === 'koucheng') {
             const maozhong = this.accountBook.guozhaCars[this.editRowIndex].maozhong || '0';
             const pizhong = this.accountBook.guozhaCars[this.editRowIndex].pizhong || '0';
-            const jingzhong = new Big(maozhong).minus(pizhong).times(new Big(100).minus(value).div(100)).toString();
+            const jingzhong = new Big(maozhong).minus(pizhong).times(new Big(100).minus(value).div(100)).toFixed(2).toString();
             this.accountBook.guozhaCars[this.editRowIndex].jingzhong = jingzhong;
             const price = this.accountBook.guozhaCars[this.editRowIndex].price || '0';
             this.accountBook.guozhaCars[this.editRowIndex].amount = new Big(price).times(jingzhong).toString();
