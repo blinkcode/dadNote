@@ -44,8 +44,10 @@
             <div class="day">
                 <p>白班:<span>{{outCarTotal1.total}}</span></p>
                 <ng-container *ngFor="let outCar of outCars1; let i=index">
-                    <span>{{outCar.origin}}-{{outCar.type}}:</span>{{outCar.jingzhong}}
-                    <span>({{outCar.count}}车)</span><br/>
+                    <div class="row">
+                        <span>{{outCar.origin}}-{{outCar.type}}:</span>{{outCar.jingzhong}}
+                        <span>({{outCar.count}}车)</span>
+                    </div>
                 </ng-container>
                 <div>小计:</div>
                 <ng-container *ngFor="let car of outcarDetail1">
@@ -55,8 +57,10 @@
             <div class="night">
                 <p>夜班:<span>{{outCarTotal2.total}}</span></p>
                 <ng-container *ngFor="let outCar of outCars2; let i=index">
-                    <span>{{outCar.origin}}-{{outCar.type}}:</span>{{outCar.jingzhong}}
-                    <span>({{outCar.count}}车)</span><br/>
+                    <div class="row">
+                        <span>{{outCar.origin}}-{{outCar.type}}:</span>{{outCar.jingzhong}}
+                        <span>({{outCar.count}}车)</span>
+                    </div>
                 </ng-container>
                 <div>小计:</div>
                 <ng-container *ngFor="let car of outcarDetail2">

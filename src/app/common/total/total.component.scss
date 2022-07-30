@@ -62,6 +62,12 @@
   color: #e94f4f;
   padding-left: 8px;
 }
+.day>.row,.night>.row {
+  display: inline-block;
+  font-size: 13px;
+  width: 50%;
+}
+
 .copyText{
   float: right;
   right: 8px;
