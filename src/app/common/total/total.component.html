@@ -53,6 +53,7 @@
                 <ng-container *ngFor="let car of outcarDetail1">
                     &nbsp;&nbsp;<span style="color: #e94f4f;font-size: 12px;">{{car.type}}:{{car.jingzhong}}({{car.count}}车)</span>
                 </ng-container>
+                &nbsp;&nbsp;<span style="color: #e94f4f;font-size: 12px;">未去皮:{{outcarDetailoutpi1.total}}({{outcarDetailoutpi1.count}}车)</span>
             </div>
             <div class="night">
                 <p>夜班:<span>{{outCarTotal2.total}}</span></p>
@@ -66,6 +67,7 @@
                 <ng-container *ngFor="let car of outcarDetail2">
                     &nbsp;&nbsp;<span style="color: #e94f4f;font-size: 12px;">{{car.type}}:{{car.jingzhong}}({{car.count}}车)</span>
                 </ng-container>
+                &nbsp;&nbsp;<span style="color: #e94f4f;font-size: 12px;">未去皮:{{outcarDetailoutpi2.total}}({{outcarDetailoutpi2.count}}车)</span>
             </div>
         </div>
       </TabPane>

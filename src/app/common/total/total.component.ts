@@ -8,7 +8,6 @@ import { ModalController, ToastController } from '@ionic/angular';
 import * as moment from 'moment';
 import { ToastService } from 'ng-zorro-antd-mobile';
 
-
 @Component({
 	selector: 'app-total',
 	templateUrl: './total.component.html',
@@ -29,6 +28,8 @@ export class TotalComponent implements OnInit {
 	outcarDetail = []; // 外来车辆拉货详情
 	outcarDetail1 = []; // 外来车辆拉货详情（白）
 	outcarDetail2 = []; // 外来车辆拉货详情（夜）
+	outcarDetailoutpi1 = { total: '0', count: 0 } // 外来车辆详情没有皮重（白）
+	outcarDetailoutpi2 = { total: '0', count: 0 } // 外来车辆详情没有皮重（夜）
 	outCarTotal = { total: '0', count: 0 };
 	outCarTotal1 = { total: '0', count: 0 };
 	outCarTotal2 = { total: '0', count: 0 };
@@ -62,7 +63,6 @@ export class TotalComponent implements OnInit {
 		this.outcarDetail = this.getOutDetailCar();
 		this.outcarDetail1 = this.getOutDetailCar1();
 		this.outcarDetail2 = this.getOutDetailCar2();
-
 	}
 	initCar() {
 		const cars = [];
@@ -106,39 +106,16 @@ export class TotalComponent implements OnInit {
 	}
 	initOutCar() {
 		const cars = [];
-		const outCars = this.accountBook.outCars || [];
 		const car1: string[] = [];
-		outCars.forEach((car) => {
-			const jingzhong = car.jingzhong.trim();
-			if (jingzhong && jingzhong !== '0') {
-				const index = car1.indexOf(car.origin + car.type);
-				if (index !== -1) {
-					cars[index].count++;
-					cars[index].jingzhong = new Big(cars[index].jingzhong)
-						.plus(car.jingzhong || '0')
-						.toString();
-				} else {
-					cars.push({
-						origin: car.origin,
-						type: car.type,
-						count: 1,
-						jingzhong: car.jingzhong || '0',
-					});
-					car1.push(car.origin + car.type);
-				}
-			}
-		});
-		return cars;
-	}
-	// 白天外来车辆
-	initOutCar1() {
-		const cars = [];
-		const outCars = this.accountBook.outCars || [];
-		const car1: string[] = [];
-		outCars.forEach((car) => {
-			if (!car.night) {
-				const jingzhong = car.jingzhong.trim();
-				if (jingzhong && jingzhong !== '0') {
+		let outCars = this.accountBook.outCars || [];
+		const types: string[] = [];
+		outCars = outCars.filter(car => car.jingzhong.trim() && car.jingzhong !== '0');
+		let type = '';
+		outCars.forEach((outcar) => {
+			type = outcar.type;
+			if (!types.includes(type)) {
+				const filOutCars = outCars.filter(c =>c.type === type);
+				filOutCars.forEach(car =>{
 					const index = car1.indexOf(car.origin + car.type);
 					if (index !== -1) {
 						cars[index].count++;
@@ -154,7 +131,68 @@ export class TotalComponent implements OnInit {
 						});
 						car1.push(car.origin + car.type);
 					}
-				}
+				});
+				types.push(type);
+			}
+		});
+		return cars;
+	}
+	// 白天外来车辆
+	initOutCar1() {
+		// const cars = [];
+		// const outCars = this.accountBook.outCars || [];
+		// const car1: string[] = [];
+		// outCars.forEach((car) => {
+		// 	if (!car.night) {
+		// 		const jingzhong = car.jingzhong.trim();
+		// 		if (jingzhong && jingzhong !== '0') {
+		// 			const index = car1.indexOf(car.origin + car.type);
+		// 			if (index !== -1) {
+		// 				cars[index].count++;
+		// 				cars[index].jingzhong = new Big(cars[index].jingzhong)
+		// 					.plus(car.jingzhong || '0')
+		// 					.toString();
+		// 			} else {
+		// 				cars.push({
+		// 					origin: car.origin,
+		// 					type: car.type,
+		// 					count: 1,
+		// 					jingzhong: car.jingzhong || '0',
+		// 				});
+		// 				car1.push(car.origin + car.type);
+		// 			}
+		// 		}
+		// 	}
+		// });
+		// return cars;
+		const cars = [];
+		const car1: string[] = [];
+		let outCars = this.accountBook.outCars || [];
+		const types: string[] = [];
+		outCars = outCars.filter(car => car.jingzhong.trim() && car.jingzhong !== '0' && !car.night);
+		let type = '';
+		outCars.forEach((outcar) => {
+			type = outcar.type;
+			if (!types.includes(type)) {
+				const filOutCars = outCars.filter(c =>c.type === type);
+				filOutCars.forEach(car =>{
+					const index = car1.indexOf(car.origin + car.type);
+					if (index !== -1) {
+						cars[index].count++;
+						cars[index].jingzhong = new Big(cars[index].jingzhong)
+							.plus(car.jingzhong || '0')
+							.toString();
+					} else {
+						cars.push({
+							origin: car.origin,
+							type: car.type,
+							count: 1,
+							jingzhong: car.jingzhong || '0',
+						});
+						car1.push(car.origin + car.type);
+					}
+				});
+				types.push(type);
 			}
 		});
 		return cars;
@@ -162,13 +200,43 @@ export class TotalComponent implements OnInit {
 
 	// 黑夜外来车辆
 	initOutCar2() {
+		// const cars = [];
+		// const outCars = this.accountBook.outCars || [];
+		// const car1: string[] = [];
+		// outCars.forEach((car) => {
+		// 	if (car.night) {
+		// 		const jingzhong = car.jingzhong.trim();
+		// 		if (jingzhong && jingzhong !== '0') {
+		// 			const index = car1.indexOf(car.origin + car.type);
+		// 			if (index !== -1) {
+		// 				cars[index].count++;
+		// 				cars[index].jingzhong = new Big(cars[index].jingzhong)
+		// 					.plus(car.jingzhong || '0')
+		// 					.toString();
+		// 			} else {
+		// 				cars.push({
+		// 					origin: car.origin,
+		// 					type: car.type,
+		// 					count: 1,
+		// 					jingzhong: car.jingzhong || '0',
+		// 				});
+		// 				car1.push(car.origin + car.type);
+		// 			}
+		// 		}
+		// 	}
+		// });
+		// return cars;
 		const cars = [];
-		const outCars = this.accountBook.outCars || [];
 		const car1: string[] = [];
-		outCars.forEach((car) => {
-			if (car.night) {
-				const jingzhong = car.jingzhong.trim();
-				if (jingzhong && jingzhong !== '0') {
+		let outCars = this.accountBook.outCars || [];
+		const types: string[] = [];
+		outCars = outCars.filter(car => car.jingzhong.trim() && car.jingzhong !== '0' && car.night);
+		let type = '';
+		outCars.forEach((outcar) => {
+			type = outcar.type;
+			if (!types.includes(type)) {
+				const filOutCars = outCars.filter(c =>c.type === type);
+				filOutCars.forEach(car =>{
 					const index = car1.indexOf(car.origin + car.type);
 					if (index !== -1) {
 						cars[index].count++;
@@ -184,12 +252,13 @@ export class TotalComponent implements OnInit {
 						});
 						car1.push(car.origin + car.type);
 					}
-				}
+				});
+				types.push(type);
 			}
 		});
 		return cars;
 	}
-	// 
+	//
 	initGuozhaCar() {
 		const cars = [];
 		const guozhaCars = this.accountBook.guozhaCars || [];
@@ -312,6 +381,14 @@ export class TotalComponent implements OnInit {
 				});
 			}
 		});
+		let outCars = this.accountBook.outCars || [];
+		outCars = outCars.filter(car => car.jingzhong.trim() && car.jingzhong !== '0' && !car.night);
+		outCars.forEach(car =>{
+			if (!car.pizhong || !car.pizhong.trim() || car.pizhong === '0' ) {
+				this.outcarDetailoutpi1.total = new Big(this.outcarDetailoutpi1.total).plus(car.jingzhong).toString();
+				this.outcarDetailoutpi1.count++;
+			}
+		});
 		return detail;
 	}
 	getOutDetailCar2() {
@@ -333,6 +410,14 @@ export class TotalComponent implements OnInit {
 					count: car.count,
 					jingzhong: car.jingzhong,
 				});
+			}
+		});
+		let outCars = this.accountBook.outCars || [];
+		outCars = outCars.filter(car => car.jingzhong.trim() && car.jingzhong !== '0' && car.night);
+		outCars.forEach(car =>{
+			if (!car.pizhong || !car.pizhong.trim() || car.pizhong === '0' ) {
+				this.outcarDetailoutpi2.total = new Big(this.outcarDetailoutpi2.total).plus(car.jingzhong).toString();
+				this.outcarDetailoutpi2.count++;
 			}
 		});
 		return detail;
@@ -376,7 +461,6 @@ export class TotalComponent implements OnInit {
 		});
 		return total;
 	}
-	
 
 	getGuozhaTotalCar() {
 		let total = { total: '0', count: 0 };
@@ -415,7 +499,7 @@ export class TotalComponent implements OnInit {
 	 * 复制文字
 	 */
 	copyText() {
-		const copyToClipboard = str => {
+		const copyToClipboard = (str) => {
 			const el = document.createElement('textarea');
 			el.value = str;
 			el.setAttribute('readonly', '');
@@ -423,15 +507,15 @@ export class TotalComponent implements OnInit {
 			el.style.left = '-9999px';
 			document.body.appendChild(el);
 			const selected =
-			  document.getSelection().rangeCount > 0
-				? document.getSelection().getRangeAt(0)
-				: false;
+				document.getSelection().rangeCount > 0
+					? document.getSelection().getRangeAt(0)
+					: false;
 			el.select();
 			document.execCommand('copy');
 			document.body.removeChild(el);
 			if (selected) {
-			  document.getSelection().removeAllRanges();
-			  document.getSelection().addRange(selected);
+				document.getSelection().removeAllRanges();
+				document.getSelection().addRange(selected);
 			}
 		};
 		const date = moment(this.accountBook.date).format('YYYY-MM-DD');
@@ -446,30 +530,30 @@ export class TotalComponent implements OnInit {
 	${car.origin}-${car.type}:${car.jingzhong}(${car.count}车)`;
 		});
 		let dayDetail = '';
-		this.outcarDetail1.forEach(car => {
+		this.outcarDetail1.forEach((car) => {
 			dayDetail += `
 	${car.type}:${car.jingzhong}(${car.count}车)`;
 		});
 		let nightDetail = '';
-		this.outcarDetail2.forEach(car => {
+		this.outcarDetail2.forEach((car) => {
 			nightDetail += `
 	${car.type}:${car.jingzhong}(${car.count}车)`;
 		});
-		let car =  '';
-		this.cars.forEach(c => {
+		let car = '';
+		this.cars.forEach((c) => {
 			car += `
  ${c.carNo}:`;
-			c.types.forEach(t => {
+			c.types.forEach((t) => {
 				car += `
-	${t.type}:${t.jingzhong}(${t.count}车)`
-			})
+	${t.type}:${t.jingzhong}(${t.count}车)`;
+			});
 		});
 		let carDetail = '';
-		this.carDetail.forEach(c => {
+		this.carDetail.forEach((c) => {
 			carDetail += `	${c.type}:${c.jingzhong}(${c.count}车)
   `;
-		})
-	
+		});
+
 		const msg = `
 ${date} 单位(吨):
 
@@ -491,6 +575,7 @@ ${carDetail}
 		// }).then(toast => {
 		// 	toast.present();
 		// })
+		console.log(msg);
 		this.socialSharing.share(msg, null, null, null);
 	}
 }
