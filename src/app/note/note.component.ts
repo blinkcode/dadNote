@@ -35,7 +35,8 @@ export class NoteComponent implements OnInit, AfterViewInit {
     isHidden = false;
     isReady = false;
     scroll = { x: '1000px', y: '500px' };
-    setOfCheckedId = new Set<string>(); // 选中的id
+    // setOfCheckedId = new Set<string>(); // 选中的id
+    setOfCheckedId = ''; // 选中的id
     @ViewChild('tableBox') tableBox: ElementRef;
     // @ViewChild('tableHeader') tableHeader: ElementRef;
     constructor(
@@ -114,7 +115,8 @@ export class NoteComponent implements OnInit, AfterViewInit {
      * @param index any
      */
     changeTab(index: any) {
-        this.setOfCheckedId.clear();
+        // this.setOfCheckedId.clear();
+        this.setOfCheckedId = '';
         setTimeout(() => {
             this.activeTabIndex = index.index;
             if (this.activeTabIndex >= this.accountBook.cars.length) {
@@ -316,7 +318,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
         if (!this.editable) {
             return false;
         }
-        if (!this.setOfCheckedId.size) {
+        if (!this.setOfCheckedId.length) {
             this.toast.info('请勾选一行', 1500);
             return false;
         }
@@ -381,7 +383,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
                     handler: ()=>{
                         if (this.isHidden) {
                             this.accountBook.cars[this.activeTabIndex].datas.forEach((data, i) => {
-                                if (this.setOfCheckedId.has(data.id)) {
+                                if (this.setOfCheckedId === data.id) {
                                     const data = cloneDeep(this.accountBook.cars[this.activeTabIndex].datas);
                                     data.splice(i, 1);
                                     this.accountBook.cars[this.activeTabIndex].datas = data;
@@ -391,7 +393,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
                         } else if (this.activeTabIndex === this.accountBook.cars.length) {
 
                             this.accountBook.outCars.forEach((car, i) => {
-                                if (this.setOfCheckedId.has(car.id)) {
+                                if (this.setOfCheckedId === car.id) {
                                     const data = cloneDeep(this.accountBook.outCars);
                                     data.splice(i, 1);
                                     this.accountBook.outCars = data;
@@ -400,7 +402,7 @@ export class NoteComponent implements OnInit, AfterViewInit {
                             })
                         } else {
                             this.accountBook.guozhaCars.forEach((car, i) => {
-                                if (this.setOfCheckedId.has(car.id)) {
+                                if (this.setOfCheckedId === car.id) {
                                     const data = cloneDeep(this.accountBook.guozhaCars);
                                     data.splice(i, 1);
                                     this.accountBook.guozhaCars = data;
@@ -747,9 +749,11 @@ export class NoteComponent implements OnInit, AfterViewInit {
      * @memberof NoteComponent
      */
     onItemChecked(id: string, checked: boolean): void {
-        this.setOfCheckedId.clear();
+        // this.setOfCheckedId.clear();
+        this.setOfCheckedId = '';
         if (checked) {
-            this.setOfCheckedId.add(id);
+            // this.setOfCheckedId.add(id);
+            this.setOfCheckedId = id;
         }
     }
 
@@ -765,10 +769,10 @@ export class NoteComponent implements OnInit, AfterViewInit {
      * 复制一行
      */
     copy() {
-        let id = '';
-        this.setOfCheckedId.forEach(a => {
-            id = a
-        });
+        let id = this.setOfCheckedId;
+        // this.setOfCheckedId.forEach(a => {
+        //     id = a
+        // });
         if (!id) {
             this.toast.info('请勾选一行', 1500);
             return false;

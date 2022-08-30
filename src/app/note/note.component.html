@@ -39,7 +39,7 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let data of table.data;let j=index">
-                                <td style="margin: 0px;padding:0px;" [nzChecked]="setOfCheckedId.has(data.id)"
+                                <td style="margin: 0px;padding:0px;" [nzChecked]="setOfCheckedId === data.id"
                                     (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
                                 <ng-container *ngIf="j === 0">
                                     <td [attr.rowspan]='table.data.length' class="table_header">
@@ -98,7 +98,7 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let data of outTable.data;let z=index">
-                                <td style="margin: 0px;padding:0px;" [nzChecked]="setOfCheckedId.has(data.id)"
+                                <td style="margin: 0px;padding:0px;" [nzChecked]="setOfCheckedId === data.id"
                                     (nzCheckedChange)="onItemChecked(data.id, $event)">
                                 </td>
                                 <td class="table_header" (click)="editOut(data.origin,z,'origin')">{{data.origin}}</td>
@@ -150,7 +150,7 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let data of guozhaTable.data;let o=index">
-                                <td style="margin: 0px;padding:0px;" [nzChecked]="setOfCheckedId.has(data.id)"
+                                <td style="margin: 0px;padding:0px;" [nzChecked]="setOfCheckedId === data.id"
                                     (nzCheckedChange)="onItemChecked(data.id, $event)">
                                 </td>
                                 <td class="table_header" (click)="editGuozha(data.origin,o,'origin')">{{data.origin}}</td>
