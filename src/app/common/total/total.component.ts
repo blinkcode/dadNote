@@ -557,8 +557,6 @@ export class TotalComponent implements OnInit {
 		const msg = `
 ${date} 单位(吨):
 
-车队: ${car}
-车队小计：${this.carTotal.total}(${this.carTotal.count}车)
 ${carDetail}
 白班：${day}
 白班小计: ${this.outCarTotal1.total}(${this.outCarTotal1.count}车)${dayDetail}

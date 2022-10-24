@@ -43,6 +43,9 @@
               },
               {
                 "input": "src/global.scss"
+              },
+              {
+                "input": "src/theme.less"
               }
             ],
             "scripts": []
