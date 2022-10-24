@@ -46,7 +46,7 @@ export class CameraService {
         const month = moment(dateStr).month() + 1 + '';
         const date = moment(dateStr).date();
         const root = this.file.externalRootDirectory;
-        const path = `${root}dadNote/${year}/${month}/exports/`;
+        const path = `${root}dadNoteMuliao/${year}/${month}/exports/`;
         const random = this.random();
         const fileName = `${year}${month}${date}${random}.jpg`;
         return new Promise((resolve, reject) => {

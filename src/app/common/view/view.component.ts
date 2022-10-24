@@ -53,7 +53,7 @@ export class ViewCommonComponent implements OnInit {
     const root = this.file.externalRootDirectory;
     const months = [];
     return new Promise((resolve, reject) => {
-      this.file.listDir(`${root}dadNote/`, this.id).then((dir: Entry[]) => {
+      this.file.listDir(`${root}dadNoteMuliao/`, this.id).then((dir: Entry[]) => {
         dir.forEach((d) => {
           if (d.isDirectory) {
             months.push(d.name);
@@ -68,7 +68,7 @@ export class ViewCommonComponent implements OnInit {
     const root = this.file.externalRootDirectory;
     const list = [];
     return new Promise((resolve, reject) => {
-      this.file.listDir(`${root}dadNote/${this.id}/${month}`, 'datas').then((dir: Entry[]) => {
+      this.file.listDir(`${root}dadNoteMuliao/${this.id}/${month}`, 'datas').then((dir: Entry[]) => {
         dir.forEach((d) => {
           if (d.isFile) {
             const number = Number(d.name.split('.').shift());
@@ -119,7 +119,7 @@ export class ViewCommonComponent implements OnInit {
    * @param date 日
    */
   preShare(month: string, date) {
-    const path = this.file.externalRootDirectory + 'dadNote/' + `${this.id}/${month}/exports/`;
+    const path = this.file.externalRootDirectory + 'dadNoteMuliao/' + `${this.id}/${month}/exports/`;
     const fileName = moment(`${this.id}-${month}-${date}`).format('YYYY-MM-DD[-过磅单.xlsx]')
     this.file.checkFile(path, fileName).then((flag) => {
       if (flag) {

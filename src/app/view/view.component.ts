@@ -31,11 +31,11 @@ export class ViewComponent implements OnInit {
     const root = this.file.externalRootDirectory;
     const years = [];
     if (!this.device.isMobile()) {
-      return Promise.resolve(['2020', '2019', '2018'])
+      return Promise.resolve(['2022']);
     }
 
     return new Promise((resolve, reject) => {
-      this.file.listDir(`${root}`, 'dadNote').then((dir: Entry[]) => {
+      this.file.listDir(`${root}`, 'dadNoteMuliao').then((dir: Entry[]) => {
         dir.forEach((d) => {
           console.log(d.isDirectory)
           if (d.isDirectory) {

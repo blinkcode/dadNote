@@ -32,7 +32,7 @@ export class FileService {
     const year = moment().year() + '';
     const month = moment().month() + 1 + '';
     const date = moment().date() + '';
-    const dadNote = await this.createDir(root, 'dadNote');
+    const dadNote = await this.createDir(root, 'dadNoteMuliao');
     // const note = await this.createDir(dadNote, 'note');
     const year1 = await this.createDir(dadNote, year);
     const month1 = await this.createDir(year1, month);
@@ -99,7 +99,7 @@ export class FileService {
     const month = moment(dateStr).month() + 1 + '';
     const date = moment(dateStr).date();
     const root = this.file.externalRootDirectory;
-    const path = `${root}dadNote/${year}/${month}/datas/`;
+    const path = `${root}dadNoteMuliao/${year}/${month}/datas/`;
     return new Promise(async (resolve) => {
       if (this.filePath) {
         this.file.readAsText(path, `${date}.json`).then((res) => {
@@ -134,7 +134,7 @@ export class FileService {
     const month = moment().month() + 1 + '';
     const date = moment().date();
     const root = this.file.externalRootDirectory;
-    const path = `${root}dadNote/${year}/${month}/datas/`;
+    const path = `${root}dadNoteMuliao/${year}/${month}/datas/`;
     return this.file.writeExistingFile(path, `${date}.json`, JSON.stringify(note));
   }
 
@@ -194,7 +194,7 @@ export class FileService {
     const month = moment(dateStr).month() + 1 + '';
     const date = moment(dateStr).date();
     const root = this.file.externalRootDirectory;
-    const path = `${root}dadNote/${year}/${month}/exports/`;
+    const path = `${root}dadNoteMuliao/${year}/${month}/exports/`;
     return new Promise((resolve, reject) => {
       this.readFile(dateStr).then((res: AccountBook) => {
         const cars = [];
@@ -236,9 +236,9 @@ export class FileService {
    */
   readConfig(): Promise<any> {
     if (!this.device.isMobile()) {
-      return Promise.resolve(this.storage.get('config'));
+      return Promise.resolve(this.storage.get('config1'));
     }
-    const path = this.file.externalRootDirectory + 'dadNote/';
+    const path = this.file.externalRootDirectory + 'dadNoteMuliao/';
     console.log('配置文件地址', path);
     return new Promise((resolve, reject) => {
       this.file.readAsText(path, 'config.json').then((res) => {
@@ -260,7 +260,7 @@ export class FileService {
       this.storage.set('config', config);
       return Promise.resolve();
     }
-    const path = this.file.externalRootDirectory + 'dadNote/';
+    const path = this.file.externalRootDirectory + 'dadNoteMuliao/';
     return this.file.writeExistingFile(path, 'config.json', JSON.stringify(config, null, 4));
   }
 
